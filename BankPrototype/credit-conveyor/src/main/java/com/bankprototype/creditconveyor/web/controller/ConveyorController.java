@@ -1,10 +1,12 @@
 package com.bankprototype.creditconveyor.web.controller;
 
+import com.bankprototype.creditconveyor.service.IPrescoringCalculation;
 import com.bankprototype.creditconveyor.web.dto.CreditDTO;
 import com.bankprototype.creditconveyor.web.dto.LoanApplicationRequestDTO;
 import com.bankprototype.creditconveyor.web.dto.LoanOfferDTO;
 import com.bankprototype.creditconveyor.web.dto.ScoringDataDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -15,13 +17,22 @@ import java.util.List;
 @RequestMapping("/conveyor")
 public class ConveyorController {
 
-    @PostMapping("/offers/{id}")
+    private final IPrescoringCalculation prescoringCalculation;
+
+    public ConveyorController(IPrescoringCalculation prescoringCalculation) {
+        this.prescoringCalculation = prescoringCalculation;
+    }
+
+    @PostMapping("/offers")
     public List<LoanOfferDTO> getInfoAboutMeeting(@Valid @RequestBody LoanApplicationRequestDTO loanApplicationRequestDTO)
     {
-        //TODO  расчёт возможных условий кредита
+        log.info("[getInfoAboutMeeting] >> loanApplicationRequestDTO: {}", loanApplicationRequestDTO);
 
+        List<LoanOfferDTO> loanOfferDTOs = prescoringCalculation.createListLoanOffer(loanApplicationRequestDTO);
 
-        return null;
+        log.info("[getInfoAboutMeeting] << result: {}", loanOfferDTOs);
+
+        return loanOfferDTOs;
 
     }
 

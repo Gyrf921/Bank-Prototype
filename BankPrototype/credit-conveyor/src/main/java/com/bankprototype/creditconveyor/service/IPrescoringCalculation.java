@@ -1,47 +1,30 @@
-/*
+
 package com.bankprototype.creditconveyor.service;
 
 import com.bankprototype.creditconveyor.web.dto.LoanApplicationRequestDTO;
+import com.bankprototype.creditconveyor.web.dto.LoanOfferDTO;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 public interface IPrescoringCalculation {
 
-    */
-/**
-     * Сумма ежемесячного платежа для расчета в десятичной системе счисления
-     * @param loanAmount - сумма по кредиту
-     * @param termInYears - срок кредитования в годах
-     * @param creditRatio - общий коэффициент пользователя от страховки и статуса зарплаатного клиента
-     *//*
 
-     BigDecimal calculationMonthlyPaymentAmount(BigDecimal loanAmount, Integer termInYears, Integer creditRatio);
+    /**
+     * Создание листа предложений по кредиту
+     * @param LNR_DTO - Вводные данные для получения кредита
+     */
+    List<LoanOfferDTO> createListLoanOffer(LoanApplicationRequestDTO LNR_DTO);
 
-    */
-/**
-     * Расчет ежемесячной процентной ставки
-     * @value - годовая процентаная ставка берётся из ресурса
-     *//*
 
-    Double calculationMonthlyInterestRate(Double customLoanRate);
+    /**
+     * Создание каждого предложения по кредиту на основании условий страхования и зарплатности клиента
+     * @param LNR_DTO - Вводные данные для получения кредита
+     * @param isInsuranceEnabled - является ли полльзователь страхователем жизни
+     * @param isSalaryClient - является ли полльхователь зарплатным клинетом
+     */
+    LoanOfferDTO createLoanOffer(LoanApplicationRequestDTO LNR_DTO, Boolean isInsuranceEnabled, Boolean isSalaryClient);
 
-    */
-/**
-     * Расчет окончания периодов начисления процентов
-     * @value - количество месяцев в году статично и являеся константой
-     * @param term - количество лет, на которые взяли кредит
-     *//*
 
-    Integer calculationInterestPeriodsTerm(Integer term);
-
-    */
-/**
-     * Расчет общей сумма кредита
-     * @param monthlyPayment - ежемесячный платёж по кредиту
-     * @param countMonth - количество месяцев на которое берётся кребит
-     *//*
-
-    BigDecimal calculationTotalAmount(BigDecimal monthlyPayment, Integer countMonth);
 
 }
-*/
+

@@ -7,8 +7,8 @@ public class PaymentScheduleElement
 {
     private Integer number;
     private LocalDate date;
-    private BigDecimal totalPayment;
-    private BigDecimal interestPayment;
-    private BigDecimal debtPayment;
-    private BigDecimal remainingDebt;
+    private BigDecimal totalPayment; //общая сумма платежа;
+    private BigDecimal interestPayment; //выплата процентов;
+    private BigDecimal debtPayment; //выплата долга;
+    private BigDecimal remainingDebt; //оставшийся долг;
 }
