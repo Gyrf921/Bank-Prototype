@@ -5,7 +5,7 @@ import com.bankprototype.creditconveyor.service.IPrescoringCalculation;
 import com.bankprototype.creditconveyor.web.dto.LoanApplicationRequestDTO;
 import com.bankprototype.creditconveyor.web.dto.LoanOfferDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 
@@ -20,10 +20,15 @@ public class PrescoringCalculationImpl implements IPrescoringCalculation {
 
     private final ICreditCalculation calculation;
 
-    //TODO сделать нормальный ввод, потому что Value от spring не внедряет данные
-    private static final Double loanRate = 8.0;
-    private static final Double ratioOfInsuranceEnabled = 1.0;
-    private static final Double ratioOfSalaryClient = 2.0;
+    @Value("${loanRate}") //8
+    private Double loanRate;
+
+    @Value("${ratioOfInsuranceEnabled}")
+    private Double ratioOfInsuranceEnabled;
+
+    @Value("${ratioOfSalaryClient}")
+    private Double ratioOfSalaryClient;
+
     private static final BigDecimal costInsurance = BigDecimal.valueOf(100000);
     private static final int countMonthOfYear = 12;
 

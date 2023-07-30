@@ -2,14 +2,13 @@ package com.bankprototype.creditconveyor.service.impl;
 
 import com.bankprototype.creditconveyor.service.ICreditCalculation;
 import com.bankprototype.creditconveyor.service.IScoringCalculation;
-import com.bankprototype.creditconveyor.service.rule.RateRuleEngine;
-import com.bankprototype.creditconveyor.service.rule.impl.person.*;
-import com.bankprototype.creditconveyor.service.rule.impl.work.*;
+import com.bankprototype.creditconveyor.rule.RateRuleEngine;
 import com.bankprototype.creditconveyor.web.dto.CreditDTO;
-import com.bankprototype.creditconveyor.web.dto.LoanOfferDTO;
 import com.bankprototype.creditconveyor.web.dto.PaymentScheduleElement;
 import com.bankprototype.creditconveyor.web.dto.ScoringDataDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -23,19 +22,17 @@ import java.util.List;
 public class ScoringCalculationImpl implements IScoringCalculation {
 
     private final ICreditCalculation calculation;
+    private final RateRuleEngine ruleEngine;
 
-
-    //TODO сделать нормальный ввод, потому что Value от spring не внедряет данные
-    private static Double loanRate = 8.0;
-
-    private static Double ratioOfInsuranceEnabled = 1.0;
-
-    //@Value("${credit-conveyor.service.ratio-of-salary-client}")
-    private static Double ratioOfSalaryClient = 2.0;
+    @Value("${loanRate}")
+    private Double loanRate;
 
     private static final int countMonthOfYear = 12;
-    public ScoringCalculationImpl(CreditCalculationImpl calculation) {
+
+    @Autowired
+    public ScoringCalculationImpl(CreditCalculationImpl calculation, RateRuleEngine ruleEngine) {
         this.calculation = calculation;
+        this.ruleEngine = ruleEngine;
     }
 
     @Override
@@ -43,32 +40,9 @@ public class ScoringCalculationImpl implements IScoringCalculation {
 
         log.info("[createCredit] >> scoringDataDTO: {}", scoringDataDTO);
 
-        RateRuleEngine ruleEngine = new RateRuleEngine(List.of(
-                new BirthdateRateRule(),
-                new DependentAmountRateRule(),
-                new GenderRateRule(),
-                new InsuranceRateRule(),
-                new MaritalStatusRateRule(),
-                new SalaryClientRateRule(),
-                new CurrentWorkExperienceRateRule(),
-                new EmploymentStatusRateRule(),
-                new SalaryRateRule(),
-                new TotalWorkExperienceRateRule(),
-                new WorkPositionRateRule()
-        )); // Все правила проверяем
-
         BigDecimal creditRate = ruleEngine.getRate(scoringDataDTO, BigDecimal.valueOf(loanRate));
 
-        CreditDTO creditDTO;
-        if(creditRate.equals(BigDecimal.ZERO)) {
-            creditDTO = calculationCredit(scoringDataDTO, BigDecimal.ONE);
-        }
-        else if (BigDecimal.valueOf(1000000).compareTo(creditRate) < 0){
-            creditDTO = null;
-        }
-        else{
-            creditDTO = calculationCredit(scoringDataDTO, creditRate);
-        }
+        CreditDTO creditDTO = calculationCredit(scoringDataDTO, creditRate);
 
         log.info("[createCredit] << result: {}", creditDTO);
 
@@ -91,7 +65,7 @@ public class ScoringCalculationImpl implements IScoringCalculation {
                 .rate(creditRate)
                 .psk(pskCalc)
                 .isInsuranceEnabled(scoringDataDTO.getIsInsuranceEnabled())
-                .isSalaryClient(scoringDataDTO.getIsInsuranceEnabled())
+                .isSalaryClient(scoringDataDTO.getIsSalaryClient())
                 .paymentSchedule(calculationPaymentSchedules(monthlyPaymentCalc, pskCalc, creditRate))
                 .build();
 

@@ -1,19 +1,25 @@
-package com.bankprototype.creditconveyor.service.rule;
+package com.bankprototype.creditconveyor.rule;
 
 import com.bankprototype.creditconveyor.web.dto.ScoringDataDTO;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
 @Data
-@AllArgsConstructor
+@Component
 public class RateRuleEngine implements IRateRule {
 
-    List<IRateRule> rules;
+    private List<IRateRule> rateRules;
+
+    @Autowired
+    public RateRuleEngine(List<IRateRule> rateRules) {
+        this.rateRules = rateRules;
+    }
 
     @Override
     public BigDecimal getRate(ScoringDataDTO scoringDataDTO, BigDecimal rate) {
@@ -21,7 +27,7 @@ public class RateRuleEngine implements IRateRule {
 
         BigDecimal customRate = rate;
 
-        for(IRateRule rule : rules)
+        for(IRateRule rule : rateRules)
         {
             customRate = rule.getRate(scoringDataDTO, customRate);
 
