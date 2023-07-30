@@ -1,12 +1,9 @@
 package com.bankprototype.creditconveyor.web.controller;
 
-import com.bankprototype.creditconveyor.service.impl.CreditCalculationImpl;
-import com.bankprototype.creditconveyor.service.impl.PrescoringCalculationImpl;
-import com.bankprototype.creditconveyor.service.impl.ScoringCalculationImpl;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;

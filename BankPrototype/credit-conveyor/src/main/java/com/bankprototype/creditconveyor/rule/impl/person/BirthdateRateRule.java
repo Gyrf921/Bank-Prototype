@@ -18,7 +18,6 @@ public class BirthdateRateRule implements IRateRule {
     public BigDecimal getRate(ScoringDataDTO scoringDataDTO, BigDecimal rate) {
         log.info("[BirthdateRateRule.getRate] >> scoringDataDTO: {}, rate: {}", scoringDataDTO, rate);
 
-        BigDecimal customRate = rate;
         int age = Period.between(scoringDataDTO.getBirthdate(), LocalDate.now()).getYears();
 
         if (age < 20 || age > 60) {
@@ -26,8 +25,8 @@ public class BirthdateRateRule implements IRateRule {
             throw new BadScoringInfo("The client's age is less than 20 or more than 60 years");
         }
 
-        log.info("[BirthdateRateRule.getRate] << result: {}", customRate);
+        log.info("[BirthdateRateRule.getRate] << result: {}", rate);
 
-        return customRate;
+        return rate;
     }
 }

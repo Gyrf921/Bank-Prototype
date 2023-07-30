@@ -15,14 +15,12 @@ public class CurrentWorkExperienceRateRule implements IRateRule {
     public BigDecimal getRate(ScoringDataDTO scoringDataDTO, BigDecimal rate) {
         log.info("[CurrentWorkExperienceRateRule.getRate] >> scoringDataDTO: {}, rate: {}", scoringDataDTO, rate);
 
-        BigDecimal customRate = rate;
-
         if (scoringDataDTO.getEmployment().getWorkExperienceCurrent() < 3) {
             log.error("[CurrentWorkExperienceRateRule.getRate] >> The current user experience is less than 3 months, Current Work Experience is {}", scoringDataDTO.getEmployment().getWorkExperienceCurrent());
             throw new BadScoringInfo("The current user experience is less than 3 months");
         }
-        log.info("[CurrentWorkExperienceRateRule.getRate] << result: {}", customRate);
+        log.info("[CurrentWorkExperienceRateRule.getRate] << result: {}", rate);
 
-        return customRate;
+        return rate;
     }
 }

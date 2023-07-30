@@ -36,17 +36,17 @@ public class GenderRateRule implements IRateRule {
             case MALE:
                 if (age >= 30 & age <= 55)
                 {
-                    customRate = rate.subtract(BigDecimal.valueOf(3));
+                    customRate = rate.subtract(BigDecimal.valueOf(genderRateRule_Male));
                 }
                 break;
             case FEMALE:
                 if (age >= 35 & age <= 60)
                 {
-                    customRate = rate.subtract(BigDecimal.valueOf(3));
+                    customRate = rate.subtract(BigDecimal.valueOf(genderRateRule_FEMALE));
                 }
                 break;
             case NOT_BINARY:
-                customRate = rate.add(BigDecimal.valueOf(3));
+                customRate = rate.add(BigDecimal.valueOf(genderRateRule_NOT_BINARY));
                 break;
 
         }

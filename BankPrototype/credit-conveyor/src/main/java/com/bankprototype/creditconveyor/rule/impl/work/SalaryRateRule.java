@@ -15,7 +15,6 @@ public class SalaryRateRule  implements IRateRule {
     public BigDecimal getRate(ScoringDataDTO scoringDataDTO, BigDecimal rate) {
         log.info("[SalaryRateRule.getRate] >> scoringDataDTO: {}, rate: {}", scoringDataDTO, rate);
 
-        BigDecimal customRate = rate;
         BigDecimal twentySalary = scoringDataDTO.getEmployment().getSalary().multiply(BigDecimal.valueOf(20));
 
         if (twentySalary.compareTo(scoringDataDTO.getAmount()) < 0) {
@@ -23,8 +22,8 @@ public class SalaryRateRule  implements IRateRule {
             throw new BadScoringInfo("The user asks for an amount of 20 or more in excess of his salary");
         }
 
-        log.info("[SalaryRateRule.getRate] << result: {}", customRate);
+        log.info("[SalaryRateRule.getRate] << result: {}", rate);
 
-        return customRate;
+        return rate;
     }
 }

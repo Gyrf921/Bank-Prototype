@@ -1,19 +1,13 @@
 package com.bankprototype.creditconveyor.service.impl;
 
-import com.bankprototype.creditconveyor.service.ICreditCalculation;
 import com.bankprototype.creditconveyor.web.dto.LoanApplicationRequestDTO;
 import com.bankprototype.creditconveyor.web.dto.LoanOfferDTO;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
