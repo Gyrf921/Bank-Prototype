@@ -1,8 +1,7 @@
 package com.bankprototype.creditconveyor.web.controller;
 
 
-import com.bankprototype.creditconveyor.web.dto.LoanOfferDTO;
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +12,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.List;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 
@@ -34,8 +29,6 @@ class ConveyorControllerTest {
 
     @Test
     void calculationPossibleLoanOffers() throws Exception {
-        // this is the expected JSON answer
-        String responseBody = "\"requestedAmount\":1000000";
 
         ResultActions response = mockMvc.perform(post("/conveyor/offers")
                 .contentType(MediaType.APPLICATION_JSON)
