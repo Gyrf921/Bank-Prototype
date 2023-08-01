@@ -1,9 +1,10 @@
 package com.bankprototype.creditconveyor.service.impl;
 
-import com.bankprototype.creditconveyor.service.ICreditCalculation;
-import com.bankprototype.creditconveyor.service.IPrescoringCalculation;
+import com.bankprototype.creditconveyor.service.CreditCalculation;
+import com.bankprototype.creditconveyor.service.PrescoringCalculation;
 import com.bankprototype.creditconveyor.web.dto.LoanApplicationRequestDTO;
 import com.bankprototype.creditconveyor.web.dto.LoanOfferDTO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,9 +17,10 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class PrescoringCalculationImpl implements IPrescoringCalculation {
+@RequiredArgsConstructor
+public class PrescoringCalculationImpl implements PrescoringCalculation {
 
-    private final ICreditCalculation calculation;
+    private final CreditCalculation calculation;
 
     @Value("${loanRate}") //8
     private Double loanRate;
@@ -29,33 +31,28 @@ public class PrescoringCalculationImpl implements IPrescoringCalculation {
     @Value("${ratioOfSalaryClient}")
     private Double ratioOfSalaryClient;
 
-    private static final BigDecimal costInsurance = BigDecimal.valueOf(100000);
-    private static final int countMonthOfYear = 12;
+    private static final BigDecimal COST_INSURANCE = BigDecimal.valueOf(100000);
+    private static final int COUNT_MONTH_OF_YEAR = 12;
 
-    public PrescoringCalculationImpl(CreditCalculationImpl calculation) {
-        this.calculation = calculation;
-    }
 
 
     @Override
-    public List<LoanOfferDTO> createListLoanOffer(LoanApplicationRequestDTO LNR_DTO){
+    public List<LoanOfferDTO> createListLoanOffer(LoanApplicationRequestDTO requestDTO){
 
-        log.info("[createLoanOffer] >> LNR_DTO (loanApplicationRequestDTO): {}", LNR_DTO);
+        log.info("[createLoanOffer] >> requestDTO (loanApplicationRequestDTO): {}", requestDTO);
         BigDecimal creditRatio = BigDecimal.valueOf(loanRate);
         List<LoanOfferDTO> loanOfferDTOs = new LinkedList<>();
 
-
-
-        loanOfferDTOs.add(calculationLoanOffer(1L ,LNR_DTO.getAmount(), LNR_DTO.getTerm(),
+        loanOfferDTOs.add(calculateLoanOffer(1L ,requestDTO.getAmount(), requestDTO.getTerm(),
                 creditRatio.subtract(BigDecimal.valueOf(ratioOfInsuranceEnabled + ratioOfSalaryClient)), false, false));
 
-        loanOfferDTOs.add(calculationLoanOffer(2L ,LNR_DTO.getAmount().add(costInsurance), LNR_DTO.getTerm(),
+        loanOfferDTOs.add(calculateLoanOffer(2L ,requestDTO.getAmount().add(COST_INSURANCE), requestDTO.getTerm(),
                 creditRatio.subtract(BigDecimal.valueOf(ratioOfInsuranceEnabled)), true, false));
 
-        loanOfferDTOs.add(calculationLoanOffer(3L ,LNR_DTO.getAmount(), LNR_DTO.getTerm(),
+        loanOfferDTOs.add(calculateLoanOffer(3L ,requestDTO.getAmount(), requestDTO.getTerm(),
                 creditRatio.subtract(BigDecimal.valueOf(ratioOfSalaryClient)), false, true));
 
-        loanOfferDTOs.add(calculationLoanOffer(4L ,LNR_DTO.getAmount().add(costInsurance), LNR_DTO.getTerm(),
+        loanOfferDTOs.add(calculateLoanOffer(4L ,requestDTO.getAmount().add(COST_INSURANCE), requestDTO.getTerm(),
                 creditRatio, true, true));
 
 
@@ -67,8 +64,8 @@ public class PrescoringCalculationImpl implements IPrescoringCalculation {
 
 
 
-    private LoanOfferDTO calculationLoanOffer(Long applicationId, BigDecimal loanAmount, Integer termInYears,
-                                              BigDecimal creditRatio, Boolean isInsuranceEnabled, Boolean isSalaryClient) {
+    private LoanOfferDTO calculateLoanOffer(Long applicationId, BigDecimal loanAmount, Integer termInYears,
+                                            BigDecimal creditRatio, Boolean isInsuranceEnabled, Boolean isSalaryClient) {
 
         log.info("[calculationMonthlyPaymentAmount] >> applicationId: {}, loanAmount: {}, termInYears: {}, creditRatio: {}, isInsuranceEnabled: {}, isSalaryClient: {}"
                 ,applicationId, loanAmount, termInYears, creditRatio, isInsuranceEnabled, isSalaryClient);
@@ -77,7 +74,7 @@ public class PrescoringCalculationImpl implements IPrescoringCalculation {
         BigDecimal monthlyInterestRate = calculation.calculationMonthlyInterestRate(creditRatio);
         Integer interestPeriodsTerm = calculation.calculationInterestPeriodsTerm(termInYears);
         BigDecimal monthlyPaymentAmount = calculation.calculationMonthlyPayment(loanAmount, monthlyInterestRate, interestPeriodsTerm);
-        BigDecimal totalAmountCalc = calculation.calculationTotalAmount(monthlyPaymentAmount, termInYears*countMonthOfYear);
+        BigDecimal totalAmountCalc = calculation.calculationTotalAmount(monthlyPaymentAmount, termInYears* COUNT_MONTH_OF_YEAR);
 
 
         LoanOfferDTO loanOfferDTO = LoanOfferDTO.builder()

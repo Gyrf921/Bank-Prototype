@@ -2,7 +2,7 @@ package com.bankprototype.creditconveyor.service;
 
 import java.math.BigDecimal;
 
-public interface ICreditCalculation {
+public interface CreditCalculation {
 
     BigDecimal calculationMonthlyPayment(BigDecimal loanAmount, BigDecimal monthlyInterestRate, Integer interestPeriodsTerm);
 

@@ -1,10 +1,11 @@
 package com.bankprototype.creditconveyor.rule.impl.person;
 
-import com.bankprototype.creditconveyor.rule.IRateRule;
+import com.bankprototype.creditconveyor.rule.RateRule;
 import com.bankprototype.creditconveyor.web.dto.ScoringDataDTO;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -13,17 +14,17 @@ import java.time.Period;
 
 @Slf4j
 @Component
-public class GenderRateRule implements IRateRule {
+public class GenderRateRule implements RateRule {
 
 
-    @Value("${genderRateRule_Male}")
-    private Double genderRateRule_Male;
+    @Value("${genderRateRuleMale}")
+    private Double genderRateRuleMale;
 
-    @Value("${genderRateRule_FEMALE}")
-    private Double genderRateRule_FEMALE;
+    @Value("${genderRateRuleFEMALE}")
+    private Double genderRateRuleFEMALE;
 
-    @Value("${genderRateRule_NOT_BINARY}")
-    private Double genderRateRule_NOT_BINARY;
+    @Value("${genderRateRuleNOTBINARY}")
+    private Double genderRateRuleNOTBINARY;
 
     @Override
     public BigDecimal getRate(ScoringDataDTO scoringDataDTO, BigDecimal rate) {
@@ -34,19 +35,19 @@ public class GenderRateRule implements IRateRule {
         switch (scoringDataDTO.getGender())
         {
             case MALE:
-                if (age >= 30 & age <= 55)
+                if (age >= 30 && age <= 55)
                 {
-                    customRate = rate.subtract(BigDecimal.valueOf(genderRateRule_Male));
+                    customRate = rate.subtract(BigDecimal.valueOf(genderRateRuleMale));
                 }
                 break;
             case FEMALE:
-                if (age >= 35 & age <= 60)
+                if (age >= 35 && age <= 60)
                 {
-                    customRate = rate.subtract(BigDecimal.valueOf(genderRateRule_FEMALE));
+                    customRate = rate.subtract(BigDecimal.valueOf(genderRateRuleFEMALE));
                 }
                 break;
             case NOT_BINARY:
-                customRate = rate.add(BigDecimal.valueOf(genderRateRule_NOT_BINARY));
+                customRate = rate.add(BigDecimal.valueOf(genderRateRuleNOTBINARY));
                 break;
 
         }

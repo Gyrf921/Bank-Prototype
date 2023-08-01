@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class LoanOfferDTO implements Cloneable {
+public class LoanOfferDTO{
 
     private Long applicationId;
 
@@ -29,12 +29,4 @@ public class LoanOfferDTO implements Cloneable {
 
     private Boolean isSalaryClient;
 
-    @Override
-    public LoanOfferDTO clone() {
-        try {
-            return (LoanOfferDTO) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
-    }
 }

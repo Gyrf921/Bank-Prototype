@@ -1,6 +1,6 @@
 package com.bankprototype.creditconveyor.rule.impl.work;
 
-import com.bankprototype.creditconveyor.rule.IRateRule;
+import com.bankprototype.creditconveyor.rule.RateRule;
 import com.bankprototype.creditconveyor.web.dto.ScoringDataDTO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,13 +11,13 @@ import java.math.BigDecimal;
 
 @Slf4j
 @Component
-public class WorkPositionRateRule implements IRateRule {
+public class WorkPositionRateRule implements RateRule {
 
-    @Value("${workPositionRateRule_MIDDLE_MANAGER}")
-    private Double workPositionRateRule_MIDDLE_MANAGER;
+    @Value("${workPositionRateRuleMIDDLEMANAGER}")
+    private Double workPositionRateRuleMIDDLEMANAGER;
 
-    @Value("${workPositionRateRule_TOP_MANAGER}")
-    private Double workPositionRateRule_TOP_MANAGER;
+    @Value("${workPositionRateRuleTOPMANAGER}")
+    private Double workPositionRateRuleTOPMANAGER;
 
     @Override
     public BigDecimal getRate(ScoringDataDTO scoringDataDTO, BigDecimal rate) {
@@ -28,10 +28,10 @@ public class WorkPositionRateRule implements IRateRule {
         switch (scoringDataDTO.getEmployment().getPosition())
         {
             case MIDDLE_MANAGER:
-                customRate = rate.subtract(BigDecimal.valueOf(workPositionRateRule_MIDDLE_MANAGER));
+                customRate = rate.subtract(BigDecimal.valueOf(workPositionRateRuleMIDDLEMANAGER));
                 break;
             case TOP_MANAGER:
-                customRate = rate.subtract(BigDecimal.valueOf(workPositionRateRule_TOP_MANAGER));
+                customRate = rate.subtract(BigDecimal.valueOf(workPositionRateRuleTOPMANAGER));
                 break;
         }
 

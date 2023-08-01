@@ -1,7 +1,7 @@
 package com.bankprototype.creditconveyor.web.dto;
 
-import com.bankprototype.creditconveyor.web.dto.enam_for_dto.EmploymentStatus;
-import com.bankprototype.creditconveyor.web.dto.enam_for_dto.Position;
+import com.bankprototype.creditconveyor.web.dto.enamfordto.EmploymentStatus;
+import com.bankprototype.creditconveyor.web.dto.enamfordto.Position;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

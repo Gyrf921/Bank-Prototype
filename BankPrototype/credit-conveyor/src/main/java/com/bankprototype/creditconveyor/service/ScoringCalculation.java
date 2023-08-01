@@ -1,11 +1,9 @@
 package com.bankprototype.creditconveyor.service;
 
 import com.bankprototype.creditconveyor.web.dto.CreditDTO;
-import com.bankprototype.creditconveyor.web.dto.LoanApplicationRequestDTO;
-import com.bankprototype.creditconveyor.web.dto.LoanOfferDTO;
 import com.bankprototype.creditconveyor.web.dto.ScoringDataDTO;
 
-public interface IScoringCalculation {
+public interface ScoringCalculation {
 
     /**
      * Создание одного предложения по кредиту со всей вводной информацией

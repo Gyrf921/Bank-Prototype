@@ -1,11 +1,12 @@
 package com.bankprototype.creditconveyor.service.impl;
 
-import com.bankprototype.creditconveyor.service.ICreditCalculation;
-import com.bankprototype.creditconveyor.service.IScoringCalculation;
+import com.bankprototype.creditconveyor.service.CreditCalculation;
+import com.bankprototype.creditconveyor.service.ScoringCalculation;
 import com.bankprototype.creditconveyor.rule.RateRuleEngine;
 import com.bankprototype.creditconveyor.web.dto.CreditDTO;
 import com.bankprototype.creditconveyor.web.dto.PaymentScheduleElement;
 import com.bankprototype.creditconveyor.web.dto.ScoringDataDTO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,21 +20,16 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class ScoringCalculationImpl implements IScoringCalculation {
+@RequiredArgsConstructor
+public class ScoringCalculationImpl implements ScoringCalculation {
 
-    private final ICreditCalculation calculation;
+    private final CreditCalculation calculation;
     private final RateRuleEngine ruleEngine;
 
     @Value("${loanRate}")
     private Double loanRate;
 
-    private static final int countMonthOfYear = 12;
-
-    @Autowired
-    public ScoringCalculationImpl(CreditCalculationImpl calculation, RateRuleEngine ruleEngine) {
-        this.calculation = calculation;
-        this.ruleEngine = ruleEngine;
-    }
+    private static final int COUNT_MONTH_OF_YEAR = 12;
 
     @Override
     public CreditDTO createCredit(ScoringDataDTO scoringDataDTO) {
@@ -41,6 +37,11 @@ public class ScoringCalculationImpl implements IScoringCalculation {
         log.info("[createCredit] >> scoringDataDTO: {}", scoringDataDTO);
 
         BigDecimal creditRate = ruleEngine.getRate(scoringDataDTO, BigDecimal.valueOf(loanRate));
+
+        if (creditRate.equals(BigDecimal.ZERO) || creditRate.compareTo(BigDecimal.ZERO) < 0){
+
+            creditRate =  BigDecimal.ONE;
+        }
 
         CreditDTO creditDTO = calculationCredit(scoringDataDTO, creditRate);
 
@@ -56,7 +57,7 @@ public class ScoringCalculationImpl implements IScoringCalculation {
         Integer interestPeriodsTerm = calculation.calculationInterestPeriodsTerm(scoringDataDTO.getTerm());
 
         BigDecimal monthlyPaymentCalc = calculation.calculationMonthlyPayment(scoringDataDTO.getAmount(), monthlyInterestRate, interestPeriodsTerm);
-        BigDecimal pskCalc = calculation.calculationTotalAmount(monthlyPaymentCalc, scoringDataDTO.getTerm() * countMonthOfYear);
+        BigDecimal pskCalc = calculation.calculationTotalAmount(monthlyPaymentCalc, scoringDataDTO.getTerm() * COUNT_MONTH_OF_YEAR);
 
         CreditDTO creditDTO = CreditDTO.builder()
                 .amount(scoringDataDTO.getAmount())
@@ -74,6 +75,7 @@ public class ScoringCalculationImpl implements IScoringCalculation {
     }
 
     private List<PaymentScheduleElement> calculationPaymentSchedules(BigDecimal monthlyPaymentCalc, BigDecimal pskCalc, BigDecimal rate) {
+        log.info("[calculationPaymentSchedules] >> monthlyPaymentCalc: {}, pskCalc: {}, rate: {}", monthlyPaymentCalc, pskCalc, rate);
 
         List<PaymentScheduleElement> elementList = new LinkedList<>();
         int number = 0;

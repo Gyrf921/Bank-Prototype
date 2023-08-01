@@ -1,7 +1,7 @@
 package com.bankprototype.creditconveyor.web.dto;
 
-import com.bankprototype.creditconveyor.web.dto.enam_for_dto.Gender;
-import com.bankprototype.creditconveyor.web.dto.enam_for_dto.MaritalStatus;
+import com.bankprototype.creditconveyor.web.dto.enamfordto.Gender;
+import com.bankprototype.creditconveyor.web.dto.enamfordto.MaritalStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

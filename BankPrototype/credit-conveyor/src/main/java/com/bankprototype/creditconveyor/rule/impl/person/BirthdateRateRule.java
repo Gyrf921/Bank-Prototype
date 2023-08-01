@@ -1,7 +1,7 @@
 package com.bankprototype.creditconveyor.rule.impl.person;
 
-import com.bankprototype.creditconveyor.exception.BadScoringInfo;
-import com.bankprototype.creditconveyor.rule.IRateRule;
+import com.bankprototype.creditconveyor.exception.BadScoringInfoException;
+import com.bankprototype.creditconveyor.rule.RateRule;
 import com.bankprototype.creditconveyor.web.dto.ScoringDataDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ import java.time.Period;
 
 @Slf4j
 @Component
-public class BirthdateRateRule implements IRateRule {
+public class BirthdateRateRule implements RateRule {
 
     @Override
     public BigDecimal getRate(ScoringDataDTO scoringDataDTO, BigDecimal rate) {
@@ -22,7 +22,7 @@ public class BirthdateRateRule implements IRateRule {
 
         if (age < 20 || age > 60) {
             log.error("[BirthdateRateRule.getRate] >> The client's age is less than 20 or more than 60 years, age is {}", age);
-            throw new BadScoringInfo("The client's age is less than 20 or more than 60 years");
+            throw new BadScoringInfoException("The client's age is less than 20 or more than 60 years");
         }
 
         log.info("[BirthdateRateRule.getRate] << result: {}", rate);

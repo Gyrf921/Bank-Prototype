@@ -1,6 +1,7 @@
 package com.bankprototype.creditconveyor.web.controller;
 
 
+import com.bankprototype.creditconveyor.web.dto.LoanOfferDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,8 +13,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 
 @SpringBootTest
@@ -24,13 +32,10 @@ class ConveyorControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @BeforeEach
-    void setUp() {
-
-    }
-
     @Test
-    void getInfoAboutMeeting() throws Exception {
+    void calculationPossibleLoanOffers() throws Exception {
+        // this is the expected JSON answer
+        String responseBody = "\"requestedAmount\":1000000";
 
         ResultActions response = mockMvc.perform(post("/conveyor/offers")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -47,14 +52,23 @@ class ConveyorControllerTest {
                         "}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.[*].requestedAmount", hasItem(1000000)))
+                .andExpect(jsonPath("$.[*].requestedAmount", hasItem(1100000)))
+                .andExpect(jsonPath("$.[*].totalAmount", hasItem(1159689)))
+                .andExpect(jsonPath("$.[*].monthlyPayment", hasItem(16107)))
+                .andExpect(jsonPath("$.[*].rate", hasItem(5.0)))
+                .andExpect(jsonPath("$.[*].isInsuranceEnabled", hasItem(false)))
+                .andExpect(jsonPath("$.[*].isSalaryClient", hasItem(false)))
+                .andExpect(jsonPath("$.[*].isInsuranceEnabled", hasItem(true)))
+                .andExpect(jsonPath("$.[*].isSalaryClient", hasItem(true)));
 
         System.out.println(response);
 
     }
 
     @Test
-    void createMeeting() throws Exception{
+    void fullCalculationLoanParameters() throws Exception{
         ResultActions response = mockMvc.perform(post("/conveyor/calculation")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
@@ -85,7 +99,19 @@ class ConveyorControllerTest {
                                 "}")
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.amount").value(1000000))
+                .andExpect(jsonPath("$.term").value(6))
+                .andExpect(jsonPath("$.monthlyPayment").value(17047.08580))
+                .andExpect(jsonPath("$.rate").value(7.0))
+                .andExpect(jsonPath("$.psk").value(1227390.17760))
+                .andExpect(jsonPath("$.isInsuranceEnabled").value(false))
+                .andExpect(jsonPath("$.isSalaryClient").value(false))
+                .andExpect(jsonPath("$.paymentSchedule.[*].number", hasItem(1)))
+                .andExpect(jsonPath("$.paymentSchedule.[*].date", hasItem("2023-09-01")))
+                .andExpect(jsonPath("$.paymentSchedule.[*].totalPayment", hasItem(17047.08580)))
+                .andExpect(jsonPath("$.paymentSchedule.[*].interestPayment", hasItem(7057.510568285800)))
+                .andExpect(jsonPath("$.paymentSchedule.[*].debtPayment", hasItem(9989.575231714200)));
 
         System.out.println(response);
     }
@@ -126,4 +152,6 @@ class ConveyorControllerTest {
 
         System.out.println(response);
     }
+
+
 }

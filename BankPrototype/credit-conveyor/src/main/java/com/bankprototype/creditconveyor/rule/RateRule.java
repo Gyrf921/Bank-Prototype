@@ -5,6 +5,6 @@ import com.bankprototype.creditconveyor.web.dto.ScoringDataDTO;
 import java.math.BigDecimal;
 
 
-public interface IRateRule {
+public interface RateRule {
     BigDecimal getRate(ScoringDataDTO scoringDataDTO, BigDecimal rate);
 }

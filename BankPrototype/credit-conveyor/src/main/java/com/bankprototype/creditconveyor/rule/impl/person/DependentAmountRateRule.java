@@ -1,6 +1,6 @@
 package com.bankprototype.creditconveyor.rule.impl.person;
 
-import com.bankprototype.creditconveyor.rule.IRateRule;
+import com.bankprototype.creditconveyor.rule.RateRule;
 import com.bankprototype.creditconveyor.web.dto.ScoringDataDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 @Slf4j
 @Component
-public class DependentAmountRateRule implements IRateRule {
+public class DependentAmountRateRule implements RateRule {
 
     @Value("${dependentAmountRateRule}")
     private Double dependentAmountRateRule;

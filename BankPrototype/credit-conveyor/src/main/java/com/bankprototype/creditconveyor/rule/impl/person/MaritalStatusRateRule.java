@@ -1,6 +1,6 @@
 package com.bankprototype.creditconveyor.rule.impl.person;
 
-import com.bankprototype.creditconveyor.rule.IRateRule;
+import com.bankprototype.creditconveyor.rule.RateRule;
 import com.bankprototype.creditconveyor.web.dto.ScoringDataDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,13 +10,13 @@ import java.math.BigDecimal;
 
 @Slf4j
 @Component
-public class MaritalStatusRateRule implements IRateRule {
+public class MaritalStatusRateRule implements RateRule {
 
-    @Value("${maritalStatusRateRule_MARRIED}")
-    private Double maritalStatusRateRule_MARRIED;
+    @Value("${maritalStatusRateRuleMARRIED}")
+    private Double maritalStatusRateRuleMARRIED;
 
-    @Value("${maritalStatusRateRule_DIVORCED}")
-    private Double maritalStatusRateRule_DIVORCED;
+    @Value("${maritalStatusRateRuleDIVORCED}")
+    private Double maritalStatusRateRuleDIVORCED;
 
     @Override
     public BigDecimal getRate(ScoringDataDTO scoringDataDTO, BigDecimal rate) {
@@ -30,10 +30,10 @@ public class MaritalStatusRateRule implements IRateRule {
                 customRate = rate;
                 break;
             case MARRIED:
-                customRate = rate.subtract(BigDecimal.valueOf(maritalStatusRateRule_MARRIED));
+                customRate = rate.subtract(BigDecimal.valueOf(maritalStatusRateRuleMARRIED));
                 break;
             case DIVORCED:
-                customRate = rate.add(BigDecimal.valueOf(maritalStatusRateRule_DIVORCED));
+                customRate = rate.add(BigDecimal.valueOf(maritalStatusRateRuleDIVORCED));
                 break;
 
         }

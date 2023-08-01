@@ -1,6 +1,6 @@
 package com.bankprototype.creditconveyor.service.impl;
 
-import com.bankprototype.creditconveyor.service.ICreditCalculation;
+import com.bankprototype.creditconveyor.service.CreditCalculation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -9,9 +9,9 @@ import java.math.RoundingMode;
 
 @Service
 @Slf4j
-public class CreditCalculationImpl implements ICreditCalculation {
+public class CreditCalculationImpl implements CreditCalculation {
 
-    private static final int countMonthOfYear = 12;
+    private static final int COUNT_MONTH_OF_YEAR = 12;
 
     @Override
     public BigDecimal calculationMonthlyPayment(BigDecimal loanAmount, BigDecimal monthlyInterestRate, Integer interestPeriodsTerm) {
@@ -33,7 +33,7 @@ public class CreditCalculationImpl implements ICreditCalculation {
     public BigDecimal calculationMonthlyInterestRate(BigDecimal customLoanRate) {
         log.info("[calculationMonthlyInterestRate] >> customLoanRate: {}", customLoanRate);
 
-        BigDecimal denominator = BigDecimal.valueOf(100 * countMonthOfYear);
+        BigDecimal denominator = BigDecimal.valueOf(100 * COUNT_MONTH_OF_YEAR);
 
         BigDecimal scale = new BigDecimal("0.00001");
 
@@ -46,9 +46,9 @@ public class CreditCalculationImpl implements ICreditCalculation {
 
     @Override
     public Integer calculationInterestPeriodsTerm(Integer term) {
-        log.info("[calculationInterestPeriodsTerm] >> term: {}, static countMonthOfYear: {}", term, countMonthOfYear);
+        log.info("[calculationInterestPeriodsTerm] >> term: {}, static countMonthOfYear: {}", term, COUNT_MONTH_OF_YEAR);
 
-        Integer interestPeriodsTerm = (countMonthOfYear * term) * -1;
+        Integer interestPeriodsTerm = (COUNT_MONTH_OF_YEAR * term) * -1;
 
         log.info("[calculationInterestPeriodsTerm] << result: {}", interestPeriodsTerm);
 

@@ -1,8 +1,11 @@
 package com.bankprototype.creditconveyor.service.impl;
 
+import com.bankprototype.creditconveyor.exception.BadScoringInfoException;
 import com.bankprototype.creditconveyor.rule.RateRuleEngine;
 import com.bankprototype.creditconveyor.web.dto.CreditDTO;
+import com.bankprototype.creditconveyor.web.dto.EmploymentDTO;
 import com.bankprototype.creditconveyor.web.dto.ScoringDataDTO;
+import com.bankprototype.creditconveyor.web.dto.enamfordto.EmploymentStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,9 +15,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -80,6 +85,75 @@ class ScoringCalculationImplTest {
         verify(calculation, times(1)).calculationInterestPeriodsTerm(any());
         verify(calculation, times(1)).calculationMonthlyPayment(any(), any(), any());
         verify(calculation, times(1)).calculationTotalAmount(any(), any());
+
+    }
+
+    @Test
+    void createCreditExceptionBirthdate() {
+        ScoringDataDTO scoringDataDTO = ScoringDataDTO.builder()
+                .term(6)
+                .amount(BigDecimal.valueOf(1000000))
+                .birthdate(LocalDate.now())
+                .build();
+
+        when(ruleEngine.getRate(any(), any()))
+                .thenThrow(new BadScoringInfoException("The client's age is less than 20 or more than 60 years"));
+
+        assertThrows(BadScoringInfoException.class, () -> {
+            CreditDTO creditDTO = scoringCalculation.createCredit(scoringDataDTO);
+            System.out.println(creditDTO);
+        });
+
+        verify(calculation, times(0)).calculationMonthlyInterestRate(any());
+        verify(calculation, times(0)).calculationInterestPeriodsTerm(any());
+        verify(calculation, times(0)).calculationMonthlyPayment(any(), any(), any());
+        verify(calculation, times(0)).calculationTotalAmount(any(), any());
+
+    }
+    @Test
+    void createCreditExceptionEmploymentStatus() {
+        ScoringDataDTO scoringDataDTO = ScoringDataDTO.builder()
+                .employment(EmploymentDTO.builder().employmentStatus(EmploymentStatus.UNEMPLOYED).build())
+                .build();
+
+        when(ruleEngine.getRate(any(), any()))
+                .thenThrow(new BadScoringInfoException("The user is unemployed"));
+
+        assertThrows(BadScoringInfoException.class, () -> {
+            CreditDTO creditDTO = scoringCalculation.createCredit(scoringDataDTO);
+            System.out.println(creditDTO);
+        });
+
+    }
+    @Test
+    void createCreditExceptionSalary() {
+        ScoringDataDTO scoringDataDTO = ScoringDataDTO.builder()
+                .amount(BigDecimal.valueOf(999999999))
+                .employment(EmploymentDTO.builder().salary(BigDecimal.valueOf(100)).build())
+                .build();
+
+        when(ruleEngine.getRate(any(), any()))
+                .thenThrow(new BadScoringInfoException("The user asks for an amount of 20 or more in excess of his salary"));
+
+        assertThrows(BadScoringInfoException.class, () -> {
+            CreditDTO creditDTO = scoringCalculation.createCredit(scoringDataDTO);
+            System.out.println(creditDTO);
+        });
+
+    }
+    @Test
+    void createCreditExceptionTotalWorkExperience() {
+        ScoringDataDTO scoringDataDTO = ScoringDataDTO.builder()
+                .employment(EmploymentDTO.builder().workExperienceTotal(3).build())
+                .build();
+
+        when(ruleEngine.getRate(any(), any()))
+                .thenThrow(new BadScoringInfoException("The total user experience is less than 12 months"));
+
+        assertThrows(BadScoringInfoException.class, () -> {
+            CreditDTO creditDTO = scoringCalculation.createCredit(scoringDataDTO);
+            System.out.println(creditDTO);
+        });
 
     }
 }

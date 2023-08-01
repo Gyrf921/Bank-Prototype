@@ -6,7 +6,7 @@ import com.bankprototype.creditconveyor.web.dto.LoanOfferDTO;
 
 import java.util.List;
 
-public interface IPrescoringCalculation {
+public interface PrescoringCalculation {
 
 
     /**
