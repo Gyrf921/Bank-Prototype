@@ -25,7 +25,7 @@ class ConveyorControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    void calculationPossibleLoanOffers() throws Exception {
+    void calculatePossibleLoanOffers() throws Exception {
 
         ResultActions response = mockMvc.perform(post("/conveyor/offers")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -58,7 +58,7 @@ class ConveyorControllerTest {
     }
 
     @Test
-    void fullCalculationLoanParameters() throws Exception{
+    void calculateFullLoanParameters() throws Exception{
         ResultActions response = mockMvc.perform(post("/conveyor/calculation")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
@@ -106,7 +106,7 @@ class ConveyorControllerTest {
     }
 
     @Test
-    void createMeetingExceptionUserIsUNEMPLOYED() throws Exception{
+    void calculateFullLoanParametersExceptionUserIsUNEMPLOYED() throws Exception{
         ResultActions response = mockMvc.perform(post("/conveyor/calculation")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
