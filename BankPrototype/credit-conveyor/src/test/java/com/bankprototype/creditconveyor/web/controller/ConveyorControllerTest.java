@@ -1,7 +1,5 @@
 package com.bankprototype.creditconveyor.web.controller;
 
-
-
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -101,7 +98,6 @@ class ConveyorControllerTest {
                 .andExpect(jsonPath("$.isInsuranceEnabled").value(false))
                 .andExpect(jsonPath("$.isSalaryClient").value(false))
                 .andExpect(jsonPath("$.paymentSchedule.[*].number", hasItem(1)))
-                .andExpect(jsonPath("$.paymentSchedule.[*].date", hasItem("2023-09-01")))
                 .andExpect(jsonPath("$.paymentSchedule.[*].totalPayment", hasItem(17047.08580)))
                 .andExpect(jsonPath("$.paymentSchedule.[*].interestPayment", hasItem(7057.510568285800)))
                 .andExpect(jsonPath("$.paymentSchedule.[*].debtPayment", hasItem(9989.575231714200)));

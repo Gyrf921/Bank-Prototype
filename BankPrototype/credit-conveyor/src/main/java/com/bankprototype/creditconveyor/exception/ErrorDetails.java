@@ -10,7 +10,7 @@ public class ErrorDetails {
 
     private int statusCode;
 
-    private int business_error_code;
+    private int businessErrorCode;
 
     private LocalDate timestamp;
 

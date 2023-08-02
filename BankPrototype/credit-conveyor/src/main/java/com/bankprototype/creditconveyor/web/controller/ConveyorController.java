@@ -26,7 +26,7 @@ public class ConveyorController {
     }
 
     @PostMapping("/offers")
-    public List<LoanOfferDTO> calculationPossibleLoanOffers(@Valid @RequestBody LoanApplicationRequestDTO loanApplicationRequestDTO)
+    public List<LoanOfferDTO> calculatePossibleLoanOffers(@Valid @RequestBody LoanApplicationRequestDTO loanApplicationRequestDTO)
     {
         log.info("[calculationPossibleLoanOffers] >> loanApplicationRequestDTO: {}", loanApplicationRequestDTO);
 
@@ -39,7 +39,7 @@ public class ConveyorController {
     }
 
     @PostMapping("/calculation")
-    public CreditDTO fullCalculationLoanParameters(@Valid @RequestBody ScoringDataDTO scoringDataDTO)
+    public CreditDTO calculateFullLoanParameters(@Valid @RequestBody ScoringDataDTO scoringDataDTO)
     {
         log.info("[fullCalculationLoanParameters] >> scoringDataDTO: {}", scoringDataDTO);
 
