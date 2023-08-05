@@ -36,7 +36,6 @@ class PrescoringCalculationImplTest {
     @Test
     void createListLoanOffer() {
 
-
         LoanApplicationRequestDTO LNR_DTO = LoanApplicationRequestDTO.builder()
                 .amount(BigDecimal.valueOf(1000000))
                 .term(6)

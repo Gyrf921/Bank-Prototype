@@ -67,7 +67,6 @@ class ScoringCalculationImplTest {
 
         System.out.println(creditDTO);
 
-
         assertEquals(creditDTO.getPsk(), pskCalc);
         assertEquals(creditDTO.getMonthlyPayment(), monthlyPaymentCalc);
 

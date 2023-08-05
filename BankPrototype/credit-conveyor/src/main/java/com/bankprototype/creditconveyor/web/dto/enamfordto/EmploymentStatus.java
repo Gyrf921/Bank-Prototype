@@ -1,6 +1,6 @@
 package com.bankprototype.creditconveyor.web.dto.enamfordto;
 
 public enum EmploymentStatus {
-    UNEMPLOYED, SELF_EMPLOYED, BUSINESS_OWNER
+    UNEMPLOYED, SELF_EMPLOYED, EMPLOYED, BUSINESS_OWNER
 
 }

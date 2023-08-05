@@ -16,6 +16,9 @@ public class EmploymentStatusRateRule implements RateRule {
     @Value("${employmentStatusRateRuleBUSINESSOWNER}")
     private Double employmentStatusRateRuleBUSINESSOWNER;
 
+    @Value("${employmentStatusRateRuleEMPLOYED}")
+    private Double employmentStatusRateRuleEMPLOYED;
+
     @Value("${employmentStatusRateRuleSELFEMPLOYED}")
     private Double employmentStatusRateRuleSELFEMPLOYED;
 
@@ -32,6 +35,9 @@ public class EmploymentStatusRateRule implements RateRule {
                 break;
             case SELF_EMPLOYED:
                 customRate = rate.add(BigDecimal.valueOf(employmentStatusRateRuleSELFEMPLOYED));
+                break;
+            case EMPLOYED:
+                customRate = rate.add(BigDecimal.valueOf(employmentStatusRateRuleEMPLOYED));
                 break;
             case UNEMPLOYED:
                 log.error("[EmploymentStatusRateRule.getRate] >> The user has EmploymentStatus: UNEMPLOYED");

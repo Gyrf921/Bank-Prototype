@@ -12,12 +12,17 @@ import java.math.BigDecimal;
 @Component
 public class MaritalStatusRateRule implements RateRule {
 
+    @Value("${maritalStatusRateRuleSINGLE}")
+    private Double maritalStatusRateRuleSINGLE;
+
     @Value("${maritalStatusRateRuleMARRIED}")
     private Double maritalStatusRateRuleMARRIED;
 
     @Value("${maritalStatusRateRuleDIVORCED}")
     private Double maritalStatusRateRuleDIVORCED;
 
+    @Value("${maritalStatusRateRuleWIDOWWIDOWER}")
+    private Double maritalStatusRateRuleWIDOWWIDOWER;
     @Override
     public BigDecimal getRate(ScoringDataDTO scoringDataDTO, BigDecimal rate) {
         log.info("[MaritalStatusRateRule.getRate] >> scoringDataDTO: {}, rate: {}", scoringDataDTO, rate);
@@ -27,7 +32,7 @@ public class MaritalStatusRateRule implements RateRule {
         switch (scoringDataDTO.getMaritalStatus())
         {
             case SINGLE:
-                customRate = rate;
+                customRate = rate.subtract(BigDecimal.valueOf(maritalStatusRateRuleSINGLE));
                 break;
             case MARRIED:
                 customRate = rate.subtract(BigDecimal.valueOf(maritalStatusRateRuleMARRIED));
@@ -35,7 +40,9 @@ public class MaritalStatusRateRule implements RateRule {
             case DIVORCED:
                 customRate = rate.add(BigDecimal.valueOf(maritalStatusRateRuleDIVORCED));
                 break;
-
+            case WIDOW_WIDOWER:
+                customRate = rate.subtract(BigDecimal.valueOf(maritalStatusRateRuleWIDOWWIDOWER));
+                break;
         }
 
         log.info("[MaritalStatusRateRule.getRate] << result: {}", customRate);
