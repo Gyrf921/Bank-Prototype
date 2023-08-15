@@ -1,4 +1,4 @@
-package com.bankprototype.creditconveyor.exception;
+package com.bankprototype.deal.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -12,14 +12,15 @@ import java.time.LocalDate;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-    @ExceptionHandler(BadScoringInfoException.class)
-    public ResponseEntity<?> badScoringInfoException(BadScoringInfoException ex, WebRequest request) {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<?> resourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
         log.error(ex.getMessage(), ex);
 
-        //100 - ошибка валидации данных
-        ErrorDetails errorDetails = new ErrorDetails(HttpStatus.BAD_REQUEST.value(), 100, LocalDate.now(), ex.getMessage(), request.getDescription(false));
+        //1000 - ошибка поиска по БД
+        ErrorDetails errorDetails = new ErrorDetails(HttpStatus.NOT_FOUND.value(), 1000, LocalDate.now(), ex.getMessage(), request.getDescription(false));
 
-        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)

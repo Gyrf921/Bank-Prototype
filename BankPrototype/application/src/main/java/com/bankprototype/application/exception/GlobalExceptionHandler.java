@@ -1,4 +1,4 @@
-package com.bankprototype.creditconveyor.exception;
+package com.bankprototype.application.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -12,8 +12,9 @@ import java.time.LocalDate;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-    @ExceptionHandler(BadScoringInfoException.class)
-    public ResponseEntity<?> badScoringInfoException(BadScoringInfoException ex, WebRequest request) {
+
+    @ExceptionHandler(BirthdateException.class)
+    public ResponseEntity<?> badBirthdateException(BirthdateException ex, WebRequest request) {
         log.error(ex.getMessage(), ex);
 
         //100 - ошибка валидации данных
