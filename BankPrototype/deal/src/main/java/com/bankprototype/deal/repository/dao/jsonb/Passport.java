@@ -3,7 +3,8 @@ package com.bankprototype.deal.repository.dao.jsonb;
 
 import lombok.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 @Builder
 @Data
 @AllArgsConstructor
@@ -16,5 +17,5 @@ public class Passport{
 
     private String issueBranch;
 
-    private Timestamp issueDate;
+    private LocalDateTime issueDate;
 }

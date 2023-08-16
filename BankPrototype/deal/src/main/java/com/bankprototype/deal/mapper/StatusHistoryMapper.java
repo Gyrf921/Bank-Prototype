@@ -12,14 +12,9 @@ import java.time.LocalDateTime;
 
 @Mapper
 public interface StatusHistoryMapper {
-    StatusHistoryMapper INSTANCE = Mappers.getMapper(StatusHistoryMapper.class );
 
-    @Mapping(target = "time", source = "applicationStatusHistoryDTO.time", qualifiedByName = "localDateTimeToTimestamp")
+    @Mapping(target = "time", source = "applicationStatusHistoryDTO.time")
     StatusHistory applicationStatusHistoryDtoToStatusHistory(ApplicationStatusHistoryDTO applicationStatusHistoryDTO);
 
-    @Named("localDateTimeToTimestamp")
-    static Timestamp localDateTimeToTimestamp(LocalDateTime time) {
-        return Timestamp.valueOf(time);
-    }
 }
 

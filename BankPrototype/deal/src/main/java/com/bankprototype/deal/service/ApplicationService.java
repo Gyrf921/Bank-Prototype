@@ -1,6 +1,7 @@
 package com.bankprototype.deal.service;
 
 import com.bankprototype.deal.repository.dao.Application;
+import com.bankprototype.deal.repository.dao.Client;
 import com.bankprototype.deal.repository.dao.enumfordao.ApplicationStatus;
 import com.bankprototype.deal.web.dto.LoanOfferDTO;
 
@@ -16,10 +17,10 @@ public interface ApplicationService {
 
     /**
      * Create Application and save to DB
-     * @param clientId - client id for application
+     * @param client - client for application
      * @return saved application
      */
-    Application createApplication(Long clientId);
+    Application createApplication(Client client);
 
 
     /**

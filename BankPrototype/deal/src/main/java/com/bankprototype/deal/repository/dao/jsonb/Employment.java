@@ -2,12 +2,12 @@ package com.bankprototype.deal.repository.dao.jsonb;
 
 import com.bankprototype.deal.repository.dao.enumfordao.EmploymentPosition;
 import com.bankprototype.deal.repository.dao.enumfordao.EmploymentStatus;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Builder

@@ -1,14 +1,13 @@
 package com.bankprototype.deal.repository.dao;
 
 import com.bankprototype.deal.web.dto.PaymentScheduleElement;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import org.hibernate.annotations.Type;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -41,8 +40,8 @@ public class Credit {
     @Column(name = "psk")
     private BigDecimal psk;
 
-    @Column(name = "payment_schedule")
-    @JdbcTypeCode(SqlTypes.JSON)
+    @Type(type = "json")
+    @Column(name = "payment_schedule", columnDefinition = "json")
     private List<PaymentScheduleElement> paymentSchedule;
 
     @Column(name = "insurance_enable")

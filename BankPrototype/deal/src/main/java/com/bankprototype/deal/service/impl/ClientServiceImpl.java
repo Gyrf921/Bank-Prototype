@@ -9,6 +9,7 @@ import com.bankprototype.deal.repository.ClientRepository;
 import com.bankprototype.deal.service.ClientService;
 import com.bankprototype.deal.web.dto.FinishRegistrationRequestDTO;
 import com.bankprototype.deal.web.dto.LoanApplicationRequestDTO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +17,13 @@ import java.sql.Timestamp;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;
 
-    public ClientServiceImpl(ClientRepository clientRepository) {
-        this.clientRepository = clientRepository;
-    }
+    private final EmploymentMapper employmentMapper;
+
 
     @Override
     public Client getClientById(Long id) {
@@ -78,7 +79,7 @@ public class ClientServiceImpl implements ClientService {
         Passport passport = Passport.builder()
                 .number(client.getPassport().getNumber())
                 .series(client.getPassport().getSeries())
-                .issueDate(Timestamp.valueOf(requestDTO.getPassportIssueDate().atStartOfDay()))
+                .issueDate(requestDTO.getPassportIssueDate().atStartOfDay())
                 .issueBranch(requestDTO.getPassportIssueBrach())
                 .build();
 
@@ -86,7 +87,7 @@ public class ClientServiceImpl implements ClientService {
         client.setMaritalStatus(requestDTO.getMaritalStatus());
         client.setAccount(requestDTO.getAccount());
         client.setPassport(passport);
-        client.setEmployment(EmploymentMapper.INSTANCE.employmentDtoToEmployment(requestDTO.getEmployment()));
+        client.setEmployment(employmentMapper.employmentDtoToEmployment(requestDTO.getEmployment()));
 
         Client updatedClient = clientRepository.save(client);
 

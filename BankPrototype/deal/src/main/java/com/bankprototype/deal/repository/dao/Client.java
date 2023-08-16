@@ -5,14 +5,13 @@ import com.bankprototype.deal.repository.dao.enumfordao.Gender;
 import com.bankprototype.deal.repository.dao.enumfordao.MaritalStatus;
 import com.bankprototype.deal.repository.dao.jsonb.Employment;
 import com.bankprototype.deal.repository.dao.jsonb.Passport;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import org.hibernate.annotations.Type;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 @Builder
@@ -51,12 +50,12 @@ public class Client {
     @Column(name = "dependent_amount")
     private BigDecimal dependentAmount;
 
-    @Column(name = "passport_id")
-    @JdbcTypeCode(SqlTypes.JSON)
+    @Type(type = "json")
+    @Column(name = "passport_id", columnDefinition = "json")
     private Passport passport;
 
-    @Column(name = "employment_id")
-    @JdbcTypeCode(SqlTypes.JSON)
+    @Type(type = "json")
+    @Column(name = "employment_id", columnDefinition = "json")
     private Employment employment;
 
     @Column(name = "account")

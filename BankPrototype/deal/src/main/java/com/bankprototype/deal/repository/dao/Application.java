@@ -2,15 +2,15 @@ package com.bankprototype.deal.repository.dao;
 
 import com.bankprototype.deal.repository.dao.jsonb.StatusHistory;
 import com.bankprototype.deal.web.dto.LoanOfferDTO;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import org.hibernate.annotations.Type;
 
+import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
@@ -27,19 +27,23 @@ public class Application {
     private Long applicationId;
 
     @Column(name = "client_id")
-    private Long clientId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "client_id", referencedColumnName = "client_id")
+    private Client clientId;
 
     @Column(name = "credit_id")
-    private Long creditId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "credit_id", referencedColumnName = "credit_id")
+    private Credit creditId;
 
     @Column(name = "status")
     private String status;
 
     @Column(name = "creation_date")
-    private Timestamp creationDate;
+    private LocalDateTime creationDate;
 
-    @Column(name = "applied_offer")
-    @JdbcTypeCode(SqlTypes.JSON)
+    @Type(type = "json")
+    @Column(name = "applied_offer", columnDefinition = "json")
     private LoanOfferDTO appliedOffer;
 
     @Column(name = "sign_date")
@@ -48,7 +52,7 @@ public class Application {
     @Column(name = "ses_code")
     private Long sesCode;
 
-    @Column(name = "status_history")
-    @JdbcTypeCode(SqlTypes.JSON)
+    @Type(type = "json")
+    @Column(name = "status_history", columnDefinition = "json")
     private List<StatusHistory> statusHistory;
 }

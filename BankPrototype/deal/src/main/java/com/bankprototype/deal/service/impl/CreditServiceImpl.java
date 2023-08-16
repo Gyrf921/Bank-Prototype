@@ -25,6 +25,8 @@ public class CreditServiceImpl implements CreditService {
 
     private final ApplicationRepository applicationRepository;
 
+    private final CreditMapper creditMapper;
+
     @Override
     public ScoringDataDTO createScoringDataDTO(FinishRegistrationRequestDTO requestDTO, Client client, LoanOfferDTO loanOfferDTO) {
         log.info("[createScoringDataDTO] >> requestDTO:{}, client: {}, loanOfferDTO: {}", requestDTO, client, loanOfferDTO);
@@ -57,10 +59,11 @@ public class CreditServiceImpl implements CreditService {
     public Credit createCredit(CreditDTO creditDTO, Application application) {
         log.info("[createCredit] >> creditDTO: {}", creditDTO);
 
-        Credit credit = CreditMapper.INSTANCE.creditDtoToCredit(creditDTO);
+        Credit credit = creditMapper.creditDtoToCredit(creditDTO);
         credit.setCreditStatus(CreditStatus.CALCULATED.name());
 
-        application.setCreditId(credit.getCreditId());
+        //Todo Хрень какая-то
+        application.setCreditId(credit);
         applicationRepository.save(application);
 
         Credit savedCredit = creditRepository.save(credit);

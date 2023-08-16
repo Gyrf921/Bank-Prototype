@@ -8,7 +8,6 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface EmploymentMapper {
-    EmploymentMapper INSTANCE = Mappers.getMapper(EmploymentMapper.class );
 
     @Mapping(target = "employmentStatus", source = "employment.status")
     @Mapping(target = "employerINN", source = "employment.employerInn")

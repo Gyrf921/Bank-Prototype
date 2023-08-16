@@ -4,6 +4,7 @@ import com.bankprototype.deal.mapper.StatusHistoryMapper;
 import com.bankprototype.deal.repository.dao.Application;
 import com.bankprototype.deal.exception.ResourceNotFoundException;
 import com.bankprototype.deal.repository.ApplicationRepository;
+import com.bankprototype.deal.repository.dao.Client;
 import com.bankprototype.deal.repository.dao.enumfordao.ApplicationStatus;
 import com.bankprototype.deal.repository.dao.enumfordao.ChangeType;
 import com.bankprototype.deal.repository.dao.jsonb.StatusHistory;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -36,12 +38,19 @@ class ApplicationServiceImplTest {
     private ApplicationServiceImpl applicationService;
 
 
+    private StatusHistoryMapper statusHistoryMapper;
+
+
     @Test
     void getApplicationById() {
         Long applicationId = 1L;
 
+        Client client = Client.builder()
+                .clientId(1L).build();
+
         Application applicationTest = Application.builder()
-                .clientId(applicationId)
+                .applicationId(applicationId)
+                .clientId(client)
                 .status("PREAPPROVAL")
                 .build();
 
@@ -79,21 +88,22 @@ class ApplicationServiceImplTest {
     @Test
     void createApplication() {
 
-        Long clientId = 3L;
+        Client client = Client.builder()
+                .clientId(3l).build();
 
         ApplicationStatusHistoryDTO applicationStatusHistoryDTO = ApplicationStatusHistoryDTO.builder()
                 .status(ApplicationStatus.PREAPPROVAL)
                 .time(LocalDateTime.now())
                 .changeType(ChangeType.AUTOMATIC)
                 .build();
-        List<StatusHistory> listStatus = List.of(StatusHistoryMapper.INSTANCE.applicationStatusHistoryDtoToStatusHistory(applicationStatusHistoryDTO));
+        List<StatusHistory> listStatus = List.of(statusHistoryMapper.applicationStatusHistoryDtoToStatusHistory(applicationStatusHistoryDTO));
 
         Application applicationTest = Application.builder()
                 .applicationId(1L)
-                .clientId(clientId)
+                .clientId(client)
                 .creditId(null)
                 .status(ApplicationStatus.PREAPPROVAL.name())
-                .creationDate(Timestamp.valueOf(LocalDateTime.now()))
+                .creationDate(LocalDateTime.now())
                 .appliedOffer(null)
                 .signDate(null)
                 .sesCode(null)
@@ -103,11 +113,11 @@ class ApplicationServiceImplTest {
         when(applicationRepository.save(any()))
                 .thenReturn(applicationTest);
 
-        Application applicationSaved = applicationService.createApplication(clientId);
+        Application applicationSaved = applicationService.createApplication(client);
 
         System.out.println(applicationSaved);
 
-        assertEquals(applicationSaved.getClientId(), clientId);
+        assertEquals(applicationSaved.getClientId(), client);
         assertEquals(applicationSaved.getApplicationId(), applicationTest.getApplicationId());
 
         assertEquals(applicationSaved.getStatusHistory().size(), 1);
@@ -118,7 +128,8 @@ class ApplicationServiceImplTest {
 
     @Test
     void updateStatusHistoryForApplication() {
-        Long applicationId = 1L;
+        Client client = Client.builder()
+                .clientId(1L).build();
 
         ApplicationStatusHistoryDTO applicationStatusHistoryDTO = ApplicationStatusHistoryDTO.builder()
                 .status(ApplicationStatus.PREAPPROVAL)
@@ -126,10 +137,10 @@ class ApplicationServiceImplTest {
                 .changeType(ChangeType.AUTOMATIC)
                 .build();
         List<StatusHistory> listStatus = new LinkedList<>();
-        listStatus.add(StatusHistoryMapper.INSTANCE.applicationStatusHistoryDtoToStatusHistory(applicationStatusHistoryDTO));
+        listStatus.add(statusHistoryMapper.applicationStatusHistoryDtoToStatusHistory(applicationStatusHistoryDTO));
         Application applicationTestBefore = Application.builder()
-                .applicationId(applicationId)
-                .clientId(applicationId)
+                .applicationId(1L)
+                .clientId(client)
                 .status(ApplicationStatus.PREAPPROVAL.name())
                 .statusHistory(listStatus)
                 .build();
@@ -144,8 +155,8 @@ class ApplicationServiceImplTest {
                 .build();
 
         Application applicationTestAfter = Application.builder()
-                .applicationId(applicationId)
-                .clientId(applicationId)
+                .applicationId(1l)
+                .clientId(client)
                 .status(status.name())
                 .statusHistory(listStatus)
                 .appliedOffer(loanOfferDTO)

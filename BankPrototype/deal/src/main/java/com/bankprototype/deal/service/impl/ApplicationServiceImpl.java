@@ -1,6 +1,7 @@
 package com.bankprototype.deal.service.impl;
 
 import com.bankprototype.deal.repository.dao.Application;
+import com.bankprototype.deal.repository.dao.Client;
 import com.bankprototype.deal.repository.dao.enumfordao.ApplicationStatus;
 import com.bankprototype.deal.repository.dao.enumfordao.ChangeType;
 import com.bankprototype.deal.repository.dao.jsonb.StatusHistory;
@@ -10,6 +11,7 @@ import com.bankprototype.deal.repository.ApplicationRepository;
 import com.bankprototype.deal.service.ApplicationService;
 import com.bankprototype.deal.web.dto.ApplicationStatusHistoryDTO;
 import com.bankprototype.deal.web.dto.LoanOfferDTO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +21,13 @@ import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ApplicationServiceImpl implements ApplicationService {
 
     private final ApplicationRepository applicationRepository;
 
-    public ApplicationServiceImpl(ApplicationRepository applicationRepository) {
-        this.applicationRepository = applicationRepository;
-    }
+    private final StatusHistoryMapper statusHistoryMapper;
+
 
 
     @Override
@@ -44,8 +46,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 
 
     @Override
-    public Application createApplication(Long clientId) {
-        log.info("[createApplication] >> clientId: {}", clientId);
+    public Application createApplication(Client client) {
+        log.info("[createApplication] >> client: {}", client);
 
         ApplicationStatusHistoryDTO applicationStatusHistoryDTO = ApplicationStatusHistoryDTO.builder()
                 .status(ApplicationStatus.PREAPPROVAL)
@@ -53,13 +55,13 @@ public class ApplicationServiceImpl implements ApplicationService {
                 .changeType(ChangeType.AUTOMATIC)
                 .build();
 
-        List<StatusHistory> listStatus = List.of(StatusHistoryMapper.INSTANCE.applicationStatusHistoryDtoToStatusHistory(applicationStatusHistoryDTO));
+        List<StatusHistory> listStatus = List.of(statusHistoryMapper.applicationStatusHistoryDtoToStatusHistory(applicationStatusHistoryDTO));
 
         Application application = Application.builder()
-                .clientId(clientId)
+                .clientId(client)
                 .creditId(null)
                 .status(ApplicationStatus.PREAPPROVAL.name())
-                .creationDate(Timestamp.valueOf(LocalDateTime.now()))
+                .creationDate(LocalDateTime.now())
                 .appliedOffer(null)
                 .signDate(null)
                 .sesCode(null)
@@ -87,7 +89,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         List<StatusHistory> listStatusHistory = application.getStatusHistory();
 
-        listStatusHistory.add(StatusHistoryMapper.INSTANCE.applicationStatusHistoryDtoToStatusHistory(applicationStatusForHistory));
+        listStatusHistory.add(statusHistoryMapper.applicationStatusHistoryDtoToStatusHistory(applicationStatusForHistory));
 
         application.setStatus(status.name());
         application.setStatusHistory(listStatusHistory);

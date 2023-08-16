@@ -2,14 +2,14 @@ package com.bankprototype.deal.web.dto;
 
 import com.bankprototype.deal.repository.dao.enumfordao.Gender;
 import com.bankprototype.deal.repository.dao.enumfordao.MaritalStatus;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 @Builder

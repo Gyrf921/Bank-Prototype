@@ -12,14 +12,15 @@ import com.bankprototype.deal.repository.dao.Application;
 import com.bankprototype.deal.repository.dao.Client;
 import com.bankprototype.deal.repository.dao.enumfordao.ApplicationStatus;
 import com.bankprototype.deal.web.feign.CreditConveyorFeignClient;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.Valid;
+//import io.swagger.v3.oas.annotations.Operation;
+//import io.swagger.v3.oas.annotations.responses.ApiResponse;
+//import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -27,7 +28,6 @@ import java.util.List;
 @RequestMapping("/deal")
 public class DealController {
     private final CreditConveyorFeignClient feignClient;
-
     private final ClientService clientService;
     private final ApplicationService applicationService;
     private final CreditService creditService;
@@ -39,8 +39,11 @@ public class DealController {
         this.creditService = creditService;
     }
 
-    @Operation(summary = "Calculate 4 loan offers")
-    @ApiResponses(value = { @ApiResponse(responseCode = "500", description = "Validation failed for some argument") })
+   /* @Operation(summary = "Calculate 4 loan offers")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Client and application was created. Loan Offers have been calculated"),
+            @ApiResponse(responseCode = "400", description = "Validation failed for some argument. Invalid input supplied"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")})*/
     @PostMapping("/application")
     public List<LoanOfferDTO> calculatePossibleLoanOffers(@Valid @RequestBody LoanApplicationRequestDTO requestDTO)
     {
@@ -48,7 +51,7 @@ public class DealController {
 
         Client client = clientService.createClient(requestDTO);
 
-        Application application = applicationService.createApplication(client.getClientId());
+        Application application = applicationService.createApplication(client);
 
         List<LoanOfferDTO> listLoanOffers = feignClient.calculatePossibleLoanOffers(requestDTO);
 
@@ -59,8 +62,11 @@ public class DealController {
         return listLoanOffers;
     }
 
-    @Operation(summary = "Choose one of the loan offers")
-    @ApiResponses(value = { @ApiResponse(responseCode = "404", description = "Not found application") })
+   /* @Operation(summary = "Choose one of the loan offers")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Status history for application has been updated"),
+            @ApiResponse(responseCode = "404", description = "Not found application"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")})*/
     @PutMapping("/offer")
     public void chooseOneOfTheOffers(@RequestBody LoanOfferDTO loanOfferDTO)
     {
@@ -72,10 +78,12 @@ public class DealController {
         log.info("[chooseOneOfTheOffers] << result: {}", application);
     }
 
-    @Operation(summary = "Completion registration", description = "Completion of registration and calculation of full loan terms")
+   /* @Operation(summary = "Completion registration", description = "Completion of registration and calculation of full loan terms")
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Status history for application has been updated"),
+            @ApiResponse(responseCode = "400", description = "Validation failed for some argument. Invalid input supplied"),
             @ApiResponse(responseCode = "404", description = "Not found some resource in database"),
-            @ApiResponse(responseCode = "500", description = "Validation failed for some argument") })
+            @ApiResponse(responseCode = "500", description = "Validation failed for some argument") })*/
     @PostMapping("/calculate/{applicationId}")
     public void completionRegistrationAndCalculateFullCredit(@PathVariable(value = "applicationId") Long applicationId,
                                                              @Valid @RequestBody FinishRegistrationRequestDTO requestDTO)
@@ -84,7 +92,7 @@ public class DealController {
 
         Application application = applicationService.getApplicationById(applicationId);
 
-        Client client = clientService.updateClient(application.getClientId(), requestDTO);
+        Client client = clientService.updateClient(application.getClientId().getClientId(), requestDTO);
 
         ScoringDataDTO scoringDataDTO = creditService.createScoringDataDTO(requestDTO, client, application.getAppliedOffer());
 

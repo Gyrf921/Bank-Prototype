@@ -7,7 +7,7 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface CreditMapper {
-    CreditMapper INSTANCE = Mappers.getMapper(CreditMapper.class );
+    //CreditMapper INSTANCE = Mappers.getMapper(CreditMapper.class );
 
     @Mapping(target = "insuranceEnable", source = "creditDTO.isInsuranceEnabled")
     @Mapping(target = "salaryClient", source = "creditDTO.isSalaryClient")

@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -34,6 +35,9 @@ class CreditServiceImplTest {
 
     @InjectMocks
     private CreditServiceImpl creditService;
+
+    @InjectMocks
+    private CreditMapper creditMapper;
 
     @Test
     void createScoringDataDTO() {
@@ -91,7 +95,9 @@ class CreditServiceImplTest {
                 .totalPayment(BigDecimal.valueOf(16101)).build();
         PaymentScheduleElement payment2 = PaymentScheduleElement.builder()
                 .totalPayment(BigDecimal.valueOf(16101)).build();
-        List<PaymentScheduleElement> paymentSchedule = List.of(payment1, payment2);
+        List<PaymentScheduleElement> paymentSchedule = new LinkedList<>();
+        paymentSchedule.add(payment1);
+        paymentSchedule.add(payment2);
 
        Application application = Application.builder()
                 .applicationId(1l)
@@ -108,7 +114,7 @@ class CreditServiceImplTest {
                 .paymentSchedule(paymentSchedule)
                 .build();
 
-        Credit credit = CreditMapper.INSTANCE.creditDtoToCredit(creditDTO);
+        Credit credit = creditMapper.creditDtoToCredit(creditDTO);
         credit.setCreditStatus(CreditStatus.CALCULATED.name());
 
         when(creditRepository.save(any()))
