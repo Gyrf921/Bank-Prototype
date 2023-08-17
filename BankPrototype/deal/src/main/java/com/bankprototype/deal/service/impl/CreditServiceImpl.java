@@ -62,14 +62,11 @@ public class CreditServiceImpl implements CreditService {
         Credit credit = creditMapper.creditDtoToCredit(creditDTO);
         credit.setCreditStatus(CreditStatus.CALCULATED.name());
 
-        //Todo Хрень какая-то
         application.setCreditId(credit);
         applicationRepository.save(application);
 
-        Credit savedCredit = creditRepository.save(credit);
+        log.info("[createCredit] << result: {}", credit);
 
-        log.info("[createCredit] << result: {}", savedCredit);
-
-        return savedCredit;
+        return credit;
     }
 }

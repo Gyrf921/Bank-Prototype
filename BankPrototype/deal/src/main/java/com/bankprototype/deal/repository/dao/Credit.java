@@ -1,11 +1,15 @@
 package com.bankprototype.deal.repository.dao;
 
 import com.bankprototype.deal.web.dto.PaymentScheduleElement;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -18,6 +22,9 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "credit")
+@TypeDefs({
+        @TypeDef(name = "json", typeClass = JsonType.class)
+})
 public class Credit {
 
     @Id

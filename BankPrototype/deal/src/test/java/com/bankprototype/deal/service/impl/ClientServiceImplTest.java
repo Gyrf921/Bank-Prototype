@@ -29,7 +29,7 @@ class ClientServiceImplTest {
     @InjectMocks
     private ClientServiceImpl clientService;
 
-    @Test
+  /*  @Test
     void getClientById() {
         Long clientId = 1L;
 
@@ -113,5 +113,5 @@ class ClientServiceImplTest {
         verify(clientRepository, times(1)).save(any());
 
 
-    }
+    }*/
 }

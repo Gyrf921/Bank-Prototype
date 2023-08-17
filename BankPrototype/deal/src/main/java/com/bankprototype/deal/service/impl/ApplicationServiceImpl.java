@@ -28,8 +28,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     private final StatusHistoryMapper statusHistoryMapper;
 
-
-
     @Override
     public Application getApplicationById(Long id) {
         log.info("[getApplicationById] >> id: {}", id);

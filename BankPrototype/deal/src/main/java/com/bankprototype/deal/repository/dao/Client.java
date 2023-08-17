@@ -5,11 +5,14 @@ import com.bankprototype.deal.repository.dao.enumfordao.Gender;
 import com.bankprototype.deal.repository.dao.enumfordao.MaritalStatus;
 import com.bankprototype.deal.repository.dao.jsonb.Employment;
 import com.bankprototype.deal.repository.dao.jsonb.Passport;
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -20,6 +23,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Table(name = "client")
+@TypeDefs({
+        @TypeDef(name = "json", typeClass = JsonType.class)
+})
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

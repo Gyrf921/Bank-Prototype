@@ -10,7 +10,7 @@ import org.mapstruct.factory.Mappers;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface StatusHistoryMapper {
 
     @Mapping(target = "time", source = "applicationStatusHistoryDTO.time")

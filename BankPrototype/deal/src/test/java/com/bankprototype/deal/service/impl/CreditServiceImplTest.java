@@ -1,5 +1,6 @@
 package com.bankprototype.deal.service.impl;
 
+import com.bankprototype.deal.repository.ApplicationRepository;
 import com.bankprototype.deal.repository.dao.Application;
 import com.bankprototype.deal.repository.dao.Client;
 import com.bankprototype.deal.repository.dao.Credit;
@@ -12,9 +13,13 @@ import com.bankprototype.deal.repository.CreditRepository;
 import com.bankprototype.deal.web.dto.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,15 +33,17 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest
 class CreditServiceImplTest {
 
     @Mock
-    private CreditRepository creditRepository;
+    private ApplicationRepository applicationRepository;
 
     @InjectMocks
     private CreditServiceImpl creditService;
 
-    @InjectMocks
+    @Autowired
     private CreditMapper creditMapper;
 
     @Test
@@ -117,8 +124,9 @@ class CreditServiceImplTest {
         Credit credit = creditMapper.creditDtoToCredit(creditDTO);
         credit.setCreditStatus(CreditStatus.CALCULATED.name());
 
-        when(creditRepository.save(any()))
-                .thenReturn(credit);
+        when(applicationRepository.save(any()))
+                .thenReturn(application);
+
 
         Credit creditSaved = creditService.createCredit(creditDTO, application);
 
@@ -131,6 +139,6 @@ class CreditServiceImplTest {
         assertEquals(creditSaved.getPaymentSchedule().size(), 2);
         assertEquals(creditSaved.getPaymentSchedule().get(0).getTotalPayment(), BigDecimal.valueOf(16101));
 
-        verify(creditRepository, times(1)).save(any());
+        verify(applicationRepository, times(1)).save(any());
     }
 }

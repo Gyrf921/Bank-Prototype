@@ -37,7 +37,6 @@ class ApplicationServiceImplTest {
     @InjectMocks
     private ApplicationServiceImpl applicationService;
 
-
     private StatusHistoryMapper statusHistoryMapper;
 
 
@@ -96,6 +95,7 @@ class ApplicationServiceImplTest {
                 .time(LocalDateTime.now())
                 .changeType(ChangeType.AUTOMATIC)
                 .build();
+
         List<StatusHistory> listStatus = List.of(statusHistoryMapper.applicationStatusHistoryDtoToStatusHistory(applicationStatusHistoryDTO));
 
         Application applicationTest = Application.builder()

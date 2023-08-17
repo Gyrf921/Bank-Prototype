@@ -2,11 +2,14 @@ package com.bankprototype.deal.repository.dao;
 
 import com.bankprototype.deal.repository.dao.jsonb.StatusHistory;
 import com.bankprototype.deal.web.dto.LoanOfferDTO;
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -19,6 +22,9 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "application")
+@TypeDefs({
+        @TypeDef(name = "json", typeClass = JsonType.class)
+})
 public class Application {
 
     @Id
@@ -26,12 +32,10 @@ public class Application {
     @Column(name = "application_id")
     private Long applicationId;
 
-    @Column(name = "client_id")
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "client_id", referencedColumnName = "client_id")
     private Client clientId;
 
-    @Column(name = "credit_id")
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "credit_id", referencedColumnName = "credit_id")
     private Credit creditId;
