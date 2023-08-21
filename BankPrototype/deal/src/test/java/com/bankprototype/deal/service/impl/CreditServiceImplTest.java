@@ -8,16 +8,14 @@ import com.bankprototype.deal.repository.dao.enumfordao.CreditStatus;
 import com.bankprototype.deal.repository.dao.enumfordao.EmploymentStatus;
 import com.bankprototype.deal.repository.dao.enumfordao.Gender;
 import com.bankprototype.deal.repository.dao.jsonb.Passport;
-import com.bankprototype.deal.mapper.CreditMapper;
-import com.bankprototype.deal.repository.CreditRepository;
+import com.bankprototype.deal.mapper.*;
 import com.bankprototype.deal.web.dto.*;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -40,11 +38,12 @@ class CreditServiceImplTest {
     @Mock
     private ApplicationRepository applicationRepository;
 
-    @InjectMocks
-    private CreditServiceImpl creditService;
+    private CreditServiceImpl creditService = new CreditServiceImpl(applicationRepository, new CreditMapperImpl());
 
-    @Autowired
-    private CreditMapper creditMapper;
+    @BeforeAll
+    static void set(){
+
+    }
 
     @Test
     void createScoringDataDTO() {
@@ -120,8 +119,19 @@ class CreditServiceImplTest {
                 .isSalaryClient(true)
                 .paymentSchedule(paymentSchedule)
                 .build();
+        //Todo mapper
+        Credit credit1 = Credit.builder()
+                .amount(BigDecimal.valueOf(1000000))
+                .term(6)
+                .monthlyPayment(BigDecimal.valueOf(16101))
+                .rate(BigDecimal.valueOf(5))
+                .psk(BigDecimal.valueOf(1159272))
+                .insuranceEnable(true)
+                .salaryClient(true)
+                .paymentSchedule(paymentSchedule)
+                .build();
 
-        Credit credit = creditMapper.creditDtoToCredit(creditDTO);
+        Credit credit = credit1;
         credit.setCreditStatus(CreditStatus.CALCULATED.name());
 
         when(applicationRepository.save(any()))

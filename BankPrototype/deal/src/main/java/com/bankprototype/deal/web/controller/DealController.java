@@ -47,7 +47,7 @@ public class DealController {
 
         Application application = applicationService.createApplication(client);
 
-       List<LoanOfferDTO> listLoanOffers = feignClient.calculatePossibleLoanOffers(requestDTO);
+        List<LoanOfferDTO> listLoanOffers = feignClient.calculatePossibleLoanOffers(requestDTO);
 
         listLoanOffers.forEach(loanOfferDTO -> loanOfferDTO.setApplicationId(application.getApplicationId()));
 
