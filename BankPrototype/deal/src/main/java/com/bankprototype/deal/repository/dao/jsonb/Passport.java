@@ -3,6 +3,7 @@ package com.bankprototype.deal.repository.dao.jsonb;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
@@ -17,5 +18,5 @@ public class Passport{
 
     private String issueBranch;
 
-    private LocalDateTime issueDate;
+    private LocalDate issueDate;
 }

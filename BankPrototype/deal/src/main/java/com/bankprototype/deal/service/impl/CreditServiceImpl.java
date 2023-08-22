@@ -23,32 +23,13 @@ public class CreditServiceImpl implements CreditService {
 
     private final ApplicationRepository applicationRepository;
 
-
     private final CreditMapper creditMapper;
 
     @Override
     public ScoringDataDTO createScoringDataDTO(FinishRegistrationRequestDTO requestDTO, Client client, LoanOfferDTO loanOfferDTO) {
         log.info("[createScoringDataDTO] >> requestDTO:{}, client: {}, loanOfferDTO: {}", requestDTO, client, loanOfferDTO);
 
-        ScoringDataDTO scoringDataDTO = ScoringDataDTO.builder()
-                .amount(loanOfferDTO.getRequestedAmount())
-                .term(loanOfferDTO.getTerm())
-                .firstName(client.getFirstName())
-                .lastName(client.getLastName())
-                .middleName(client.getMiddleName())
-                .gender(requestDTO.getGender())
-                .birthdate(client.getBirthDate())
-                .passportSeries(client.getPassport().getSeries())
-                .passportNumber(client.getPassport().getNumber())
-                .passportIssueDate(requestDTO.getPassportIssueDate())
-                .passportIssueBranch(requestDTO.getPassportIssueBrach())
-                .maritalStatus(requestDTO.getMaritalStatus())
-                .dependentAmount(requestDTO.getDependentAmount())
-                .employment(requestDTO.getEmployment())
-                .account(requestDTO.getAccount())
-                .isInsuranceEnabled(loanOfferDTO.getIsInsuranceEnabled())
-                .isSalaryClient(loanOfferDTO.getIsSalaryClient())
-                .build();
+        ScoringDataDTO scoringDataDTO = creditMapper.infoToScoringDataDTO(requestDTO, client, loanOfferDTO);
 
         log.info("[createScoringDataDTO] << result: {}", scoringDataDTO);
         return scoringDataDTO;

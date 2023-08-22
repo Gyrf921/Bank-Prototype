@@ -1,35 +1,46 @@
 package com.bankprototype.deal.service.impl;
 
+import com.bankprototype.deal.mapper.*;
 import com.bankprototype.deal.repository.dao.Client;
 import com.bankprototype.deal.repository.dao.jsonb.Passport;
 import com.bankprototype.deal.exception.ResourceNotFoundException;
 import com.bankprototype.deal.repository.ClientRepository;
+import com.bankprototype.deal.web.dto.FinishRegistrationRequestDTO;
 import com.bankprototype.deal.web.dto.LoanApplicationRequestDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import static io.github.benas.randombeans.api.EnhancedRandom.random;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class ClientServiceImplTest {
 
-    @Mock
+    @MockBean
     private ClientRepository clientRepository;
 
-    @InjectMocks
-    private ClientServiceImpl clientService;
+    @Autowired
+    private ClientMapper clientMapper;
 
+    @Autowired
+    private EmploymentMapper employmentMapper;
+
+    @Autowired
+    private ClientServiceImpl clientService = new ClientServiceImpl(clientRepository, new EmploymentMapperImpl(),new ClientMapperImpl());
 
 
     @Test
@@ -84,18 +95,7 @@ class ClientServiceImplTest {
                 .passportSeries("2222")
                 .build();
 
-        Passport passportTest = Passport.builder()
-                .series(requestDTO.passportSeries)
-                .number(requestDTO.passportNumber)
-                .build();
-
-        Client clientTest = Client.builder()
-                .firstName(requestDTO.firstName)
-                .birthDate(requestDTO.birthdate)
-                .email(requestDTO.email)
-                .dependentAmount(requestDTO.amount)
-                .passport(passportTest)
-                .build();
+        Client clientTest = clientMapper.LoanApplicationRequestDTOToClient(requestDTO);
 
         when(clientRepository.save(any()))
                 .thenReturn(clientTest);
@@ -114,7 +114,43 @@ class ClientServiceImplTest {
 
 
         verify(clientRepository, times(1)).save(any());
+    }
+
+    @Test
+    void updateClient() {
+
+        Passport passport = Passport.builder()
+                .series("2343")
+                .number("234444")
+                .build();
+
+        Client clientTest = Client.builder()
+                .passport(passport)
+                .clientId(1L)
+                .build();
+
+        FinishRegistrationRequestDTO requestDTO = random(FinishRegistrationRequestDTO.class);
+
+        Client client = clientMapper.updateClientToFinishRegistrationRequestDTO(requestDTO, clientTest);
+
+        when(clientRepository.findById(any()))
+                .thenReturn(Optional.of(clientTest));
+
+        when(clientRepository.save(any()))
+                .thenReturn(client);
+
+        Client clientReturned = clientService.updateClient(clientTest.getClientId(), requestDTO);
+
+        System.out.println(clientReturned);
+
+        assertThat(clientReturned).isNotNull();
+        System.out.println("clientReturned.passport :  " + clientReturned.getPassport());
+        System.out.println("clientTest.passport :  " + clientTest.getPassport());
+        assertEquals(clientReturned.getPassport(), clientTest.getPassport());
+
+        assertEquals(clientReturned, clientTest);
 
 
+        verify(clientRepository, times(1)).save(any());
     }
 }

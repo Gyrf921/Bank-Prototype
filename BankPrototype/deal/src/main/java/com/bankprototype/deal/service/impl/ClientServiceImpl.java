@@ -1,5 +1,6 @@
 package com.bankprototype.deal.service.impl;
 
+import com.bankprototype.deal.mapper.ClientMapper;
 import com.bankprototype.deal.mapper.EmploymentMapper;
 import com.bankprototype.deal.repository.dao.Client;
 import com.bankprototype.deal.repository.dao.jsonb.Employment;
@@ -24,6 +25,8 @@ public class ClientServiceImpl implements ClientService {
 
     private final EmploymentMapper employmentMapper;
 
+    private final ClientMapper clientMapper;
+
 
     @Override
     public Client getClientById(Long id) {
@@ -45,23 +48,7 @@ public class ClientServiceImpl implements ClientService {
     public Client createClient(LoanApplicationRequestDTO requestDTO) {
         log.info("[createClient] >> requestDTO: {}", requestDTO);
 
-        Passport passport = Passport.builder()
-                .series(requestDTO.passportSeries)
-                .number(requestDTO.passportNumber)
-                .build();
-
-        Client client = Client.builder()
-                .lastName(requestDTO.lastName)
-                .firstName(requestDTO.firstName)
-                .middleName(requestDTO.middleName)
-                .birthDate(requestDTO.birthdate)
-                .email(requestDTO.email)
-                .gender(null)
-                .maritalStatus(null)
-                .dependentAmount(requestDTO.amount)
-                .passport(passport)
-                .employment(new Employment())
-                .build();
+        Client client = clientMapper.LoanApplicationRequestDTOToClient(requestDTO);
 
         Client savedClient = clientRepository.save(client);
 
@@ -76,20 +63,9 @@ public class ClientServiceImpl implements ClientService {
 
         Client client = getClientById(clientId);
 
-        Passport passport = Passport.builder()
-                .number(client.getPassport().getNumber())
-                .series(client.getPassport().getSeries())
-                .issueDate(requestDTO.getPassportIssueDate().atStartOfDay())
-                .issueBranch(requestDTO.getPassportIssueBrach())
-                .build();
+        Client clientForSaving = clientMapper.updateClientToFinishRegistrationRequestDTO(requestDTO, client);
 
-        client.setGender(requestDTO.getGender());
-        client.setMaritalStatus(requestDTO.getMaritalStatus());
-        client.setAccount(requestDTO.getAccount());
-        client.setPassport(passport);
-        client.setEmployment(employmentMapper.employmentDtoToEmployment(requestDTO.getEmployment()));
-
-        Client updatedClient = clientRepository.save(client);
+        Client updatedClient = clientRepository.save(clientForSaving);
 
         log.info("[updateClient] << result: {}", updatedClient);
 
