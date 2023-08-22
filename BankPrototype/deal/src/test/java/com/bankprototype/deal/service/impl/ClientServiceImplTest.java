@@ -1,16 +1,16 @@
 package com.bankprototype.deal.service.impl;
 
-import com.bankprototype.deal.mapper.*;
+import com.bankprototype.deal.exception.ResourceNotFoundException;
+import com.bankprototype.deal.mapper.ClientMapper;
+import com.bankprototype.deal.repository.ClientRepository;
 import com.bankprototype.deal.repository.dao.Client;
 import com.bankprototype.deal.repository.dao.jsonb.Passport;
-import com.bankprototype.deal.exception.ResourceNotFoundException;
-import com.bankprototype.deal.repository.ClientRepository;
 import com.bankprototype.deal.web.dto.FinishRegistrationRequestDTO;
 import com.bankprototype.deal.web.dto.LoanApplicationRequestDTO;
+import io.github.benas.randombeans.EnhancedRandomBuilder;
+import io.github.benas.randombeans.api.EnhancedRandom;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,9 +20,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static io.github.benas.randombeans.api.EnhancedRandom.random;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -36,11 +36,9 @@ class ClientServiceImplTest {
     @Autowired
     private ClientMapper clientMapper;
 
-    @Autowired
-    private EmploymentMapper employmentMapper;
 
     @Autowired
-    private ClientServiceImpl clientService = new ClientServiceImpl(clientRepository, new EmploymentMapperImpl(),new ClientMapperImpl());
+    private ClientServiceImpl clientService;
 
 
     @Test
@@ -95,7 +93,7 @@ class ClientServiceImplTest {
                 .passportSeries("2222")
                 .build();
 
-        Client clientTest = clientMapper.LoanApplicationRequestDTOToClient(requestDTO);
+        Client clientTest = clientMapper.loanApplicationRequestDTOToClient(requestDTO);
 
         when(clientRepository.save(any()))
                 .thenReturn(clientTest);
@@ -129,7 +127,8 @@ class ClientServiceImplTest {
                 .clientId(1L)
                 .build();
 
-        FinishRegistrationRequestDTO requestDTO = random(FinishRegistrationRequestDTO.class);
+        EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build();
+        FinishRegistrationRequestDTO requestDTO = enhancedRandom.nextObject(FinishRegistrationRequestDTO.class);
 
         Client client = clientMapper.updateClientToFinishRegistrationRequestDTO(requestDTO, clientTest);
 

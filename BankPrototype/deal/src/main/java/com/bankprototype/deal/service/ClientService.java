@@ -8,6 +8,7 @@ public interface ClientService {
 
     /**
      * Found and get client from DB dy clientId
+     *
      * @param id - client id for DB
      * @return founded client
      */
@@ -15,6 +16,7 @@ public interface ClientService {
 
     /**
      * Create client and save to DB
+     *
      * @param requestDTO - LoanApplicationRequestDTO with some information about client
      * @return saved client
      */
@@ -22,7 +24,8 @@ public interface ClientService {
 
     /**
      * Update information about client's passport, gender, marital status, account and employment
-     * @param clientId - client id for update
+     *
+     * @param clientId   - client id for update
      * @param requestDTO - missing information about client
      * @return updated client
      */

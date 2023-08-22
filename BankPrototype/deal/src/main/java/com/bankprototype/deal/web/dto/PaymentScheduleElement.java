@@ -12,8 +12,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Builder
 @Data
-public class PaymentScheduleElement
-{
+public class PaymentScheduleElement {
     private Integer number;
     private Timestamp date;
     private BigDecimal totalPayment; //общая сумма платежа;

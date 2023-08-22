@@ -6,7 +6,8 @@ import com.bankprototype.deal.web.dto.CreditDTO;
 import com.bankprototype.deal.web.dto.FinishRegistrationRequestDTO;
 import com.bankprototype.deal.web.dto.LoanOfferDTO;
 import com.bankprototype.deal.web.dto.ScoringDataDTO;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface CreditMapper {

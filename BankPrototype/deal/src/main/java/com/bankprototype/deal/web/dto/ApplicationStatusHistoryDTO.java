@@ -15,10 +15,10 @@ import java.time.LocalDateTime;
 @Data
 public class ApplicationStatusHistoryDTO {
 
-      private ApplicationStatus status;
+    private ApplicationStatus status;
 
-      private LocalDateTime time;
+    private LocalDateTime time;
 
-      private ChangeType changeType;
+    private ChangeType changeType;
 
 }

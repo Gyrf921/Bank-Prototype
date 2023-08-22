@@ -1,5 +1,6 @@
 package com.bankprototype.deal.service.impl;
 
+import com.bankprototype.deal.mapper.CreditMapper;
 import com.bankprototype.deal.repository.ApplicationRepository;
 import com.bankprototype.deal.repository.dao.Application;
 import com.bankprototype.deal.repository.dao.Client;
@@ -8,28 +9,21 @@ import com.bankprototype.deal.repository.dao.enumfordao.CreditStatus;
 import com.bankprototype.deal.repository.dao.enumfordao.EmploymentStatus;
 import com.bankprototype.deal.repository.dao.enumfordao.Gender;
 import com.bankprototype.deal.repository.dao.jsonb.Passport;
-import com.bankprototype.deal.mapper.*;
 import com.bankprototype.deal.web.dto.*;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -44,7 +38,7 @@ class CreditServiceImplTest {
     private CreditMapper creditMapper;
 
     @Autowired
-    private CreditServiceImpl creditService = new CreditServiceImpl(applicationRepository, new CreditMapperImpl());
+    private CreditServiceImpl creditService;
 
 
     @Test
@@ -81,7 +75,7 @@ class CreditServiceImplTest {
                 .build();
 
 
-       ScoringDataDTO scoringDataDTO = creditService.createScoringDataDTO(requestDTO, clientTest, loanOfferDTO);
+        ScoringDataDTO scoringDataDTO = creditService.createScoringDataDTO(requestDTO, clientTest, loanOfferDTO);
 
         System.out.println(scoringDataDTO);
 
@@ -107,8 +101,8 @@ class CreditServiceImplTest {
         paymentSchedule.add(payment1);
         paymentSchedule.add(payment2);
 
-       Application application = Application.builder()
-                .applicationId(1l)
+        Application application = Application.builder()
+                .applicationId(1L)
                 .build();
 
         CreditDTO creditDTO = CreditDTO.builder()

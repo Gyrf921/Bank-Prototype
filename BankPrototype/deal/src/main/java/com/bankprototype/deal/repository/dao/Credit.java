@@ -1,7 +1,6 @@
 package com.bankprototype.deal.repository.dao;
 
 import com.bankprototype.deal.web.dto.PaymentScheduleElement;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

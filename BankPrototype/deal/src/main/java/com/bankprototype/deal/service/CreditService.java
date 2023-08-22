@@ -12,8 +12,9 @@ public interface CreditService {
 
     /**
      * Create ScoringDataDTO to calculate the terms of the loan
-     * @param requestDTO - important information about clients
-     * @param client - another information about client
+     *
+     * @param requestDTO   - important information about clients
+     * @param client       - another information about client
      * @param loanOfferDTO - information about terms of the loan
      * @return scoring Data
      */
@@ -21,7 +22,8 @@ public interface CreditService {
 
     /**
      * Create  new credit and save it to DB
-     * @param creditDTO - information about credits terms
+     *
+     * @param creditDTO   - information about credits terms
      * @param application - information about application for update
      * @return saved Credit
      */

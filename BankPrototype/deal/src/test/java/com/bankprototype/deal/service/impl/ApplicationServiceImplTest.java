@@ -1,10 +1,9 @@
 package com.bankprototype.deal.service.impl;
 
-import com.bankprototype.deal.mapper.StatusHistoryMapper;
-import com.bankprototype.deal.mapper.StatusHistoryMapperImpl;
-import com.bankprototype.deal.repository.dao.Application;
 import com.bankprototype.deal.exception.ResourceNotFoundException;
+import com.bankprototype.deal.mapper.StatusHistoryMapper;
 import com.bankprototype.deal.repository.ApplicationRepository;
+import com.bankprototype.deal.repository.dao.Application;
 import com.bankprototype.deal.repository.dao.Client;
 import com.bankprototype.deal.repository.dao.enumfordao.ApplicationStatus;
 import com.bankprototype.deal.repository.dao.enumfordao.ChangeType;
@@ -13,21 +12,19 @@ import com.bankprototype.deal.web.dto.ApplicationStatusHistoryDTO;
 import com.bankprototype.deal.web.dto.LoanOfferDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -42,8 +39,7 @@ class ApplicationServiceImplTest {
     private StatusHistoryMapper statusHistoryMapper;
 
     @Autowired
-    private ApplicationServiceImpl applicationService = new ApplicationServiceImpl(applicationRepository, new StatusHistoryMapperImpl());
-
+    private ApplicationServiceImpl applicationService;
 
 
     @Test
@@ -94,7 +90,7 @@ class ApplicationServiceImplTest {
     void createApplication() {
 
         Client client = Client.builder()
-                .clientId(3l).build();
+                .clientId(3L).build();
 
         ApplicationStatusHistoryDTO applicationStatusHistoryDTO = ApplicationStatusHistoryDTO.builder()
                 .status(ApplicationStatus.PREAPPROVAL)
@@ -161,7 +157,7 @@ class ApplicationServiceImplTest {
                 .build();
 
         Application applicationTestAfter = Application.builder()
-                .applicationId(1l)
+                .applicationId(1L)
                 .clientId(client)
                 .status(status.name())
                 .statusHistory(listStatus)

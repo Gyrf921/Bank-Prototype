@@ -1,34 +1,27 @@
 package com.bankprototype.deal.web.controller;
 
 import com.bankprototype.deal.exception.ResourceNotFoundException;
-import com.bankprototype.deal.mapper.*;
-import com.bankprototype.deal.repository.ApplicationRepository;
-import com.bankprototype.deal.repository.ClientRepository;
 import com.bankprototype.deal.repository.dao.Application;
 import com.bankprototype.deal.repository.dao.Client;
 import com.bankprototype.deal.repository.dao.Credit;
 import com.bankprototype.deal.repository.dao.enumfordao.*;
-import com.bankprototype.deal.repository.dao.jsonb.Employment;
-import com.bankprototype.deal.repository.dao.jsonb.Passport;
 import com.bankprototype.deal.repository.dao.jsonb.StatusHistory;
-import com.bankprototype.deal.service.*;
+import com.bankprototype.deal.service.ClientService;
 import com.bankprototype.deal.service.impl.ApplicationServiceImpl;
-import com.bankprototype.deal.service.impl.ClientServiceImpl;
 import com.bankprototype.deal.service.impl.CreditServiceImpl;
-import com.bankprototype.deal.web.dto.*;
-import org.junit.jupiter.api.BeforeAll;
+import com.bankprototype.deal.web.dto.CreditDTO;
+import com.bankprototype.deal.web.dto.EmploymentDTO;
+import com.bankprototype.deal.web.dto.LoanOfferDTO;
+import com.bankprototype.deal.web.dto.ScoringDataDTO;
+import com.bankprototype.deal.web.feign.CreditConveyorFeignClient;
+import io.github.benas.randombeans.EnhancedRandomBuilder;
+import io.github.benas.randombeans.api.EnhancedRandom;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -36,15 +29,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
-
-import static io.github.benas.randombeans.api.EnhancedRandom.random;
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -55,6 +43,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class DealControllerTest {
+
+    @MockBean
+    private CreditConveyorFeignClient feignClient;
 
     @Autowired
     private MockMvc mockMvc;
@@ -72,13 +63,25 @@ class DealControllerTest {
     @Test
     void calculatePossibleLoanOffers() throws Exception {
 
-        Client clientTest = random(Client.class);
-        Application applicationTest = random(Application.class);
+        EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build();
+        Client clientTest = enhancedRandom.nextObject(Client.class);
+        Application applicationTest = enhancedRandom.nextObject(Application.class);
+
+        LoanOfferDTO ln1 = enhancedRandom.nextObject(LoanOfferDTO.class);
+        ln1.setRequestedAmount(BigDecimal.valueOf(1000000));
+        ln1.setIsSalaryClient(true);
+        ln1.setIsInsuranceEnabled(true);
+
+        List<LoanOfferDTO> list = List.of(ln1, ln1, ln1, ln1);
 
         when(clientService.createClient(any()))
                 .thenReturn(clientTest);
+
         when(applicationService.createApplication(any()))
                 .thenReturn(applicationTest);
+
+        when(feignClient.calculatePossibleLoanOffers(any()))
+                .thenReturn(list);
 
         ResultActions response = mockMvc.perform(post("/deal/application")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -97,12 +100,6 @@ class DealControllerTest {
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.[*].requestedAmount", hasItem(1000000)))
-                .andExpect(jsonPath("$.[*].requestedAmount", hasItem(1100000)))
-                .andExpect(jsonPath("$.[*].totalAmount", hasItem(1159689)))
-                .andExpect(jsonPath("$.[*].monthlyPayment", hasItem(16107)))
-                .andExpect(jsonPath("$.[*].rate", hasItem(5.0)))
-                .andExpect(jsonPath("$.[*].isInsuranceEnabled", hasItem(false)))
-                .andExpect(jsonPath("$.[*].isSalaryClient", hasItem(false)))
                 .andExpect(jsonPath("$.[*].isInsuranceEnabled", hasItem(true)))
                 .andExpect(jsonPath("$.[*].isSalaryClient", hasItem(true)));
 
@@ -111,10 +108,12 @@ class DealControllerTest {
 
     @Test
     void chooseOneOfTheOffers() throws Exception {
-        Application applicationTestAfter = random(Application.class);
+        EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build();
 
-        when(applicationService.updateStatusHistoryForApplication(any(),any()))
-                .thenReturn(applicationTestAfter);
+        Application applicationTest = enhancedRandom.nextObject(Application.class);
+
+        when(applicationService.updateStatusHistoryForApplication(any(), any()))
+                .thenReturn(applicationTest);
 
         ResultActions response = mockMvc.perform(put("/deal/offer")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -138,7 +137,7 @@ class DealControllerTest {
     @Test
     void chooseOneOfTheOffers_ExceptionResourceNotFound() throws Exception {
 
-        when(applicationService.updateStatusHistoryForApplication(any(),any()))
+        when(applicationService.updateStatusHistoryForApplication(any(), any()))
                 .thenThrow(ResourceNotFoundException.class);
 
         ResultActions response = mockMvc.perform(put("/deal/offer")
@@ -193,27 +192,32 @@ class DealControllerTest {
                 .time(LocalDateTime.now())
                 .changeType(ChangeType.AUTOMATIC)
                 .build();
-        List<StatusHistory> listStatus = List.of(applicationStatusHistory);
+
+        EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build();
+
+        Client clientTest = enhancedRandom.nextObject(Client.class);
+        clientTest.setClientId(1L);
 
         Application applicationTest = Application.builder()
                 .applicationId(1L)
-                .applicationId(1L).build();
+                .clientId(clientTest).build();
 
-        Client clientTest = random(Client.class);
-        clientTest.setClientId(1L);
-
-        Credit credit = new Credit();
+        Credit credit = enhancedRandom.nextObject(Credit.class);
+        CreditDTO creditDTO = enhancedRandom.nextObject(CreditDTO.class);
 
         when(applicationService.getApplicationById(any()))
                 .thenReturn(applicationTest);
 
-        when(clientService.updateClient(any(),any()))
+        when(clientService.updateClient(any(), any()))
                 .thenReturn(clientTest);
 
-        when(creditService.createScoringDataDTO(any(),any(),any()))
+        when(creditService.createScoringDataDTO(any(), any(), any()))
                 .thenReturn(scoringDataDTO);
 
-        when(creditService.createCredit(any(),any()))
+        when(feignClient.calculateFullLoanParameters(any()))
+                .thenReturn(creditDTO);
+
+        when(creditService.createCredit(any(), any()))
                 .thenReturn(credit);
 
         ResultActions response = mockMvc.perform(post("/deal/calculate/1")

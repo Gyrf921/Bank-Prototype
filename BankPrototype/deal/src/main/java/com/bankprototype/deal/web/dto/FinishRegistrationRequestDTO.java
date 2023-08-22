@@ -2,43 +2,44 @@ package com.bankprototype.deal.web.dto;
 
 import com.bankprototype.deal.repository.dao.enumfordao.Gender;
 import com.bankprototype.deal.repository.dao.enumfordao.MaritalStatus;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class FinishRegistrationRequestDTO {
 
-      @NotNull
-      private Gender gender;
+    @NotNull
+    private Gender gender;
 
-      @NotNull
-      private MaritalStatus maritalStatus;
+    @NotNull
+    private MaritalStatus maritalStatus;
 
-      @NotNull
-      @DecimalMin(value = "10000")
-      private BigDecimal dependentAmount;
+    @NotNull
+    @DecimalMin(value = "10000")
+    private BigDecimal dependentAmount;
 
-      @NotNull
-      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-      private LocalDate passportIssueDate;
+    @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate passportIssueDate;
 
-      @NotNull
-      private String passportIssueBrach;
+    @NotNull
+    private String passportIssueBrach;
 
-      @NotNull
-      private EmploymentDTO employment;
+    @NotNull
+    private EmploymentDTO employment;
 
-      @NotNull
-      private String account;
+    @NotNull
+    private String account;
 
 }

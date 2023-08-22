@@ -1,12 +1,11 @@
 package com.bankprototype.deal.service.impl;
 
+import com.bankprototype.deal.mapper.CreditMapper;
 import com.bankprototype.deal.repository.ApplicationRepository;
 import com.bankprototype.deal.repository.dao.Application;
 import com.bankprototype.deal.repository.dao.Client;
 import com.bankprototype.deal.repository.dao.Credit;
 import com.bankprototype.deal.repository.dao.enumfordao.CreditStatus;
-import com.bankprototype.deal.mapper.CreditMapper;
-import com.bankprototype.deal.repository.CreditRepository;
 import com.bankprototype.deal.service.CreditService;
 import com.bankprototype.deal.web.dto.CreditDTO;
 import com.bankprototype.deal.web.dto.FinishRegistrationRequestDTO;

@@ -1,14 +1,9 @@
 package com.bankprototype.deal.mapper;
 
 import com.bankprototype.deal.repository.dao.jsonb.StatusHistory;
-import com.bankprototype.deal.web.dto.*;
+import com.bankprototype.deal.web.dto.ApplicationStatusHistoryDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
-
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Mapper(componentModel = "spring")
 public interface StatusHistoryMapper {
