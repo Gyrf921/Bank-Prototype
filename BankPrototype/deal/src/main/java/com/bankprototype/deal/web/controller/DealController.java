@@ -1,5 +1,6 @@
 package com.bankprototype.deal.web.controller;
 
+import com.bankprototype.deal.exception.ResourceNotFoundException;
 import com.bankprototype.deal.repository.dao.Credit;
 import com.bankprototype.deal.service.ApplicationService;
 import com.bankprototype.deal.service.ClientService;
@@ -12,6 +13,8 @@ import com.bankprototype.deal.repository.dao.enumfordao.ApplicationStatus;
 import com.bankprototype.deal.web.feign.CreditConveyorFeignClient;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +62,9 @@ public class DealController {
    @Operation(summary = "Choose one of the loan offers")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Status history for application has been updated"),
-            @ApiResponse(responseCode = "404", description = "Not found application"),
+            @ApiResponse(responseCode = "404", description = "Not found application", content =
+                    { @Content(mediaType = "application/json", schema =
+                      @Schema(implementation = ResourceNotFoundException.class)) }),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")})
     @PutMapping("/offer")
     public void chooseOneOfTheOffers(@RequestBody LoanOfferDTO loanOfferDTO)

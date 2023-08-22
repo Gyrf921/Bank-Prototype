@@ -14,9 +14,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
@@ -31,19 +34,18 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@RunWith(SpringRunner.class)
 @SpringBootTest
 class CreditServiceImplTest {
 
-    @Mock
+    @MockBean
     private ApplicationRepository applicationRepository;
 
+    @Autowired
+    private CreditMapper creditMapper;
+
+    @Autowired
     private CreditServiceImpl creditService = new CreditServiceImpl(applicationRepository, new CreditMapperImpl());
 
-    @BeforeAll
-    static void set(){
-
-    }
 
     @Test
     void createScoringDataDTO() {
@@ -79,7 +81,7 @@ class CreditServiceImplTest {
                 .build();
 
 
-        ScoringDataDTO scoringDataDTO = creditService.createScoringDataDTO(requestDTO, clientTest, loanOfferDTO);
+       ScoringDataDTO scoringDataDTO = creditService.createScoringDataDTO(requestDTO, clientTest, loanOfferDTO);
 
         System.out.println(scoringDataDTO);
 
@@ -119,19 +121,8 @@ class CreditServiceImplTest {
                 .isSalaryClient(true)
                 .paymentSchedule(paymentSchedule)
                 .build();
-        //Todo mapper
-        Credit credit1 = Credit.builder()
-                .amount(BigDecimal.valueOf(1000000))
-                .term(6)
-                .monthlyPayment(BigDecimal.valueOf(16101))
-                .rate(BigDecimal.valueOf(5))
-                .psk(BigDecimal.valueOf(1159272))
-                .insuranceEnable(true)
-                .salaryClient(true)
-                .paymentSchedule(paymentSchedule)
-                .build();
 
-        Credit credit = credit1;
+        Credit credit = creditMapper.creditDtoToCredit(creditDTO);
         credit.setCreditStatus(CreditStatus.CALCULATED.name());
 
         when(applicationRepository.save(any()))
@@ -141,7 +132,6 @@ class CreditServiceImplTest {
         Credit creditSaved = creditService.createCredit(creditDTO, application);
 
         System.out.println(creditSaved);
-
 
         assertEquals(creditSaved.getPsk(), creditDTO.getPsk());
         assertEquals(creditSaved.getMonthlyPayment(), creditDTO.getMonthlyPayment());

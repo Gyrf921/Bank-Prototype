@@ -1,6 +1,7 @@
 package com.bankprototype.deal.web.controller;
 
-import com.bankprototype.deal.mapper.StatusHistoryMapper;
+import com.bankprototype.deal.exception.ResourceNotFoundException;
+import com.bankprototype.deal.mapper.*;
 import com.bankprototype.deal.repository.ApplicationRepository;
 import com.bankprototype.deal.repository.ClientRepository;
 import com.bankprototype.deal.repository.dao.Application;
@@ -10,23 +11,24 @@ import com.bankprototype.deal.repository.dao.enumfordao.*;
 import com.bankprototype.deal.repository.dao.jsonb.Employment;
 import com.bankprototype.deal.repository.dao.jsonb.Passport;
 import com.bankprototype.deal.repository.dao.jsonb.StatusHistory;
-import com.bankprototype.deal.service.ApplicationService;
-import com.bankprototype.deal.service.CreditService;
+import com.bankprototype.deal.service.*;
+import com.bankprototype.deal.service.impl.ApplicationServiceImpl;
 import com.bankprototype.deal.service.impl.ClientServiceImpl;
-import com.bankprototype.deal.web.dto.ApplicationStatusHistoryDTO;
-import com.bankprototype.deal.web.dto.EmploymentDTO;
-import com.bankprototype.deal.web.dto.LoanOfferDTO;
-import com.bankprototype.deal.web.dto.ScoringDataDTO;
+import com.bankprototype.deal.service.impl.CreditServiceImpl;
+import com.bankprototype.deal.web.dto.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -38,150 +40,43 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+
+import static io.github.benas.randombeans.api.EnhancedRandom.random;
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+//@ExtendWith(MockitoExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ExtendWith(MockitoExtension.class)
 class DealControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private ClientServiceImpl clientService;
-    @Mock
-    private ApplicationService applicationService;
-    @Mock
-    private CreditService creditService;
+    private ClientService clientService;
 
-    private static StatusHistoryMapper statusHistoryMapper;
+    @MockBean
+    private ApplicationServiceImpl applicationService;
 
-    private static Client clientTest;
-    private static Client clientTestUpdated;
-    private static Application applicationTest;
-    private static Application applicationTestAfter;
-    private static ScoringDataDTO scoringDataDTO;
-    private static Credit credit;
-    @BeforeAll
-    static void set(){
-        Passport passportTest = Passport.builder()
-                .series("1111")
-                .number("222222")
-                .build();
-        ApplicationStatusHistoryDTO applicationStatusHistoryDTO = ApplicationStatusHistoryDTO.builder()
-                .status(ApplicationStatus.PREAPPROVAL)
-                .time(LocalDateTime.now())
-                .changeType(ChangeType.AUTOMATIC)
-                .build();
-        StatusHistory applicationStatusHistory = StatusHistory.builder()
-                .status(ApplicationStatus.PREAPPROVAL)
-                .time(LocalDateTime.now())
-                .changeType(ChangeType.AUTOMATIC)
-                .build();
-        List<StatusHistory> listStatus = new LinkedList<>();
-        listStatus.add(applicationStatusHistory);
+    @MockBean
+    private CreditServiceImpl creditService;
 
-        clientTest = Client.builder()
-                .clientId(100L)
-                .firstName("firstName")
-                .birthDate(LocalDate.of(1990, 07, 07))
-                .email("string@gmail.com")
-                .dependentAmount(BigDecimal.valueOf(1000000))
-                .passport(passportTest)
-                .build();
-
-        applicationTest = Application.builder()
-                .applicationId(1L)
-                .clientId(clientTest)
-                .creditId(null)
-                .status(ApplicationStatus.PREAPPROVAL.name())
-                .creationDate(LocalDateTime.now())
-                .appliedOffer(null)
-                .signDate(null)
-                .sesCode(null)
-                .statusHistory(listStatus)
-                .build();
-
-        listStatus.add(applicationStatusHistory);
-        LoanOfferDTO loanOfferDTO = LoanOfferDTO.builder()
-                .applicationId(1L)
-                .term(6)
-                .isInsuranceEnabled(true)
-                .isSalaryClient(true)
-                .build();
-
-        ApplicationStatus status = ApplicationStatus.APPROVED;
-        Application applicationTestAfter = Application.builder()
-                .applicationId(1l)
-                .clientId(clientTest)
-                .status(status.name())
-                .statusHistory(listStatus)
-                .appliedOffer(loanOfferDTO)
-                .build();
-
-        Passport passportTestUpdated = Passport.builder()
-                .series("1111")
-                .number("222222")
-                .issueDate(LocalDateTime.now())
-                .issueBranch("issue Branch")
-                .build();
-
-        Employment employment = Employment.builder()
-                .status(EmploymentStatus.BUSINESS_OWNER)
-                .salary(BigDecimal.valueOf(400000))
-                .build();
-
-        EmploymentDTO employmentDTO = EmploymentDTO.builder()
-                .employmentStatus(EmploymentStatus.BUSINESS_OWNER)
-                .salary(BigDecimal.valueOf(400000))
-                .build();
-        clientTestUpdated = Client.builder()
-                .clientId(100L)
-                .firstName("firstName")
-                .birthDate(LocalDate.of(1990, 07, 07))
-                .email("string@gmail.com")
-                .dependentAmount(BigDecimal.valueOf(1000000))
-                .passport(passportTestUpdated)
-                .gender(Gender.MALE)
-                .maritalStatus(MaritalStatus.SINGLE)
-                .employment(employment)
-                .account("zsdfg")
-                .build();
-
-        ScoringDataDTO scoringDataDTO = ScoringDataDTO.builder()
-                .amount(loanOfferDTO.getRequestedAmount())
-                .term(loanOfferDTO.getTerm())
-                .firstName(clientTestUpdated.getFirstName())
-                .lastName(clientTestUpdated.getLastName())
-                .middleName(clientTestUpdated.getMiddleName())
-                .gender(clientTestUpdated.getGender())
-                .birthdate(clientTestUpdated.getBirthDate())
-                .passportSeries(clientTestUpdated.getPassport().getSeries())
-                .passportNumber(clientTestUpdated.getPassport().getNumber())
-                .passportIssueDate(clientTestUpdated.getPassport().getIssueDate().toLocalDate())
-                .passportIssueBranch(clientTestUpdated.getPassport().getIssueBranch())
-                .maritalStatus(clientTestUpdated.getMaritalStatus())
-                .dependentAmount(clientTestUpdated.getDependentAmount())
-                .employment(employmentDTO)
-                .account(clientTestUpdated.getAccount())
-                .isInsuranceEnabled(loanOfferDTO.getIsInsuranceEnabled())
-                .isSalaryClient(loanOfferDTO.getIsSalaryClient())
-                .build();
-    }
 
     @Test
     void calculatePossibleLoanOffers() throws Exception {
 
+        Client clientTest = random(Client.class);
+        Application applicationTest = random(Application.class);
+
         when(clientService.createClient(any()))
                 .thenReturn(clientTest);
-
         when(applicationService.createApplication(any()))
                 .thenReturn(applicationTest);
 
@@ -216,6 +111,7 @@ class DealControllerTest {
 
     @Test
     void chooseOneOfTheOffers() throws Exception {
+        Application applicationTestAfter = random(Application.class);
 
         when(applicationService.updateStatusHistoryForApplication(any(),any()))
                 .thenReturn(applicationTestAfter);
@@ -242,6 +138,9 @@ class DealControllerTest {
     @Test
     void chooseOneOfTheOffers_ExceptionResourceNotFound() throws Exception {
 
+        when(applicationService.updateStatusHistoryForApplication(any(),any()))
+                .thenThrow(ResourceNotFoundException.class);
+
         ResultActions response = mockMvc.perform(put("/deal/offer")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
@@ -264,11 +163,52 @@ class DealControllerTest {
     @Test
     void completionRegistrationAndCalculateFullCredit() throws Exception {
 
+        EmploymentDTO employmentDTO = EmploymentDTO.builder()
+                .employmentStatus(EmploymentStatus.BUSINESS_OWNER)
+                .salary(BigDecimal.valueOf(400000))
+                .build();
+
+        ScoringDataDTO scoringDataDTO = ScoringDataDTO.builder()
+                .amount(BigDecimal.valueOf(1000000))
+                .term(6)
+                .firstName("testName")
+                .lastName("testName")
+                .middleName("testName")
+                .gender(Gender.MALE)
+                .birthdate(LocalDate.of(1990, 07, 07))
+                .passportSeries("1111")
+                .passportNumber("222222")
+                .passportIssueDate(LocalDate.of(2020, 07, 07))
+                .passportIssueBranch("issue Branch")
+                .maritalStatus(MaritalStatus.SINGLE)
+                .dependentAmount(BigDecimal.valueOf(1159689))
+                .employment(employmentDTO)
+                .account("testAccount")
+                .isInsuranceEnabled(true)
+                .isSalaryClient(true)
+                .build();
+
+        StatusHistory applicationStatusHistory = StatusHistory.builder()
+                .status(ApplicationStatus.PREAPPROVAL)
+                .time(LocalDateTime.now())
+                .changeType(ChangeType.AUTOMATIC)
+                .build();
+        List<StatusHistory> listStatus = List.of(applicationStatusHistory);
+
+        Application applicationTest = Application.builder()
+                .applicationId(1L)
+                .applicationId(1L).build();
+
+        Client clientTest = random(Client.class);
+        clientTest.setClientId(1L);
+
+        Credit credit = new Credit();
+
         when(applicationService.getApplicationById(any()))
-                .thenReturn(applicationTestAfter);
+                .thenReturn(applicationTest);
 
         when(clientService.updateClient(any(),any()))
-                .thenReturn(clientTestUpdated);
+                .thenReturn(clientTest);
 
         when(creditService.createScoringDataDTO(any(),any(),any()))
                 .thenReturn(scoringDataDTO);
@@ -303,6 +243,10 @@ class DealControllerTest {
 
     @Test
     void completionRegistrationAndCalculateFullCredit_ExceptionResourceNotFound() throws Exception {
+
+        when(applicationService.getApplicationById(any()))
+                .thenThrow(ResourceNotFoundException.class);
+
         ResultActions response = mockMvc.perform(post("/deal/calculate/0")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -29,7 +30,9 @@ class ClientServiceImplTest {
     @InjectMocks
     private ClientServiceImpl clientService;
 
-  /*  @Test
+
+
+    @Test
     void getClientById() {
         Long clientId = 1L;
 
@@ -113,5 +116,5 @@ class ClientServiceImplTest {
         verify(clientRepository, times(1)).save(any());
 
 
-    }*/
+    }
 }

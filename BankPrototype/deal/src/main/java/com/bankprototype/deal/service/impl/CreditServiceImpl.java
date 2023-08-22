@@ -21,8 +21,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CreditServiceImpl implements CreditService {
 
-
     private final ApplicationRepository applicationRepository;
+
 
     private final CreditMapper creditMapper;
 

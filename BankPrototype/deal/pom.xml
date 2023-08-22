@@ -89,6 +89,12 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>io.github.benas</groupId>
+			<artifactId>random-beans</artifactId>
+			<version>3.9.0</version>
+		</dependency>
+
 
 		<!--ТЕСТЫ-->
 		<dependency>

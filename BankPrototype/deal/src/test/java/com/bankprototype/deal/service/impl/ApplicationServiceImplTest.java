@@ -1,6 +1,7 @@
 package com.bankprototype.deal.service.impl;
 
 import com.bankprototype.deal.mapper.StatusHistoryMapper;
+import com.bankprototype.deal.mapper.StatusHistoryMapperImpl;
 import com.bankprototype.deal.repository.dao.Application;
 import com.bankprototype.deal.exception.ResourceNotFoundException;
 import com.bankprototype.deal.repository.ApplicationRepository;
@@ -16,6 +17,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -29,15 +32,18 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class ApplicationServiceImplTest {
 
-    @Mock
+    @MockBean
     private ApplicationRepository applicationRepository;
 
-    @InjectMocks
-    private ApplicationServiceImpl applicationService;
-
+    @Autowired
     private StatusHistoryMapper statusHistoryMapper;
+
+    @Autowired
+    private ApplicationServiceImpl applicationService = new ApplicationServiceImpl(applicationRepository, new StatusHistoryMapperImpl());
+
 
 
     @Test
