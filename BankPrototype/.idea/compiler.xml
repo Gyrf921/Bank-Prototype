@@ -24,7 +24,6 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="application" target="11" />
-      <module name="deal" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
