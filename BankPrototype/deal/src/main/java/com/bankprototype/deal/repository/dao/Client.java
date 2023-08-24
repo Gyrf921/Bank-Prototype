@@ -12,7 +12,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -24,9 +23,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Table(name = "client")
-@TypeDefs({
-        @TypeDef(name = "json", typeClass = JsonType.class)
-})
+@TypeDef(name = "json", typeClass = JsonType.class)
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,9 +46,11 @@ public class Client {
     private String email;
 
     @Column(name = "gender")
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @Column(name = "marital_status")
+    @Enumerated(EnumType.STRING)
     private MaritalStatus maritalStatus;
 
     @Column(name = "dependent_amount")

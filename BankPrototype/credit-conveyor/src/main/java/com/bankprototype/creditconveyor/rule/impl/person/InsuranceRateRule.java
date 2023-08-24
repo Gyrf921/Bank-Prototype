@@ -20,7 +20,7 @@ public class InsuranceRateRule implements RateRule {
         log.info("[InsuranceRateRule.getRate] >> scoringDataDTO: {}, rate: {}", scoringDataDTO, rate);
 
         BigDecimal customRate = rate;
-        if (scoringDataDTO.getIsInsuranceEnabled()) {
+        if (Boolean.TRUE.equals(scoringDataDTO.getIsInsuranceEnabled())) {
             customRate = rate.subtract(BigDecimal.valueOf(insuranceRateRule));
         }
 

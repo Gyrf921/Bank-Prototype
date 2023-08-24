@@ -8,7 +8,7 @@
         <!-- Прописываем создание таблиц-->
         <createTable tableName="application">
             <!--Создаем поля -->
-            <column autoIncrement="true" name="application_id" type="SERIAL">
+            <column autoIncrement="true" name="application_id" type="BIGINT">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="client_id" type="BIGINT"/>

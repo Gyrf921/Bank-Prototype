@@ -13,8 +13,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.math.BigDecimal;
 import java.util.List;
 
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,7 +55,7 @@ class PrescoringCalculationImplTest {
 
 
         loanOfferDTO.forEach(System.out::println);
-        assertEquals(loanOfferDTO.size(), 4);
+        assertEquals(4, loanOfferDTO.size());
 
         System.out.println(loanOfferDTO.get(0).getRequestedAmount());
         System.out.println(LNR_DTO.getAmount());

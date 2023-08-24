@@ -1,5 +1,6 @@
 package com.bankprototype.deal.repository.dao;
 
+import com.bankprototype.deal.repository.dao.enumfordao.ApplicationStatus;
 import com.bankprototype.deal.repository.dao.jsonb.StatusHistory;
 import com.bankprototype.deal.web.dto.LoanOfferDTO;
 import com.vladmihalcea.hibernate.type.json.JsonType;
@@ -9,7 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -22,9 +22,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "application")
-@TypeDefs({
-        @TypeDef(name = "json", typeClass = JsonType.class)
-})
+@TypeDef(name = "json", typeClass = JsonType.class)
 public class Application {
 
     @Id
@@ -41,7 +39,8 @@ public class Application {
     private Credit creditId;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ApplicationStatus status;
 
     @Column(name = "creation_date")
     private LocalDateTime creationDate;

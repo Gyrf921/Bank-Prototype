@@ -77,7 +77,7 @@ public class DealController {
             @ApiResponse(responseCode = "200", description = "Status history for application has been updated"),
             @ApiResponse(responseCode = "400", description = "Validation failed for some argument. Invalid input supplied"),
             @ApiResponse(responseCode = "404", description = "Not found some resource in database"),
-            @ApiResponse(responseCode = "500", description = "Validation failed for some argument")})
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")})
     @PostMapping("/calculate/{applicationId}")
     public void completionRegistrationAndCalculateFullCredit(@PathVariable(value = "applicationId") Long applicationId,
                                                              @Valid @RequestBody FinishRegistrationRequestDTO requestDTO) {
