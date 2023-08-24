@@ -20,7 +20,7 @@ public class SalaryClientRateRule implements RateRule {
         log.info("[SalaryClientRateRule.getRate] >> scoringDataDTO: {}, rate: {}", scoringDataDTO, rate);
 
         BigDecimal customRate = rate;
-        if (scoringDataDTO.getIsSalaryClient()) {
+        if (Boolean.TRUE.equals(scoringDataDTO.getIsSalaryClient())) {
             customRate = rate.subtract(BigDecimal.valueOf(salaryClientRateRule));
         }
 

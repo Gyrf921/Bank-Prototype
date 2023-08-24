@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.bankprototype.deal.repository.dao.enumfordao.ApplicationStatus.PREAPPROVAL;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -52,7 +53,7 @@ class ApplicationServiceImplTest {
         Application applicationTest = Application.builder()
                 .applicationId(applicationId)
                 .clientId(client)
-                .status("PREAPPROVAL")
+                .status(PREAPPROVAL)
                 .build();
 
         when(applicationRepository.findById(any()))
@@ -93,7 +94,7 @@ class ApplicationServiceImplTest {
                 .clientId(3L).build();
 
         ApplicationStatusHistoryDTO applicationStatusHistoryDTO = ApplicationStatusHistoryDTO.builder()
-                .status(ApplicationStatus.PREAPPROVAL)
+                .status(PREAPPROVAL)
                 .time(LocalDateTime.now())
                 .changeType(ChangeType.AUTOMATIC)
                 .build();
@@ -104,7 +105,7 @@ class ApplicationServiceImplTest {
                 .applicationId(1L)
                 .clientId(client)
                 .creditId(null)
-                .status(ApplicationStatus.PREAPPROVAL.name())
+                .status(PREAPPROVAL)
                 .creationDate(LocalDateTime.now())
                 .appliedOffer(null)
                 .signDate(null)
@@ -119,10 +120,10 @@ class ApplicationServiceImplTest {
 
         System.out.println(applicationSaved);
 
-        assertEquals(applicationSaved.getClientId(), client);
-        assertEquals(applicationSaved.getApplicationId(), applicationTest.getApplicationId());
+        assertEquals(client, applicationSaved.getClientId());
+        assertEquals(applicationTest.getApplicationId(), applicationSaved.getApplicationId());
 
-        assertEquals(applicationSaved.getStatusHistory().size(), 1);
+        assertEquals(1, applicationSaved.getStatusHistory().size());
 
         verify(applicationRepository, times(1)).save(any());
 
@@ -134,7 +135,7 @@ class ApplicationServiceImplTest {
                 .clientId(1L).build();
 
         ApplicationStatusHistoryDTO applicationStatusHistoryDTO = ApplicationStatusHistoryDTO.builder()
-                .status(ApplicationStatus.PREAPPROVAL)
+                .status(PREAPPROVAL)
                 .time(LocalDateTime.now())
                 .changeType(ChangeType.AUTOMATIC)
                 .build();
@@ -143,7 +144,7 @@ class ApplicationServiceImplTest {
         Application applicationTestBefore = Application.builder()
                 .applicationId(1L)
                 .clientId(client)
-                .status(ApplicationStatus.PREAPPROVAL.name())
+                .status(PREAPPROVAL)
                 .statusHistory(listStatus)
                 .build();
 
@@ -159,7 +160,7 @@ class ApplicationServiceImplTest {
         Application applicationTestAfter = Application.builder()
                 .applicationId(1L)
                 .clientId(client)
-                .status(status.name())
+                .status(status)
                 .statusHistory(listStatus)
                 .appliedOffer(loanOfferDTO)
                 .build();
@@ -179,11 +180,11 @@ class ApplicationServiceImplTest {
         System.out.println(applicationSaved);
         assertEquals(applicationSaved.getApplicationId(), applicationTestAfter.getApplicationId());
         assertEquals(applicationSaved.getApplicationId(), applicationTestBefore.getApplicationId());
-        assertEquals(applicationSaved.getStatus(), ApplicationStatus.APPROVED.name());
+        assertEquals(ApplicationStatus.APPROVED, applicationSaved.getStatus());
 
         assertThat(applicationSaved.getAppliedOffer()).isNotNull();
-        assertThat(applicationSaved.getAppliedOffer().getIsInsuranceEnabled()).isEqualTo(true);
-        assertThat(applicationSaved.getAppliedOffer().getIsSalaryClient()).isEqualTo(true);
+        assertThat(applicationSaved.getAppliedOffer().getIsInsuranceEnabled()).isTrue();
+        assertThat(applicationSaved.getAppliedOffer().getIsSalaryClient()).isTrue();
 
         verify(applicationRepository, times(1)).save(any());
 

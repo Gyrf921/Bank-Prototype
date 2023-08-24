@@ -7,6 +7,7 @@ public interface ScoringCalculation {
 
     /**
      * Создание одного предложения по кредиту со всей вводной информацией
+     *
      * @param scoringDataDTO - Вводные данные для офрмирования кредита
      */
     CreditDTO createCredit(ScoringDataDTO scoringDataDTO);

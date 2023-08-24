@@ -23,14 +23,14 @@ public class MaritalStatusRateRule implements RateRule {
 
     @Value("${maritalStatusRateRuleWIDOWWIDOWER}")
     private Double maritalStatusRateRuleWIDOWWIDOWER;
+
     @Override
     public BigDecimal getRate(ScoringDataDTO scoringDataDTO, BigDecimal rate) {
         log.info("[MaritalStatusRateRule.getRate] >> scoringDataDTO: {}, rate: {}", scoringDataDTO, rate);
 
         BigDecimal customRate = null;
 
-        switch (scoringDataDTO.getMaritalStatus())
-        {
+        switch (scoringDataDTO.getMaritalStatus()) {
             case SINGLE:
                 customRate = rate.subtract(BigDecimal.valueOf(maritalStatusRateRuleSINGLE));
                 break;

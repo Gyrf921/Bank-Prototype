@@ -57,7 +57,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         Application application = Application.builder()
                 .clientId(client)
                 .creditId(null)
-                .status(ApplicationStatus.PREAPPROVAL.name())
+                .status(ApplicationStatus.PREAPPROVAL)
                 .creationDate(LocalDateTime.now())
                 .appliedOffer(null)
                 .signDate(null)
@@ -88,7 +88,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         listStatusHistory.add(statusHistoryMapper.applicationStatusHistoryDtoToStatusHistory(applicationStatusForHistory));
 
-        application.setStatus(status.name());
+        application.setStatus(status);
         application.setStatusHistory(listStatusHistory);
         application.setAppliedOffer(loanOfferDTO);
 

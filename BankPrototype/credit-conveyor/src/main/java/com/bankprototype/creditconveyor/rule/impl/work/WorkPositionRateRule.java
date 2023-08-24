@@ -3,7 +3,6 @@ package com.bankprototype.creditconveyor.rule.impl.work;
 import com.bankprototype.creditconveyor.rule.RateRule;
 import com.bankprototype.creditconveyor.web.dto.ScoringDataDTO;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -24,14 +23,14 @@ public class WorkPositionRateRule implements RateRule {
 
     @Value("${workPositionRateRuleOWNER}")
     private Double workPositionRateRuleOWNER;
+
     @Override
     public BigDecimal getRate(ScoringDataDTO scoringDataDTO, BigDecimal rate) {
         log.info("[WorkPositionRateRule.getRate] >> scoringDataDTO: {}, rate: {}", scoringDataDTO, rate);
 
         BigDecimal customRate = rate;
 
-        switch (scoringDataDTO.getEmployment().getPosition())
-        {
+        switch (scoringDataDTO.getEmployment().getPosition()) {
             case WORKER:
                 customRate = rate.subtract(BigDecimal.valueOf(workPositionRateRuleWORKER));
                 break;

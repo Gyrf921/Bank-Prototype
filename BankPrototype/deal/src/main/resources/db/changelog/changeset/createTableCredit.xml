@@ -7,7 +7,7 @@
     <changeSet id="create_table" author="Oladushek">
         <!-- Прописываем создание таблиц-->
         <createTable tableName="credit">
-            <column autoIncrement="true" name="credit_id" type="SERIAL">
+            <column autoIncrement="true" name="credit_id" type="BIGINT">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="amount" type="DECIMAL"/>

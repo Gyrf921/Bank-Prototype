@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class LoanOfferDTO{
+public class LoanOfferDTO {
 
     private Long applicationId;
 

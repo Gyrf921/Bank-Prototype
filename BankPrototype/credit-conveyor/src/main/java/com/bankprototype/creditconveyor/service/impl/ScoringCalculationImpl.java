@@ -1,8 +1,8 @@
 package com.bankprototype.creditconveyor.service.impl;
 
+import com.bankprototype.creditconveyor.rule.RateRuleEngine;
 import com.bankprototype.creditconveyor.service.CreditCalculation;
 import com.bankprototype.creditconveyor.service.ScoringCalculation;
-import com.bankprototype.creditconveyor.rule.RateRuleEngine;
 import com.bankprototype.creditconveyor.web.dto.CreditDTO;
 import com.bankprototype.creditconveyor.web.dto.PaymentScheduleElement;
 import com.bankprototype.creditconveyor.web.dto.ScoringDataDTO;
@@ -37,9 +37,9 @@ public class ScoringCalculationImpl implements ScoringCalculation {
 
         BigDecimal creditRate = ruleEngine.getRate(scoringDataDTO, BigDecimal.valueOf(loanRate));
 
-        if (creditRate.equals(BigDecimal.ZERO) || creditRate.compareTo(BigDecimal.ZERO) < 0){
+        if (creditRate.equals(BigDecimal.ZERO) || creditRate.compareTo(BigDecimal.ZERO) < 0) {
 
-            creditRate =  BigDecimal.ONE;
+            creditRate = BigDecimal.ONE;
         }
 
         CreditDTO creditDTO = calculationCredit(scoringDataDTO, creditRate);
@@ -79,12 +79,12 @@ public class ScoringCalculationImpl implements ScoringCalculation {
         List<PaymentScheduleElement> elementList = new LinkedList<>();
         int number = 0;
         LocalDate localDate = LocalDate.now();
-        BigDecimal remainingDebt = pskCalc;//оставшийся долг;
+        BigDecimal remainingDebt = pskCalc;
         BigDecimal scale = BigDecimal.valueOf(0.00001);
 
         BigDecimal monthRate = rate.multiply(BigDecimal.valueOf(0.01).divide(BigDecimal.valueOf(12), scale.scale(), RoundingMode.HALF_UP));
 
-        BigDecimal interestPayment = remainingDebt.multiply(monthRate); //выплата процентов;
+        BigDecimal interestPayment = remainingDebt.multiply(monthRate);
 
         do {
             number++;
@@ -92,10 +92,10 @@ public class ScoringCalculationImpl implements ScoringCalculation {
             elementList.add(
                     PaymentScheduleElement.builder()
                             .number(number)
-                            .date(localDate.plusMonths(number-1))
+                            .date(localDate.plusMonths(number - 1L))
                             .totalPayment(monthlyPaymentCalc)
                             .interestPayment(interestPayment)
-                            .debtPayment(monthlyPaymentCalc.subtract(interestPayment)) //выплата долга;
+                            .debtPayment(monthlyPaymentCalc.subtract(interestPayment))
                             .remainingDebt(remainingDebt.subtract(monthlyPaymentCalc))
                             .build());
 
@@ -103,15 +103,14 @@ public class ScoringCalculationImpl implements ScoringCalculation {
             interestPayment = remainingDebt.multiply(monthRate);
         }
         while (monthlyPaymentCalc.compareTo(remainingDebt) < 0);
-        //remainingDebt(100) < monthlyPaymentCalc(16107) but not zero
         number++;
         elementList.add(
                 PaymentScheduleElement.builder()
                         .number(number)
-                        .date(localDate.plusMonths(number-1))
+                        .date(localDate.plusMonths(number - 1L))
                         .totalPayment(remainingDebt)
                         .interestPayment(interestPayment)
-                        .debtPayment(remainingDebt.subtract(interestPayment)) //выплата долга;
+                        .debtPayment(remainingDebt.subtract(interestPayment))
                         .remainingDebt(BigDecimal.ZERO)
                         .build());
 

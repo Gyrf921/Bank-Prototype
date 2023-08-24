@@ -39,7 +39,7 @@ public class CreditServiceImpl implements CreditService {
         log.info("[createCredit] >> creditDTO: {}", creditDTO);
 
         Credit credit = creditMapper.creditDtoToCredit(creditDTO);
-        credit.setCreditStatus(CreditStatus.CALCULATED.name());
+        credit.setCreditStatus(CreditStatus.CALCULATED);
 
         application.setCreditId(credit);
         applicationRepository.save(application);

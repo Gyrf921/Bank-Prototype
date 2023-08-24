@@ -15,7 +15,7 @@ public class CreditCalculationImpl implements CreditCalculation {
 
     @Override
     public BigDecimal calculationMonthlyPayment(BigDecimal loanAmount, BigDecimal monthlyInterestRate, Integer interestPeriodsTerm) {
-        log.info("[calculationMonthlyPaymentAmount] >> loanAmount: {}, monthlyInterestRate: {}, interestPeriodsTerm: {}", loanAmount,monthlyInterestRate,interestPeriodsTerm);
+        log.info("[calculationMonthlyPaymentAmount] >> loanAmount: {}, monthlyInterestRate: {}, interestPeriodsTerm: {}", loanAmount, monthlyInterestRate, interestPeriodsTerm);
 
         BigDecimal tempSumForPow = BigDecimal.ONE.add(monthlyInterestRate);
         BigDecimal temp = tempSumForPow.pow(Math.abs(interestPeriodsTerm));
@@ -33,7 +33,7 @@ public class CreditCalculationImpl implements CreditCalculation {
     public BigDecimal calculationMonthlyInterestRate(BigDecimal customLoanRate) {
         log.info("[calculationMonthlyInterestRate] >> customLoanRate: {}", customLoanRate);
 
-        BigDecimal denominator = BigDecimal.valueOf(100 * COUNT_MONTH_OF_YEAR);
+        BigDecimal denominator = BigDecimal.valueOf(100L * COUNT_MONTH_OF_YEAR);
 
         BigDecimal scale = new BigDecimal("0.00001");
 
