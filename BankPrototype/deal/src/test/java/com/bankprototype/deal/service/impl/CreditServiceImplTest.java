@@ -85,8 +85,8 @@ class CreditServiceImplTest {
         assertEquals(scoringDataDTO.getDependentAmount(), requestDTO.getDependentAmount());
         assertEquals(scoringDataDTO.getFirstName(), clientTest.getFirstName());
         assertEquals(scoringDataDTO.getFirstName(), clientTest.getFirstName());
-        assertEquals(scoringDataDTO.getIsInsuranceEnabled(), true);
-        assertEquals(scoringDataDTO.getIsSalaryClient(), true);
+        assertEquals(true, scoringDataDTO.getIsInsuranceEnabled());
+        assertEquals(true, scoringDataDTO.getIsSalaryClient());
 
     }
 
@@ -117,7 +117,7 @@ class CreditServiceImplTest {
                 .build();
 
         Credit credit = creditMapper.creditDtoToCredit(creditDTO);
-        credit.setCreditStatus(CreditStatus.CALCULATED.name());
+        credit.setCreditStatus(CreditStatus.CALCULATED);
 
         when(applicationRepository.save(any()))
                 .thenReturn(application);
@@ -130,8 +130,8 @@ class CreditServiceImplTest {
         assertEquals(creditSaved.getPsk(), creditDTO.getPsk());
         assertEquals(creditSaved.getMonthlyPayment(), creditDTO.getMonthlyPayment());
 
-        assertEquals(creditSaved.getPaymentSchedule().size(), 2);
-        assertEquals(creditSaved.getPaymentSchedule().get(0).getTotalPayment(), BigDecimal.valueOf(16101));
+        assertEquals(2, creditSaved.getPaymentSchedule().size());
+        assertEquals(BigDecimal.valueOf(16101), creditSaved.getPaymentSchedule().get(0).getTotalPayment());
 
         verify(applicationRepository, times(1)).save(any());
     }

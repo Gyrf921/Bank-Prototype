@@ -2,7 +2,6 @@ package com.bankprototype.deal.mapper;
 
 import com.bankprototype.deal.repository.dao.Client;
 import com.bankprototype.deal.repository.dao.jsonb.Passport;
-
 import com.bankprototype.deal.web.dto.FinishRegistrationRequestDTO;
 import com.bankprototype.deal.web.dto.LoanApplicationRequestDTO;
 import org.mapstruct.Mapper;
@@ -17,8 +16,8 @@ public interface ClientMapper {
 
     static Passport mapPassport(LoanApplicationRequestDTO requestDTO) {
         return Passport.builder()
-                .series(requestDTO.passportSeries)
-                .number(requestDTO.passportNumber).build();
+                .series(requestDTO.getPassportSeries())
+                .number(requestDTO.getPassportNumber()).build();
     }
 
 

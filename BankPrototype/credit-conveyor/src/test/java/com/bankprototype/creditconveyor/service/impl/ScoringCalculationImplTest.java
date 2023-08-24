@@ -63,17 +63,17 @@ class ScoringCalculationImplTest {
         when(calculation.calculationTotalAmount(any(), any()))
                 .thenReturn(pskCalc);
 
-        CreditDTO creditDTO =  scoringCalculation.createCredit(scoringDataDTO);
+        CreditDTO creditDTO = scoringCalculation.createCredit(scoringDataDTO);
 
         System.out.println(creditDTO);
 
         assertEquals(creditDTO.getPsk(), pskCalc);
         assertEquals(creditDTO.getMonthlyPayment(), monthlyPaymentCalc);
 
-        Integer tempInPaymentSchedule = creditDTO.getPaymentSchedule().get(Math.abs(interestPeriodsTerm)-1).getDate().getYear() - creditDTO.getPaymentSchedule().get(0).getDate().getYear();
+        Integer tempInPaymentSchedule = creditDTO.getPaymentSchedule().get(Math.abs(interestPeriodsTerm) - 1).getDate().getYear() - creditDTO.getPaymentSchedule().get(0).getDate().getYear();
         assertEquals(creditDTO.getTerm(), tempInPaymentSchedule);
 
-        assertEquals(creditDTO.getPaymentSchedule().size(), 72);
+        assertEquals(72, creditDTO.getPaymentSchedule().size());
         assertEquals(creditDTO.getPaymentSchedule().get(0).getTotalPayment(), monthlyPaymentCalc);
 
         System.out.println("creditDTO.getPaymentSchedule().get(0).getInterestPayment() = " + creditDTO.getPaymentSchedule().get(0).getInterestPayment());
@@ -109,6 +109,7 @@ class ScoringCalculationImplTest {
         verify(calculation, times(0)).calculationTotalAmount(any(), any());
 
     }
+
     @Test
     void createCreditExceptionEmploymentStatus() {
         ScoringDataDTO scoringDataDTO = ScoringDataDTO.builder()
@@ -124,6 +125,7 @@ class ScoringCalculationImplTest {
         });
 
     }
+
     @Test
     void createCreditExceptionSalary() {
         ScoringDataDTO scoringDataDTO = ScoringDataDTO.builder()
@@ -140,6 +142,7 @@ class ScoringCalculationImplTest {
         });
 
     }
+
     @Test
     void createCreditExceptionTotalWorkExperience() {
         ScoringDataDTO scoringDataDTO = ScoringDataDTO.builder()

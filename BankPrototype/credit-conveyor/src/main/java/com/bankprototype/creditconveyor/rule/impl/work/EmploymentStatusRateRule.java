@@ -28,8 +28,7 @@ public class EmploymentStatusRateRule implements RateRule {
 
         BigDecimal customRate = rate;
 
-        switch (scoringDataDTO.getEmployment().getEmploymentStatus())
-        {
+        switch (scoringDataDTO.getEmployment().getEmploymentStatus()) {
             case BUSINESS_OWNER:
                 customRate = rate.add(BigDecimal.valueOf(employmentStatusRateRuleBUSINESSOWNER));
                 break;

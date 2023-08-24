@@ -4,5 +4,8 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <include file="changeset/createTableCredit.xml" relativeToChangelogFile="true"/>
     <include file="changeset/createTableApplication.xml" relativeToChangelogFile="true"/>
+    <include file="changeset/createTableClient.xml" relativeToChangelogFile="true"/>
+    <include file="changeset/createForeignKey.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

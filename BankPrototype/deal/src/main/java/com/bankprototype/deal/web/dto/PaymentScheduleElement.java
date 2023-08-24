@@ -15,8 +15,8 @@ import java.sql.Timestamp;
 public class PaymentScheduleElement {
     private Integer number;
     private Timestamp date;
-    private BigDecimal totalPayment; //общая сумма платежа;
-    private BigDecimal interestPayment; //выплата процентов;
-    private BigDecimal debtPayment; //выплата долга;
-    private BigDecimal remainingDebt; //оставшийся долг;
+    private BigDecimal totalPayment;
+    private BigDecimal interestPayment;
+    private BigDecimal debtPayment;
+    private BigDecimal remainingDebt;
 }

@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 @Slf4j
 @Component
-public class SalaryRateRule  implements RateRule {
+public class SalaryRateRule implements RateRule {
     @Override
     public BigDecimal getRate(ScoringDataDTO scoringDataDTO, BigDecimal rate) {
         log.info("[SalaryRateRule.getRate] >> scoringDataDTO: {}, rate: {}", scoringDataDTO, rate);

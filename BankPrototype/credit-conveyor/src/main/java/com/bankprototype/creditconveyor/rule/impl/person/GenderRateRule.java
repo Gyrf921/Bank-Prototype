@@ -3,7 +3,6 @@ package com.bankprototype.creditconveyor.rule.impl.person;
 import com.bankprototype.creditconveyor.rule.RateRule;
 import com.bankprototype.creditconveyor.web.dto.ScoringDataDTO;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -31,17 +30,14 @@ public class GenderRateRule implements RateRule {
 
         int age = Period.between(scoringDataDTO.getBirthdate(), LocalDate.now()).getYears();
         BigDecimal customRate = rate;
-        switch (scoringDataDTO.getGender())
-        {
+        switch (scoringDataDTO.getGender()) {
             case MALE:
-                if (age >= 30 && age <= 55)
-                {
+                if (age >= 30 && age <= 55) {
                     customRate = rate.subtract(BigDecimal.valueOf(genderRateRuleMale));
                 }
                 break;
             case FEMALE:
-                if (age >= 35 && age <= 60)
-                {
+                if (age >= 35 && age <= 60) {
                     customRate = rate.subtract(BigDecimal.valueOf(genderRateRuleFEMALE));
                 }
                 break;

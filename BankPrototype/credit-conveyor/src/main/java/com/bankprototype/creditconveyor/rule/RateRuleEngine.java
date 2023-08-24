@@ -21,12 +21,11 @@ public class RateRuleEngine implements RateRule {
 
     @Override
     public BigDecimal getRate(ScoringDataDTO scoringDataDTO, BigDecimal rate) {
-        log.info("[getRate] >> scoringDataDTO: {}, rate: {}", scoringDataDTO,rate);
+        log.info("[getRate] >> scoringDataDTO: {}, rate: {}", scoringDataDTO, rate);
 
         BigDecimal customRate = rate;
 
-        for(RateRule rule : rateRules)
-        {
+        for (RateRule rule : rateRules) {
             customRate = rule.getRate(scoringDataDTO, customRate);
 
         }
