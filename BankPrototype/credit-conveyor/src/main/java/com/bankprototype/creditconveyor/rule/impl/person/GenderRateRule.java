@@ -28,7 +28,7 @@ public class GenderRateRule implements RateRule {
     public BigDecimal getRate(ScoringDataDTO scoringDataDTO, BigDecimal rate) {
         log.info("[GenderRateRule.getRate] >> scoringDataDTO: {}, rate: {}", scoringDataDTO, rate);
 
-        int age = Period.between(scoringDataDTO.getBirthdate(), LocalDate.now()).getYears();
+        int age = Period.between(scoringDataDTO.getBirthDate(), LocalDate.now()).getYears();
         BigDecimal customRate = rate;
         switch (scoringDataDTO.getGender()) {
             case MALE:

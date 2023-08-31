@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="credit-conveyor" />
         <module name="application" />
+        <module name="dossier" />
       </profile>
       <profile name="Annotation profile for deal" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -29,6 +30,7 @@
       <module name="application" options="-parameters" />
       <module name="credit-conveyor" options="-parameters" />
       <module name="deal" options="-parameters" />
+      <module name="dossier" options="-parameters" />
     </option>
   </component>
 </project>

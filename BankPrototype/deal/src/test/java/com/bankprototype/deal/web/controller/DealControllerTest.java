@@ -7,6 +7,7 @@ import com.bankprototype.deal.repository.dao.Credit;
 import com.bankprototype.deal.repository.dao.enumfordao.*;
 import com.bankprototype.deal.repository.dao.jsonb.StatusHistory;
 import com.bankprototype.deal.service.ClientService;
+import com.bankprototype.deal.service.DealProducer;
 import com.bankprototype.deal.service.impl.ApplicationServiceImpl;
 import com.bankprototype.deal.service.impl.CreditServiceImpl;
 import com.bankprototype.deal.web.dto.CreditDTO;
@@ -33,6 +34,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -46,6 +48,9 @@ class DealControllerTest {
 
     @MockBean
     private CreditConveyorFeignClient feignClient;
+
+    @MockBean
+    private DealProducer dealProducer;
 
     @Autowired
     private MockMvc mockMvc;
@@ -92,7 +97,7 @@ class DealControllerTest {
                                 "  \"lastName\": \"lastName\",\n" +
                                 "  \"middleName\": \"middleName\",\n" +
                                 "  \"email\": \"string@gmail.com\",\n" +
-                                "  \"birthdate\": \"1990-07-07\",\n" +
+                                "  \"birthDate\": \"1990-07-07\",\n" +
                                 "  \"passportSeries\": \"1111\",\n" +
                                 "  \"passportNumber\": \"222222\"\n" +
                                 "}")
@@ -114,6 +119,8 @@ class DealControllerTest {
 
         when(applicationService.updateStatusHistoryForApplication(any(), any()))
                 .thenReturn(applicationTest);
+
+        doNothing().when(dealProducer).sendMessage(any(), any());
 
         ResultActions response = mockMvc.perform(put("/deal/offer")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -139,6 +146,8 @@ class DealControllerTest {
 
         when(applicationService.updateStatusHistoryForApplication(any(), any()))
                 .thenThrow(ResourceNotFoundException.class);
+
+        doNothing().when(dealProducer).sendMessage(any(), any());
 
         ResultActions response = mockMvc.perform(put("/deal/offer")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -174,7 +183,7 @@ class DealControllerTest {
                 .lastName("testName")
                 .middleName("testName")
                 .gender(Gender.MALE)
-                .birthdate(LocalDate.of(1990, 07, 07))
+                .birthDate(LocalDate.of(1990, 07, 07))
                 .passportSeries("1111")
                 .passportNumber("222222")
                 .passportIssueDate(LocalDate.of(2020, 07, 07))
@@ -220,6 +229,8 @@ class DealControllerTest {
         when(creditService.createCredit(any(), any()))
                 .thenReturn(credit);
 
+        doNothing().when(dealProducer).sendMessage(any(), any());
+
         ResultActions response = mockMvc.perform(post("/deal/calculate/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
@@ -251,6 +262,8 @@ class DealControllerTest {
         when(applicationService.getApplicationById(any()))
                 .thenThrow(ResourceNotFoundException.class);
 
+        doNothing().when(dealProducer).sendMessage(any(), any());
+
         ResultActions response = mockMvc.perform(post("/deal/calculate/0")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
@@ -272,6 +285,57 @@ class DealControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+
+        System.out.println(response);
+    }
+
+    @Test
+    void sendDocuments() throws Exception {
+        EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build();
+        Application applicationTest = enhancedRandom.nextObject(Application.class);
+
+        when(applicationService.getApplicationById(any()))
+                .thenReturn(applicationTest);
+
+        doNothing().when(dealProducer).sendMessage(any(), any());
+
+        ResultActions response = mockMvc.perform(post("/deal/document/1/send"))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+
+        System.out.println(response);
+    }
+
+    @Test
+    void signDocuments() throws Exception {
+        EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build();
+        Application applicationTest = enhancedRandom.nextObject(Application.class);
+
+        when(applicationService.getApplicationById(any()))
+                .thenReturn(applicationTest);
+
+        doNothing().when(dealProducer).sendMessage(any(), any());
+
+        ResultActions response = mockMvc.perform(post("/deal/document/1/sign"))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+
+        System.out.println(response);
+    }
+
+    @Test
+    void codeDocuments() throws Exception {
+        EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build();
+        Application applicationTest = enhancedRandom.nextObject(Application.class);
+
+        when(applicationService.getApplicationById(any()))
+                .thenReturn(applicationTest);
+
+        doNothing().when(dealProducer).sendMessage(any(), any());
+
+        ResultActions response = mockMvc.perform(post("/deal/document/1/code"))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
 
         System.out.println(response);
     }

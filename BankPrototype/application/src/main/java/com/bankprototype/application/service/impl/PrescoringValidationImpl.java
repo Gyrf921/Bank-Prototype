@@ -20,7 +20,7 @@ public class PrescoringValidationImpl implements PrescoringValidation {
     public void checkBirthdateValid(LoanApplicationRequestDTO requestDTO) {
         log.info("[checkValidLoanApplicationRequest] >> requestDTO: {}", requestDTO);
 
-        int age = Period.between(requestDTO.getBirthdate(), LocalDate.now()).getYears();
+        int age = Period.between(requestDTO.getBirthDate(), LocalDate.now()).getYears();
 
         if (age < MINIMUM_AGE) {
             log.error("[checkValidLoanApplicationRequest.getRate] >> The client's age is less than 18, age is {}", age);

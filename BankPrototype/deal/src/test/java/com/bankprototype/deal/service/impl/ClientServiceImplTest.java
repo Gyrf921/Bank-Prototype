@@ -87,7 +87,7 @@ class ClientServiceImplTest {
         LoanApplicationRequestDTO requestDTO = LoanApplicationRequestDTO.builder()
                 .amount(BigDecimal.valueOf(1000000))
                 .firstName("testFirstName")
-                .birthdate(LocalDate.of(1991, 1, 1))
+                .birthDate(LocalDate.of(1991, 1, 1))
                 .email("test@neoflex.com")
                 .passportNumber("111111")
                 .passportSeries("2222")

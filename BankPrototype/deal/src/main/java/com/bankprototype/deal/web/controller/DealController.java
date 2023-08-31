@@ -8,7 +8,9 @@ import com.bankprototype.deal.repository.dao.enumfordao.ApplicationStatus;
 import com.bankprototype.deal.service.ApplicationService;
 import com.bankprototype.deal.service.ClientService;
 import com.bankprototype.deal.service.CreditService;
+import com.bankprototype.deal.service.DealProducer;
 import com.bankprototype.deal.web.dto.*;
+import com.bankprototype.deal.web.dto.enumfordto.Theme;
 import com.bankprototype.deal.web.feign.CreditConveyorFeignClient;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -27,11 +29,12 @@ import java.util.List;
 @RequestMapping("/deal")
 @RequiredArgsConstructor
 public class DealController {
+
     private final CreditConveyorFeignClient feignClient;
     private final ClientService clientService;
     private final ApplicationService applicationService;
     private final CreditService creditService;
-
+    private final DealProducer dealProducer;
 
     @Operation(summary = "Calculate 4 loan offers")
     @ApiResponses(value = {
@@ -69,8 +72,13 @@ public class DealController {
         Application application = applicationService
                 .updateStatusHistoryForApplication(loanOfferDTO, ApplicationStatus.PREAPPROVAL);
 
+        EmailMassageDTO massageDTO = new EmailMassageDTO(application.getClientId().getEmail(), Theme.finish_registration, application.getApplicationId());
+
+        dealProducer.sendMessage(massageDTO, Theme.finish_registration.name());
+
         log.info("[chooseOneOfTheOffers] << result: {}", application);
     }
+
 
     @Operation(summary = "Completion registration", description = "Completion of registration and calculation of full loan terms")
     @ApiResponses(value = {
@@ -93,7 +101,66 @@ public class DealController {
 
         Credit credit = creditService.createCredit(creditDTO, application);
 
+        EmailMassageDTO massageDTO = new EmailMassageDTO(application.getClientId().getEmail(), Theme.create_documents, applicationId);
+
+        dealProducer.sendMessage(massageDTO, Theme.create_documents.name());
+
         log.info("[completionRegistrationAndCalculateFullCredit] << result: {}", credit);
+    }
+
+
+    @Operation(summary = "Request to send documents")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Possible Loan Offers have been calculated"),
+            @ApiResponse(responseCode = "400", description = "Validation failed for some argument"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")})
+    @PostMapping("document/{applicationId}/send")
+    public void sendDocuments(@PathVariable(value = "applicationId") Long applicationId) {
+        log.info("[sendDocuments] >> applicationId:{}", applicationId);
+
+        Application application = applicationService.getApplicationById(applicationId);
+
+        EmailMassageDTO massageDTO = new EmailMassageDTO(application.getClientId().getEmail(), Theme.send_documents, 1L);
+
+        dealProducer.sendMessage(massageDTO, Theme.send_documents.name());
+
+        log.info("[sendDocuments] << result is void, message: {}, topic/theme: {}", massageDTO, Theme.send_documents.name());
+    }
+
+    @Operation(summary = "Request to sign documents")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Loan Offer have been choose"),
+            @ApiResponse(responseCode = "400", description = "Validation failed for some argument"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")})
+    @PostMapping("document/{applicationId}/sign")
+    public void signDocuments(@PathVariable(value = "applicationId") Long applicationId) {
+        log.info("[signDocuments] >> applicationId:{}", applicationId);
+
+        Application application = applicationService.getApplicationById(applicationId);
+
+        EmailMassageDTO massageDTO = new EmailMassageDTO(application.getClientId().getEmail(), Theme.credit_issued, applicationId);
+
+        dealProducer.sendMessage(massageDTO, Theme.credit_issued.name());
+
+        log.info("[signDocuments] << result is void, message: {}, topic/theme: {}", massageDTO, Theme.credit_issued.name());
+    }
+
+    @Operation(summary = "Signing of documents")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Loan Offer have been choose"),
+            @ApiResponse(responseCode = "400", description = "Validation failed for some argument"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")})
+    @PostMapping("document/{applicationId}/code")
+    public void codeDocuments(@PathVariable(value = "applicationId") Long applicationId) {
+        log.info("[codeDocuments] >> applicationId:{}", applicationId);
+
+        Application application = applicationService.getApplicationById(applicationId);
+
+        EmailMassageDTO massageDTO = new EmailMassageDTO(application.getClientId().getEmail(), Theme.send_ses, applicationId);
+
+        dealProducer.sendMessage(massageDTO, Theme.send_ses.name());
+
+        log.info("[codeDocuments] << result is void, message: {}, topic/theme: {}", massageDTO, Theme.send_ses.name());
 
     }
 }

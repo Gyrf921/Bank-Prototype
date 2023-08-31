@@ -47,7 +47,7 @@ public class LoanApplicationRequestDTO {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Past(message = "birthday can't be after current date")
     ///@Min(value = 6570, message = "Minimum age should be 6570 days (18 y.o.)")
-    public LocalDate birthdate;
+    public LocalDate birthDate;
 
     @NotNull
     @Length(min = 4, max = 4, message = "passportSeries it is 4 number")

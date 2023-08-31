@@ -46,7 +46,7 @@ public class LoanApplicationRequestDTO {
     @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Past(message = "birthday can't be after current date")
-    private LocalDate birthdate;
+    private LocalDate birthDate;
 
     @NotNull
     @Length(min = 4, max = 4, message = "passportSeries it is 4 number")
