@@ -25,7 +25,7 @@ class PrescoringValidationImplTest {
 
         LoanApplicationRequestDTO requestDTO = enhancedRandom.nextObject(LoanApplicationRequestDTO.class);
 
-        requestDTO.setBirthdate(LocalDate.of(2000, 7, 7));
+        requestDTO.setBirthDate(LocalDate.of(2000, 7, 7));
 
         prescoringService.checkBirthdateValid(requestDTO);
 
@@ -37,7 +37,7 @@ class PrescoringValidationImplTest {
 
         LoanApplicationRequestDTO requestDTO = enhancedRandom.nextObject(LoanApplicationRequestDTO.class);
 
-        requestDTO.setBirthdate(LocalDate.of(2020, 7, 7));
+        requestDTO.setBirthDate(LocalDate.of(2020, 7, 7));
 
         assertThrows(BirthdateException.class, () -> {
             prescoringService.checkBirthdateValid(requestDTO);

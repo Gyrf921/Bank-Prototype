@@ -92,7 +92,7 @@ class ScoringCalculationImplTest {
         ScoringDataDTO scoringDataDTO = ScoringDataDTO.builder()
                 .term(6)
                 .amount(BigDecimal.valueOf(1000000))
-                .birthdate(LocalDate.now())
+                .birthDate(LocalDate.now())
                 .build();
 
         when(ruleEngine.getRate(any(), any()))

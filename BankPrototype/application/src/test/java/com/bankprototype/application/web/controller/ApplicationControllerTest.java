@@ -62,7 +62,7 @@ class ApplicationControllerTest {
                                 "  \"lastName\": \"lastName\",\n" +
                                 "  \"middleName\": \"middleName\",\n" +
                                 "  \"email\": \"string@gmail.com\",\n" +
-                                "  \"birthdate\": \"1990-07-07\",\n" +
+                                "  \"birthDate\": \"1990-07-07\",\n" +
                                 "  \"passportSeries\": \"1111\",\n" +
                                 "  \"passportNumber\": \"222222\"\n" +
                                 "}")
@@ -92,7 +92,7 @@ class ApplicationControllerTest {
                                 "  \"lastName\": \"lastName\",\n" +
                                 "  \"middleName\": \"middleName\",\n" +
                                 "  \"email\": \"string@gmail.com\",\n" +
-                                "  \"birthdate\": \"2022-07-07\",\n" +
+                                "  \"birthDate\": \"2022-07-07\",\n" +
                                 "  \"passportSeries\": \"1111\",\n" +
                                 "  \"passportNumber\": \"222222\"\n" +
                                 "}")
@@ -115,7 +115,7 @@ class ApplicationControllerTest {
                                 "  \"lastName\": \"lastName\",\n" +
                                 "  \"middleName\": \"middleName\",\n" +
                                 "  \"email\": \"string@gmail.com\",\n" +
-                                "  \"birthdate\": \"2000-07-07\",\n" +
+                                "  \"birthDate\": \"2000-07-07\",\n" +
                                 "  \"passportSeries\": \"1111231231\",\n" +
                                 "  \"passportNumber\": \"2222222\"\n" +
                                 "}")
