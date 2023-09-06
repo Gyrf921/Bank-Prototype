@@ -1,8 +1,10 @@
 package com.bankprototype.dossier.service.impl;
 
+import com.bankprototype.dossier.config.EmailPropertiesConfig;
+import com.bankprototype.dossier.exception.BadKafkaMessageException;
+import com.bankprototype.dossier.kafka.dto.EmailMassageDTO;
 import com.bankprototype.dossier.service.DossierConsumer;
 import com.bankprototype.dossier.service.SendMailService;
-import com.bankprototype.dossier.web.dto.EmailMassageDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -19,124 +21,81 @@ public class DossierConsumerImpl implements DossierConsumer {
 
     private final ObjectMapper objectMapper;
 
+    private final EmailPropertiesConfig emailConfig;
 
     @Override
-    @KafkaListener(groupId = "dossier", topics = "finish_registration")
+    @KafkaListener(topics = "${topic-name.finish-registration}")
     public void consumeFinishRegistration(String message) {
         log.info("[consumeFinishRegistration] >> massage: {}", message);
 
-        EmailMassageDTO email;
+        sendEmailFromTheKafkaMessage(message, emailConfig.getFinishRegistrationTheme(), emailConfig.getFinishRegistrationText());
 
-        try {
-            email = objectMapper.readValue(message, EmailMassageDTO.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        mailService.sendEmail(email, "Первичная регистрация заявки", "Заканчивая первичное оформление," +
-                " ты делаешь первый шаг к своим целям и мечтам! Ты готов стать частью чего-то большего," +
-                " и я уверен, что у тебя все получится. Вперед, преодолевай преграды и достигай вершин! Вместе с нашим кредитом!");
-
-        log.info("[consumeFinishRegistration] << result void, email: {}", email);
+        log.info("[consumeFinishRegistration] << result void");
     }
 
-
     @Override
-    @KafkaListener(groupId = "dossier", topics = "create_documents")
+    @KafkaListener(topics = "${topic-name.create-documents}")
     public void consumeCreateDocuments(String message) {
         log.info("[consumeCreateDocuments] >> message: {}", message);
 
-        EmailMassageDTO email;
-        try {
-            email = objectMapper.readValue(message, EmailMassageDTO.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        sendEmailFromTheKafkaMessage(message, emailConfig.getCreateDocumentsTheme(), emailConfig.getCreateDocumentsText());
 
-        mailService.sendEmail(email, "Переход к оформлению документов", "Оформление документов - это следующий шаг на пути к твоим богатствам!" +
-                " Ты создаешь основу для своего будущего успеха. Не забудь, что каждая отметка, каждая подпись в документе - это шаг вперед к твоей мечте." +
-                " Иди вперед и не останавливайся!");
-
-        log.info("[consumeCreateDocuments] << result void, email: {}", email);
+        log.info("[consumeCreateDocuments] << result void");
     }
 
     @Override
-    @KafkaListener(groupId = "dossier", topics = "send_documents")
+    @KafkaListener(topics = "${topic-name.send-documents}")
     public void consumeSendDocuments(String message) {
         log.info("[consumeSendDocuments] >> message: {}", message);
 
-        EmailMassageDTO email;
-        try {
-            email = objectMapper.readValue(message, EmailMassageDTO.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        sendEmailFromTheKafkaMessage(message, emailConfig.getSendDocumentsTheme(), emailConfig.getSendDocumentsText());
 
-        mailService.sendEmail(email, "Получение сформированных документов", "Поздравляю! Ты получил сформированные документы на почту." +
-                " Это свидетельство твоего прогресса и упорства. Теперь реальность стала немного ближе к твоим мечтам. Не сомневайся в своих силах," +
-                " иди вперед и достигни своих целей!");
-        log.info("[consumeSendDocuments] << result void, email: {}", email);
+        log.info("[consumeSendDocuments] << result void");
     }
 
     @Override
-    @KafkaListener(groupId = "dossier", topics = "credit_issued")
+    @KafkaListener(topics = "${topic-name.credit-issued}")
     public void consumeCreditIssued(String message) {
         log.info("[consumeCreditIssued] >> message: {}", message);
 
-        EmailMassageDTO email;
-        try {
-            email = objectMapper.readValue(message, EmailMassageDTO.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        sendEmailFromTheKafkaMessage(message, emailConfig.getCreditIssuedTheme(), emailConfig.getCreditIssuedText());
 
-        mailService.sendEmail(email, "Ссылка на подписание документов", "Вот она - заветная ссылка на подписание документов!" +
-                " Ты так близко к реализации своих мечт! Не бойся шагнуть в неизвестность и сделать этот решающий шаг. Уверен," +
-                " что за каждой подписью скрывается новая возможность. Пусть каждый клик будет шагом к твоей победе!");
-
-        log.info("[consumeCreditIssued] << result void, email: {}", email);
+        log.info("[consumeCreditIssued] << result void");
     }
 
     @Override
-    @KafkaListener(groupId = "dossier", topics = "send_ses")
+    @KafkaListener(topics = "${topic-name.send-ses}")
     public void consumeSendSes(String message) {
         log.info("[consumeSendSes] >> message: {}", message);
 
-        EmailMassageDTO email;
-        try {
-            email = objectMapper.readValue(message, EmailMassageDTO.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        mailService.sendEmail(email, "Получение SES кода", "Поздравляю с получением SES кода для подписания документов!" +
-                " В этом коде заключены твоя сила и уверенность. Будь смелым и решительным при подписании." +
-                " Это твой шанс отпечатать свой след на пути к успеху. Не сомневайся в своей способности преодоление любых препятствий!");
-
-        log.info("[consumeSendSes] << result void, email: {}", email);
+        sendEmailFromTheKafkaMessage(message, emailConfig.getSendSesTheme(), emailConfig.getSendSesText());
+        log.info("[consumeSendSes] << result void");
     }
 
-
-
     @Override
-    @KafkaListener(groupId = "dossier", topics = "application_denied")
+    @KafkaListener(topics = "${topic-name.application-denied}")
     public void consumeApplicationDenied(String message) {
         log.info("[consumeApplicationDenied] >> message: {}", message);
 
+        sendEmailFromTheKafkaMessage(message, emailConfig.getApplicationDeniedTheme(), emailConfig.getApplicationDeniedText());
+
+        log.info("[consumeApplicationDenied] << result void");
+    }
+
+    private void sendEmailFromTheKafkaMessage(String message, String theme, String text) {
+        log.info("[sendEmailFromTheKafkaMessage] >> message: {}", message);
+
         EmailMassageDTO email;
         try {
             email = objectMapper.readValue(message, EmailMassageDTO.class);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            log.error("Error converting kafka message to EmailMessageDTO");
+            throw new BadKafkaMessageException("Error converting kafka message to EmailMessageDTO, exception's message: " + e.getMessage());
         }
 
-        mailService.sendEmail(email, "Отказ в выдаче кредита", "Принятие отказа по заявке на кредит -" +
-                " это лишь страничка в твоей истории. Не забывай, что даже в неудаче есть уроки и возможности." +
-                " Разочарование - это всего лишь новый вызов, новый толчок для развития. Встань после падения и" +
-                " иди дальше, впереди ещё много возможностей стать лучше!");
+        mailService.sendEmail(email, theme, text);
 
-        log.info("[consumeApplicationDenied] << result void, email: {}", email);
+        log.info("[sendEmailFromTheKafkaMessage] << result void, email: {}", email);
     }
-
 
 }

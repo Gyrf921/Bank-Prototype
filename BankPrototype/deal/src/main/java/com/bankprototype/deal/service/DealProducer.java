@@ -1,10 +1,14 @@
 package com.bankprototype.deal.service;
 
 
-import com.bankprototype.deal.web.dto.EmailMassageDTO;
+import com.bankprototype.deal.kafka.EmailMessageDTO;
+import com.bankprototype.deal.kafka.enumfordto.Theme;
 
 public interface DealProducer {
 
-     void sendMessage(EmailMassageDTO massageDTO, String topicName);
+    EmailMessageDTO createMessage(Long applicationId, Theme theme);
+
+    void sendMessage(EmailMessageDTO massageDTO, String topicName);
+
 
 }

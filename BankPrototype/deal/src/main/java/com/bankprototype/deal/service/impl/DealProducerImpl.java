@@ -1,12 +1,13 @@
 package com.bankprototype.deal.service.impl;
 
 
+import com.bankprototype.deal.kafka.EmailMessageDTO;
+import com.bankprototype.deal.kafka.enumfordto.Theme;
+import com.bankprototype.deal.repository.dao.Application;
+import com.bankprototype.deal.service.ApplicationService;
 import com.bankprototype.deal.service.DealProducer;
-import com.bankprototype.deal.web.dto.EmailMassageDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.admin.NewTopic;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
@@ -18,13 +19,29 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DealProducerImpl implements DealProducer {
 
-    private final KafkaTemplate<String, EmailMassageDTO> kafkaTemplate;
+    private final ApplicationService applicationService;
+
+    private final KafkaTemplate<String, EmailMessageDTO> kafkaTemplate;
+
 
     @Override
-    public void sendMessage(EmailMassageDTO massageDTO, String topicName) {
+    public EmailMessageDTO createMessage(Long applicationId, Theme theme) {
+        log.info("[createMessage] >> applicationId: {}, theme: {}", applicationId, theme);
+
+        Application application = applicationService.getApplicationById(applicationId);
+
+        EmailMessageDTO massageDTO = new EmailMessageDTO(application.getClientId().getEmail(), theme, applicationId);
+
+        log.info("[createMessage] << result: {}", massageDTO);
+
+        return massageDTO;
+    }
+
+    @Override
+    public void sendMessage(EmailMessageDTO massageDTO, String topicName) {
         log.info("[sendMessage] >> massageDTO: {}", massageDTO);
 
-        Message<EmailMassageDTO> message = MessageBuilder
+        Message<EmailMessageDTO> message = MessageBuilder
                 .withPayload(massageDTO)
                 .setHeader(KafkaHeaders.TOPIC, topicName)
                 .build();
@@ -33,4 +50,6 @@ public class DealProducerImpl implements DealProducer {
 
         log.info("[sendMessage] << result is void.");
     }
+
+
 }

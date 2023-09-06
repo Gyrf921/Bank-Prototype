@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -49,9 +50,9 @@ class ApplicationControllerTest {
         ln2.setIsInsuranceEnabled(false);
 
         List<LoanOfferDTO> list = List.of(ln2, ln2, ln1, ln1);
-
+        ResponseEntity<List<LoanOfferDTO>> listResponseEntity = ResponseEntity.ok(list);
         when(feignClient.calculatePossibleLoanOffers(any()))
-                .thenReturn(list);
+                .thenReturn(listResponseEntity);
 
         ResultActions response = mockMvc.perform(post("/application")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -1,7 +1,7 @@
 package com.bankprototype.deal.service.impl;
 
 import com.bankprototype.deal.exception.ResourceNotFoundException;
-import com.bankprototype.deal.mapper.StatusHistoryMapper;
+import com.bankprototype.deal.mapper.StatusHistoryMapperImpl;
 import com.bankprototype.deal.repository.ApplicationRepository;
 import com.bankprototype.deal.repository.dao.Application;
 import com.bankprototype.deal.repository.dao.Client;
@@ -10,12 +10,9 @@ import com.bankprototype.deal.repository.dao.enumfordao.ChangeType;
 import com.bankprototype.deal.repository.dao.jsonb.StatusHistory;
 import com.bankprototype.deal.web.dto.ApplicationStatusHistoryDTO;
 import com.bankprototype.deal.web.dto.LoanOfferDTO;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.Mock;
 
 import java.time.LocalDateTime;
 import java.util.LinkedList;
@@ -29,19 +26,20 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-@SpringBootTest
-class ApplicationServiceImplTest {
 
-    @MockBean
+class ApplicationServiceImplTest extends BaseServiceTest {
+
+    @Mock
     private ApplicationRepository applicationRepository;
 
-    @Autowired
-    private StatusHistoryMapper statusHistoryMapper;
+    private final StatusHistoryMapperImpl statusHistoryMapper = new StatusHistoryMapperImpl();
 
-    @Autowired
     private ApplicationServiceImpl applicationService;
 
+    @BeforeEach
+    void setUp() {
+        applicationService = new ApplicationServiceImpl(applicationRepository, statusHistoryMapper);
+    }
 
     @Test
     void getApplicationById() {

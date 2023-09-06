@@ -1,4 +1,4 @@
-package com.bankprototype.deal.exception;
+package com.bankprototype.dossier.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,27 +13,28 @@ import java.time.LocalDate;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    private static final int BUSINESS_ERROR_CODE_DATABASE = 1000;
-    private static final int BUSINESS_ERROR_CODE_VALIDATE = 100;
+    private static final int BUSINESS_ERROR_CODE_EMAIL = 300;
+    private static final int BUSINESS_ERROR_CODE_KAFKA_DATA = 330;
     private static final int BUSINESS_ERROR_CODE_SERVER = 0;
 
-    @ExceptionHandler(BadScoringInfoException.class)
-    public ResponseEntity<?> badUserLoginException(BadScoringInfoException ex, WebRequest request) {
+    @ExceptionHandler(CreateMimeMessageException.class)
+    public ResponseEntity<?> createMimeMessageException(CreateMimeMessageException ex, WebRequest request) {
         log.error(ex.getMessage(), ex);
 
-        ErrorDetails errorDetails = new ErrorDetails(HttpStatus.BAD_REQUEST.value(), BUSINESS_ERROR_CODE_VALIDATE, LocalDate.now(), ex.getMessage(), request.getDescription(false));
+        ErrorDetails errorDetails = new ErrorDetails(HttpStatus.BAD_REQUEST.value(), BUSINESS_ERROR_CODE_EMAIL, LocalDate.now(), ex.getMessage(), request.getDescription(false));
 
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<?> resourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
+    @ExceptionHandler(BadKafkaMessageException.class)
+    public ResponseEntity<?> badKafkaMessageException(BadKafkaMessageException ex, WebRequest request) {
         log.error(ex.getMessage(), ex);
 
-        ErrorDetails errorDetails = new ErrorDetails(HttpStatus.NOT_FOUND.value(), BUSINESS_ERROR_CODE_DATABASE, LocalDate.now(), ex.getMessage(), request.getDescription(false));
+        ErrorDetails errorDetails = new ErrorDetails(HttpStatus.UNPROCESSABLE_ENTITY.value(), BUSINESS_ERROR_CODE_KAFKA_DATA, LocalDate.now(), ex.getMessage(), request.getDescription(false));
 
-        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorDetails, HttpStatus.UNPROCESSABLE_ENTITY);
     }
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> globalExceptionHandler(Exception ex, WebRequest request) {

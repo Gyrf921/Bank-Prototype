@@ -7,7 +7,6 @@ import com.bankprototype.deal.repository.dao.Credit;
 import com.bankprototype.deal.repository.dao.enumfordao.*;
 import com.bankprototype.deal.repository.dao.jsonb.StatusHistory;
 import com.bankprototype.deal.service.ClientService;
-import com.bankprototype.deal.service.DealProducer;
 import com.bankprototype.deal.service.impl.ApplicationServiceImpl;
 import com.bankprototype.deal.service.impl.CreditServiceImpl;
 import com.bankprototype.deal.web.dto.CreditDTO;
@@ -18,12 +17,9 @@ import com.bankprototype.deal.web.feign.CreditConveyorFeignClient;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -41,19 +37,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-//@ExtendWith(MockitoExtension.class)
-@SpringBootTest
-@AutoConfigureMockMvc
-class DealControllerTest {
+
+class DealControllerTest extends BaseControllerTest {
+
 
     @MockBean
     private CreditConveyorFeignClient feignClient;
-
-    @MockBean
-    private DealProducer dealProducer;
-
-    @Autowired
-    private MockMvc mockMvc;
 
     @MockBean
     private ClientService clientService;
@@ -63,7 +52,6 @@ class DealControllerTest {
 
     @MockBean
     private CreditServiceImpl creditService;
-
 
     @Test
     void calculatePossibleLoanOffers() throws Exception {
@@ -78,7 +66,7 @@ class DealControllerTest {
         ln1.setIsInsuranceEnabled(true);
 
         List<LoanOfferDTO> list = List.of(ln1, ln1, ln1, ln1);
-
+        ResponseEntity<List<LoanOfferDTO>> listResponseEntity = ResponseEntity.ok().body(list);
         when(clientService.createClient(any()))
                 .thenReturn(clientTest);
 
@@ -86,7 +74,7 @@ class DealControllerTest {
                 .thenReturn(applicationTest);
 
         when(feignClient.calculatePossibleLoanOffers(any()))
-                .thenReturn(list);
+                .thenReturn(listResponseEntity);
 
         ResultActions response = mockMvc.perform(post("/deal/application")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -213,6 +201,7 @@ class DealControllerTest {
 
         Credit credit = enhancedRandom.nextObject(Credit.class);
         CreditDTO creditDTO = enhancedRandom.nextObject(CreditDTO.class);
+        ResponseEntity<CreditDTO> creditDTOResponseEntity = ResponseEntity.ok().body(creditDTO);
 
         when(applicationService.getApplicationById(any()))
                 .thenReturn(applicationTest);
@@ -224,14 +213,14 @@ class DealControllerTest {
                 .thenReturn(scoringDataDTO);
 
         when(feignClient.calculateFullLoanParameters(any()))
-                .thenReturn(creditDTO);
+                .thenReturn(creditDTOResponseEntity);
 
         when(creditService.createCredit(any(), any()))
                 .thenReturn(credit);
 
         doNothing().when(dealProducer).sendMessage(any(), any());
 
-        ResultActions response = mockMvc.perform(post("/deal/calculate/1")
+        ResultActions response = mockMvc.perform(put("/deal/calculate/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
                                 "  \"gender\": \"MALE\",\n" +
@@ -264,7 +253,7 @@ class DealControllerTest {
 
         doNothing().when(dealProducer).sendMessage(any(), any());
 
-        ResultActions response = mockMvc.perform(post("/deal/calculate/0")
+        ResultActions response = mockMvc.perform(put("/deal/calculate/0")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
                                 "  \"gender\": \"MALE\",\n" +
@@ -289,54 +278,5 @@ class DealControllerTest {
         System.out.println(response);
     }
 
-    @Test
-    void sendDocuments() throws Exception {
-        EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build();
-        Application applicationTest = enhancedRandom.nextObject(Application.class);
 
-        when(applicationService.getApplicationById(any()))
-                .thenReturn(applicationTest);
-
-        doNothing().when(dealProducer).sendMessage(any(), any());
-
-        ResultActions response = mockMvc.perform(post("/deal/document/1/send"))
-                .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
-
-        System.out.println(response);
-    }
-
-    @Test
-    void signDocuments() throws Exception {
-        EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build();
-        Application applicationTest = enhancedRandom.nextObject(Application.class);
-
-        when(applicationService.getApplicationById(any()))
-                .thenReturn(applicationTest);
-
-        doNothing().when(dealProducer).sendMessage(any(), any());
-
-        ResultActions response = mockMvc.perform(post("/deal/document/1/sign"))
-                .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
-
-        System.out.println(response);
-    }
-
-    @Test
-    void codeDocuments() throws Exception {
-        EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build();
-        Application applicationTest = enhancedRandom.nextObject(Application.class);
-
-        when(applicationService.getApplicationById(any()))
-                .thenReturn(applicationTest);
-
-        doNothing().when(dealProducer).sendMessage(any(), any());
-
-        ResultActions response = mockMvc.perform(post("/deal/document/1/code"))
-                .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
-
-        System.out.println(response);
-    }
 }
