@@ -5,6 +5,8 @@ import com.bankprototype.dossier.kafka.dto.enamfordto.Theme;
 import com.bankprototype.dossier.service.SendMailService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -54,87 +56,48 @@ class DossierConsumerImplTest {
     void testKafkaConsumer_finishRegistration() {
         EmailMassageDTO message = new EmailMassageDTO("gyrf921@gmail.com", Theme.FINISH_REGISTRATION, 1L);
 
-        kafkaProducer.send(finishRegistration, message);
-
-        doNothing().when(mailService).sendEmail(any(), any(), any());
-
-        verify(mailService, timeout(5000)).sendEmail(any(), any(), any());
-
-        verify(mailService).sendEmail(emailKafkaCaptor.capture(), any(), any());
-        EmailMassageDTO emailCaptorValue = emailKafkaCaptor.getValue();
-        System.out.println("SendMailService received this EmailMassageDTO:" + emailCaptorValue);
-
+        testKafkaConsumer(finishRegistration, message);
     }
 
     @Test
     void testKafkaConsumer_createDocuments() {
         EmailMassageDTO message = new EmailMassageDTO("gyrf921@gmail.com", Theme.CREATE_DOCUMENTS, 1L);
 
-        kafkaProducer.send(createDocuments, message);
-
-        doNothing().when(mailService).sendEmail(any(), any(), any());
-
-        verify(mailService, timeout(5000)).sendEmail(any(), any(), any());
-
-        verify(mailService).sendEmail(emailKafkaCaptor.capture(), any(), any());
-        EmailMassageDTO emailCaptorValue = emailKafkaCaptor.getValue();
-        System.out.println("SendMailService received this EmailMassageDTO:" + emailCaptorValue);
-
+        testKafkaConsumer(createDocuments, message);
     }
 
     @Test
     void testKafkaConsumer_sendDocuments() {
         EmailMassageDTO message = new EmailMassageDTO("gyrf921@gmail.com", Theme.SEND_DOCUMENTS, 1L);
 
-        kafkaProducer.send(sendDocuments, message);
-
-        doNothing().when(mailService).sendEmail(any(), any(), any());
-
-        verify(mailService, timeout(5000)).sendEmail(any(), any(), any());
-
-        verify(mailService).sendEmail(emailKafkaCaptor.capture(), any(), any());
-        EmailMassageDTO emailCaptorValue = emailKafkaCaptor.getValue();
-        System.out.println("SendMailService received this EmailMassageDTO:" + emailCaptorValue);
-
+        testKafkaConsumer(sendDocuments, message);
     }
 
     @Test
     void testKafkaConsumer_creditIssued() {
         EmailMassageDTO message = new EmailMassageDTO("gyrf921@gmail.com", Theme.CREDIT_ISSUED, 1L);
 
-        kafkaProducer.send(creditIssued, message);
-
-        doNothing().when(mailService).sendEmail(any(), any(), any());
-
-        verify(mailService, timeout(5000)).sendEmail(any(), any(), any());
-
-        verify(mailService).sendEmail(emailKafkaCaptor.capture(), any(), any());
-        EmailMassageDTO emailCaptorValue = emailKafkaCaptor.getValue();
-        System.out.println("SendMailService received this EmailMassageDTO:" + emailCaptorValue);
-
+        testKafkaConsumer(creditIssued, message);
     }
 
     @Test
     void testKafkaConsumer_sendSes() {
         EmailMassageDTO message = new EmailMassageDTO("gyrf921@gmail.com", Theme.SEND_SES, 1L);
 
-        kafkaProducer.send(sendSes, message);
-
-        doNothing().when(mailService).sendEmail(any(), any(), any());
-
-        verify(mailService, timeout(5000)).sendEmail(any(), any(), any());
-
-        verify(mailService).sendEmail(emailKafkaCaptor.capture(), any(), any());
-        EmailMassageDTO emailCaptorValue = emailKafkaCaptor.getValue();
-        System.out.println("SendMailService received this EmailMassageDTO:" + emailCaptorValue);
-
+        testKafkaConsumer(sendSes, message);
     }
 
     @Test
     void testKafkaConsumer_applicationDenied() {
         EmailMassageDTO message = new EmailMassageDTO("gyrf921@gmail.com", Theme.APPLICATION_DENIED, 1L);
 
-        kafkaProducer.send(applicationDenied, message);
+        testKafkaConsumer(applicationDenied, message);
+    }
+
+
+    void testKafkaConsumer(String topicName, EmailMassageDTO message) {
+
+        kafkaProducer.send(topicName, message);
 
         doNothing().when(mailService).sendEmail(any(), any(), any());
 
@@ -143,7 +106,6 @@ class DossierConsumerImplTest {
         verify(mailService).sendEmail(emailKafkaCaptor.capture(), any(), any());
         EmailMassageDTO emailCaptorValue = emailKafkaCaptor.getValue();
         System.out.println("SendMailService received this EmailMassageDTO:" + emailCaptorValue);
-
     }
 
 }

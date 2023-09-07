@@ -27,6 +27,7 @@ import java.util.List;
 public class ConveyorController {
 
     private final PrescoringCalculation prescoringCalculation;
+
     private final ScoringCalculation scoringCalculation;
 
     @Operation(summary = "Calculate 4 loan offers")

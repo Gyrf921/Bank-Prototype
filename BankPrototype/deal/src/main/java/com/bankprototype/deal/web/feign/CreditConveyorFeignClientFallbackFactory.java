@@ -35,12 +35,13 @@ public class CreditConveyorFeignClientFallbackFactory implements FallbackFactory
         return new CreditConveyorFeignClient() {
 
             @Override
-            public ResponseEntity<List<LoanOfferDTO>> calculatePossibleLoanOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
+            public ResponseEntity<List<LoanOfferDTO>> calculatePossibleLoanOffers(LoanApplicationRequestDTO loanApplicationRequestDTO){
 
                 log.info("[Fallback.calculatePossibleLoanOffers] >> loanApplicationRequestDTO: {}", loanApplicationRequestDTO);
 
                 log.info("[Fallback.calculatePossibleLoanOffers] << result: null");
-                return null;
+
+                return ResponseEntity.internalServerError().body(null);
             }
 
             @Override

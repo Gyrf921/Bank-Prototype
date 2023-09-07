@@ -21,7 +21,7 @@ public class PrescoringCalculationImpl implements PrescoringCalculation {
 
     private final CreditCalculation calculation;
 
-    @Value("${loanRate}") //8
+    @Value("${loanRate}")
     private Double loanRate;
 
     @Value("${ratioOfInsuranceEnabled}")

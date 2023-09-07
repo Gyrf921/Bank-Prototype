@@ -3,7 +3,7 @@ package com.bankprototype.dossier.service.impl;
 import com.bankprototype.dossier.kafka.dto.EmailMassageDTO;
 import com.bankprototype.dossier.kafka.dto.enamfordto.Theme;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
 
-@RunWith(SpringRunner.class)
+
 @SpringBootTest
 @DirtiesContext
 @SpyBean(JavaMailSender.class)
