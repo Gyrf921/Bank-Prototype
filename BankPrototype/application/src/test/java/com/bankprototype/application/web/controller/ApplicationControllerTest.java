@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -49,9 +50,9 @@ class ApplicationControllerTest {
         ln2.setIsInsuranceEnabled(false);
 
         List<LoanOfferDTO> list = List.of(ln2, ln2, ln1, ln1);
-
+        ResponseEntity<List<LoanOfferDTO>> listResponseEntity = ResponseEntity.ok(list);
         when(feignClient.calculatePossibleLoanOffers(any()))
-                .thenReturn(list);
+                .thenReturn(listResponseEntity);
 
         ResultActions response = mockMvc.perform(post("/application")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -62,7 +63,7 @@ class ApplicationControllerTest {
                                 "  \"lastName\": \"lastName\",\n" +
                                 "  \"middleName\": \"middleName\",\n" +
                                 "  \"email\": \"string@gmail.com\",\n" +
-                                "  \"birthdate\": \"1990-07-07\",\n" +
+                                "  \"birthDate\": \"1990-07-07\",\n" +
                                 "  \"passportSeries\": \"1111\",\n" +
                                 "  \"passportNumber\": \"222222\"\n" +
                                 "}")
@@ -92,7 +93,7 @@ class ApplicationControllerTest {
                                 "  \"lastName\": \"lastName\",\n" +
                                 "  \"middleName\": \"middleName\",\n" +
                                 "  \"email\": \"string@gmail.com\",\n" +
-                                "  \"birthdate\": \"2022-07-07\",\n" +
+                                "  \"birthDate\": \"2022-07-07\",\n" +
                                 "  \"passportSeries\": \"1111\",\n" +
                                 "  \"passportNumber\": \"222222\"\n" +
                                 "}")
@@ -115,7 +116,7 @@ class ApplicationControllerTest {
                                 "  \"lastName\": \"lastName\",\n" +
                                 "  \"middleName\": \"middleName\",\n" +
                                 "  \"email\": \"string@gmail.com\",\n" +
-                                "  \"birthdate\": \"2000-07-07\",\n" +
+                                "  \"birthDate\": \"2000-07-07\",\n" +
                                 "  \"passportSeries\": \"1111231231\",\n" +
                                 "  \"passportNumber\": \"2222222\"\n" +
                                 "}")

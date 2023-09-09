@@ -1,6 +1,7 @@
 package com.bankprototype.deal.service.impl;
 
 import com.bankprototype.deal.mapper.CreditMapper;
+import com.bankprototype.deal.mapper.CreditMapperImpl;
 import com.bankprototype.deal.repository.ApplicationRepository;
 import com.bankprototype.deal.repository.dao.Application;
 import com.bankprototype.deal.repository.dao.Client;
@@ -10,12 +11,9 @@ import com.bankprototype.deal.repository.dao.enumfordao.EmploymentStatus;
 import com.bankprototype.deal.repository.dao.enumfordao.Gender;
 import com.bankprototype.deal.repository.dao.jsonb.Passport;
 import com.bankprototype.deal.web.dto.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.Mock;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -27,19 +25,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-@SpringBootTest
-class CreditServiceImplTest {
 
-    @MockBean
+class CreditServiceImplTest extends BaseServiceTest {
+
+    @Mock
     private ApplicationRepository applicationRepository;
 
-    @Autowired
-    private CreditMapper creditMapper;
+    private final CreditMapper creditMapper = new CreditMapperImpl();
 
-    @Autowired
     private CreditServiceImpl creditService;
 
+    @BeforeEach
+    void setUp() {
+        creditService = new CreditServiceImpl(applicationRepository, creditMapper);
+    }
 
     @Test
     void createScoringDataDTO() {
@@ -48,6 +47,7 @@ class CreditServiceImplTest {
                 .employmentStatus(EmploymentStatus.BUSINESS_OWNER)
                 .salary(BigDecimal.valueOf(400000))
                 .build();
+
         Passport passportTest = Passport.builder()
                 .series("2222")
                 .number("111111")

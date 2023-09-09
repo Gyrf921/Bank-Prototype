@@ -35,7 +35,7 @@ class ConveyorControllerTest {
                                 "  \"lastName\": \"lastName\",\n" +
                                 "  \"middleName\": \"middleName\",\n" +
                                 "  \"email\": \"string@gmail.com\",\n" +
-                                "  \"birthdate\": \"1990-07-07\",\n" +
+                                "  \"birthDate\": \"1990-07-07\",\n" +
                                 "  \"passportSeries\": \"1111\",\n" +
                                 "  \"passportNumber\": \"222222\"\n" +
                                 "}")
@@ -67,7 +67,7 @@ class ConveyorControllerTest {
                                 "  \"lastName\": \"lastName\",\n" +
                                 "  \"middleName\": \"middleName\",\n" +
                                 "  \"gender\": \"MALE\",\n" +
-                                "  \"birthdate\": \"2000-07-30\",\n" +
+                                "  \"birthDate\": \"2000-07-30\",\n" +
                                 "  \"passportSeries\": \"1111\",\n" +
                                 "  \"passportNumber\": \"222222\",\n" +
                                 "  \"passportIssueDate\": \"2020-07-30\",\n" +
@@ -110,7 +110,7 @@ class ConveyorControllerTest {
                                 "  \"lastName\": \"lastName\",\n" +
                                 "  \"middleName\": \"middleName\",\n" +
                                 "  \"gender\": \"MALE\",\n" +
-                                "  \"birthdate\": \"2000-07-30\",\n" +
+                                "  \"birthDate\": \"2000-07-30\",\n" +
                                 "  \"passportSeries\": \"1111\",\n" +
                                 "  \"passportNumber\": \"222222\",\n" +
                                 "  \"passportIssueDate\": \"2020-07-30\",\n" +

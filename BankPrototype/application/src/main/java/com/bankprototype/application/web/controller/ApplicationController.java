@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,17 +32,17 @@ public class ApplicationController {
             @ApiResponse(responseCode = "400", description = "Validation failed for some argument"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")})
     @PostMapping("/application")
-    public List<LoanOfferDTO> calculatePossibleLoanOffers(@Valid @RequestBody LoanApplicationRequestDTO loanApplicationRequestDTO) {
+    public ResponseEntity<List<LoanOfferDTO>> calculatePossibleLoanOffers(@Valid @RequestBody LoanApplicationRequestDTO loanApplicationRequestDTO) {
         log.info("[calculationPossibleLoanOffers] >> loanApplicationRequestDTO: {}", loanApplicationRequestDTO);
 
         prescoringValidation.checkBirthdateValid(loanApplicationRequestDTO);
 
         List<LoanOfferDTO> listLoanOffers
-                = feignClient.calculatePossibleLoanOffers(loanApplicationRequestDTO);
+                = feignClient.calculatePossibleLoanOffers(loanApplicationRequestDTO).getBody();
 
         log.info("[calculationPossibleLoanOffers] << result: {}", listLoanOffers);
 
-        return listLoanOffers;
+        return ResponseEntity.ok().body(listLoanOffers);
 
     }
 

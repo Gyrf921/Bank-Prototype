@@ -1,7 +1,8 @@
 package com.bankprototype.deal.service.impl;
 
 import com.bankprototype.deal.exception.ResourceNotFoundException;
-import com.bankprototype.deal.mapper.ClientMapper;
+import com.bankprototype.deal.mapper.ClientMapperImpl;
+import com.bankprototype.deal.mapper.EmploymentMapperImpl;
 import com.bankprototype.deal.repository.ClientRepository;
 import com.bankprototype.deal.repository.dao.Client;
 import com.bankprototype.deal.repository.dao.jsonb.Passport;
@@ -9,12 +10,9 @@ import com.bankprototype.deal.web.dto.FinishRegistrationRequestDTO;
 import com.bankprototype.deal.web.dto.LoanApplicationRequestDTO;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.Mock;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,20 +24,21 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-@SpringBootTest
-class ClientServiceImplTest {
+class ClientServiceImplTest extends BaseServiceTest {
 
-    @MockBean
+
+    @Mock
     private ClientRepository clientRepository;
 
-    @Autowired
-    private ClientMapper clientMapper;
+    private final ClientMapperImpl clientMapper = new ClientMapperImpl(new EmploymentMapperImpl());
 
-
-    @Autowired
     private ClientServiceImpl clientService;
 
+    @BeforeEach
+    void setUp() {
+
+        clientService = new ClientServiceImpl(clientRepository, clientMapper);
+    }
 
     @Test
     void getClientById() {
@@ -87,7 +86,7 @@ class ClientServiceImplTest {
         LoanApplicationRequestDTO requestDTO = LoanApplicationRequestDTO.builder()
                 .amount(BigDecimal.valueOf(1000000))
                 .firstName("testFirstName")
-                .birthdate(LocalDate.of(1991, 1, 1))
+                .birthDate(LocalDate.of(1991, 1, 1))
                 .email("test@neoflex.com")
                 .passportNumber("111111")
                 .passportSeries("2222")

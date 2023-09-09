@@ -17,12 +17,9 @@ import com.bankprototype.deal.web.feign.CreditConveyorFeignClient;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -33,22 +30,19 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-//@ExtendWith(MockitoExtension.class)
-@SpringBootTest
-@AutoConfigureMockMvc
-class DealControllerTest {
+
+class DealControllerTest extends BaseControllerTest {
+
 
     @MockBean
     private CreditConveyorFeignClient feignClient;
-
-    @Autowired
-    private MockMvc mockMvc;
 
     @MockBean
     private ClientService clientService;
@@ -58,7 +52,6 @@ class DealControllerTest {
 
     @MockBean
     private CreditServiceImpl creditService;
-
 
     @Test
     void calculatePossibleLoanOffers() throws Exception {
@@ -73,7 +66,7 @@ class DealControllerTest {
         ln1.setIsInsuranceEnabled(true);
 
         List<LoanOfferDTO> list = List.of(ln1, ln1, ln1, ln1);
-
+        ResponseEntity<List<LoanOfferDTO>> listResponseEntity = ResponseEntity.ok().body(list);
         when(clientService.createClient(any()))
                 .thenReturn(clientTest);
 
@@ -81,7 +74,7 @@ class DealControllerTest {
                 .thenReturn(applicationTest);
 
         when(feignClient.calculatePossibleLoanOffers(any()))
-                .thenReturn(list);
+                .thenReturn(listResponseEntity);
 
         ResultActions response = mockMvc.perform(post("/deal/application")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -92,7 +85,7 @@ class DealControllerTest {
                                 "  \"lastName\": \"lastName\",\n" +
                                 "  \"middleName\": \"middleName\",\n" +
                                 "  \"email\": \"string@gmail.com\",\n" +
-                                "  \"birthdate\": \"1990-07-07\",\n" +
+                                "  \"birthDate\": \"1990-07-07\",\n" +
                                 "  \"passportSeries\": \"1111\",\n" +
                                 "  \"passportNumber\": \"222222\"\n" +
                                 "}")
@@ -114,6 +107,8 @@ class DealControllerTest {
 
         when(applicationService.updateStatusHistoryForApplication(any(), any()))
                 .thenReturn(applicationTest);
+
+        doNothing().when(dealProducer).sendMessage(any(), any());
 
         ResultActions response = mockMvc.perform(put("/deal/offer")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -139,6 +134,8 @@ class DealControllerTest {
 
         when(applicationService.updateStatusHistoryForApplication(any(), any()))
                 .thenThrow(ResourceNotFoundException.class);
+
+        doNothing().when(dealProducer).sendMessage(any(), any());
 
         ResultActions response = mockMvc.perform(put("/deal/offer")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -174,7 +171,7 @@ class DealControllerTest {
                 .lastName("testName")
                 .middleName("testName")
                 .gender(Gender.MALE)
-                .birthdate(LocalDate.of(1990, 07, 07))
+                .birthDate(LocalDate.of(1990, 07, 07))
                 .passportSeries("1111")
                 .passportNumber("222222")
                 .passportIssueDate(LocalDate.of(2020, 07, 07))
@@ -204,6 +201,7 @@ class DealControllerTest {
 
         Credit credit = enhancedRandom.nextObject(Credit.class);
         CreditDTO creditDTO = enhancedRandom.nextObject(CreditDTO.class);
+        ResponseEntity<CreditDTO> creditDTOResponseEntity = ResponseEntity.ok().body(creditDTO);
 
         when(applicationService.getApplicationById(any()))
                 .thenReturn(applicationTest);
@@ -215,12 +213,14 @@ class DealControllerTest {
                 .thenReturn(scoringDataDTO);
 
         when(feignClient.calculateFullLoanParameters(any()))
-                .thenReturn(creditDTO);
+                .thenReturn(creditDTOResponseEntity);
 
         when(creditService.createCredit(any(), any()))
                 .thenReturn(credit);
 
-        ResultActions response = mockMvc.perform(post("/deal/calculate/1")
+        doNothing().when(dealProducer).sendMessage(any(), any());
+
+        ResultActions response = mockMvc.perform(put("/deal/calculate/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
                                 "  \"gender\": \"MALE\",\n" +
@@ -251,7 +251,9 @@ class DealControllerTest {
         when(applicationService.getApplicationById(any()))
                 .thenThrow(ResourceNotFoundException.class);
 
-        ResultActions response = mockMvc.perform(post("/deal/calculate/0")
+        doNothing().when(dealProducer).sendMessage(any(), any());
+
+        ResultActions response = mockMvc.perform(put("/deal/calculate/0")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
                                 "  \"gender\": \"MALE\",\n" +
@@ -275,4 +277,6 @@ class DealControllerTest {
 
         System.out.println(response);
     }
+
+
 }

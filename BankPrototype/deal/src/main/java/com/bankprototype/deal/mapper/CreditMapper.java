@@ -22,7 +22,7 @@ public interface CreditMapper {
     @Mapping(target = "lastName", source = "client.lastName")
     @Mapping(target = "middleName", source = "client.middleName")
     @Mapping(target = "gender", source = "requestDTO.gender")
-    @Mapping(target = "birthdate", source = "client.birthDate")
+    @Mapping(target = "birthDate", source = "client.birthDate")
     @Mapping(target = "passportSeries", source = "client.passport.series")
     @Mapping(target = "passportNumber", source = "client.passport.number")
     @Mapping(target = "passportIssueDate", source = "requestDTO.passportIssueDate")

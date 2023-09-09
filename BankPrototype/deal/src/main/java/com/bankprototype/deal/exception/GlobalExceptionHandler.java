@@ -14,7 +14,17 @@ import java.time.LocalDate;
 public class GlobalExceptionHandler {
 
     private static final int BUSINESS_ERROR_CODE_DATABASE = 1000;
+    private static final int BUSINESS_ERROR_CODE_VALIDATE = 100;
     private static final int BUSINESS_ERROR_CODE_SERVER = 0;
+
+    @ExceptionHandler(BadScoringInfoException.class)
+    public ResponseEntity<?> badUserLoginException(BadScoringInfoException ex, WebRequest request) {
+        log.error(ex.getMessage(), ex);
+
+        ErrorDetails errorDetails = new ErrorDetails(HttpStatus.BAD_REQUEST.value(), BUSINESS_ERROR_CODE_VALIDATE, LocalDate.now(), ex.getMessage(), request.getDescription(false));
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> resourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {

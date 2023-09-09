@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,7 @@ import java.util.List;
 public class ConveyorController {
 
     private final PrescoringCalculation prescoringCalculation;
+
     private final ScoringCalculation scoringCalculation;
 
     @Operation(summary = "Calculate 4 loan offers")
@@ -34,14 +36,14 @@ public class ConveyorController {
             @ApiResponse(responseCode = "400", description = "Validation failed for some argument. Invalid input supplied"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")})
     @PostMapping("/offers")
-    public List<LoanOfferDTO> calculatePossibleLoanOffers(@Valid @RequestBody LoanApplicationRequestDTO loanApplicationRequestDTO) {
+    public ResponseEntity<List<LoanOfferDTO>> calculatePossibleLoanOffers(@Valid @RequestBody LoanApplicationRequestDTO loanApplicationRequestDTO) {
         log.info("[calculationPossibleLoanOffers] >> loanApplicationRequestDTO: {}", loanApplicationRequestDTO);
 
         List<LoanOfferDTO> loanOfferDTOs = prescoringCalculation.createListLoanOffer(loanApplicationRequestDTO);
 
         log.info("[calculationPossibleLoanOffers] << result: {}", loanOfferDTOs);
 
-        return loanOfferDTOs;
+        return ResponseEntity.ok().body(loanOfferDTOs);
 
     }
 
@@ -51,14 +53,14 @@ public class ConveyorController {
             @ApiResponse(responseCode = "400", description = "Validation failed for some argument. Invalid input supplied"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")})
     @PostMapping("/calculation")
-    public CreditDTO calculateFullLoanParameters(@Valid @RequestBody ScoringDataDTO scoringDataDTO) {
+    public ResponseEntity<CreditDTO> calculateFullLoanParameters(@Valid @RequestBody ScoringDataDTO scoringDataDTO) {
         log.info("[fullCalculationLoanParameters] >> scoringDataDTO: {}", scoringDataDTO);
 
         CreditDTO creditDTO = scoringCalculation.createCredit(scoringDataDTO);
 
         log.info("[fullCalculationLoanParameters] << result: {}", creditDTO);
 
-        return creditDTO;
+        return ResponseEntity.ok().body(creditDTO);
     }
 
 }
