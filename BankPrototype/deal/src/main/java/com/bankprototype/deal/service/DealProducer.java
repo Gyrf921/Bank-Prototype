@@ -10,5 +10,4 @@ public interface DealProducer {
 
     void sendMessage(EmailMessageDTO massageDTO, String topicName);
 
-
 }

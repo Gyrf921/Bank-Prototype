@@ -26,15 +26,14 @@ public class FinishRegistrationRequestDTO {
     private MaritalStatus maritalStatus;
 
     @NotNull
-    @DecimalMin(value = "10000")
-    private BigDecimal dependentAmount;
+    private Integer dependentAmount;
 
     @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate passportIssueDate;
 
     @NotNull
-    private String passportIssueBrach;
+    private String passportIssueBranch;
 
     @NotNull
     private EmploymentDTO employment;

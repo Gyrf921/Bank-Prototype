@@ -7,7 +7,6 @@ import com.bankprototype.deal.repository.dao.Credit;
 import com.bankprototype.deal.repository.dao.enumfordao.*;
 import com.bankprototype.deal.repository.dao.jsonb.StatusHistory;
 import com.bankprototype.deal.service.ClientService;
-import com.bankprototype.deal.service.impl.ApplicationServiceImpl;
 import com.bankprototype.deal.service.impl.CreditServiceImpl;
 import com.bankprototype.deal.web.dto.CreditDTO;
 import com.bankprototype.deal.web.dto.EmploymentDTO;
@@ -47,8 +46,6 @@ class DealControllerTest extends BaseControllerTest {
     @MockBean
     private ClientService clientService;
 
-    @MockBean
-    private ApplicationServiceImpl applicationService;
 
     @MockBean
     private CreditServiceImpl creditService;
@@ -177,7 +174,7 @@ class DealControllerTest extends BaseControllerTest {
                 .passportIssueDate(LocalDate.of(2020, 07, 07))
                 .passportIssueBranch("issue Branch")
                 .maritalStatus(MaritalStatus.SINGLE)
-                .dependentAmount(BigDecimal.valueOf(1159689))
+                .dependentAmount(1)
                 .employment(employmentDTO)
                 .account("testAccount")
                 .isInsuranceEnabled(true)
@@ -227,7 +224,7 @@ class DealControllerTest extends BaseControllerTest {
                                 "  \"maritalStatus\": \"SINGLE\",\n" +
                                 "  \"dependentAmount\": 1000000,\n" +
                                 "  \"passportIssueDate\": \"2020-07-30\",\n" +
-                                "  \"passportIssueBrach\": \"passportIssue\",\n" +
+                                "  \"passportIssueBranch\": \"passportIssue\",\n" +
                                 "  \"employment\": {\n" +
                                 "    \"employmentStatus\": \"EMPLOYED\",\n" +
                                 "    \"employerINN\": \"string\",\n" +
@@ -260,7 +257,7 @@ class DealControllerTest extends BaseControllerTest {
                                 "  \"maritalStatus\": \"SINGLE\",\n" +
                                 "  \"dependentAmount\": 1000000,\n" +
                                 "  \"passportIssueDate\": \"2020-07-30\",\n" +
-                                "  \"passportIssueBrach\": \"passportIssue\",\n" +
+                                "  \"passportIssueBranch\": \"passportIssue\",\n" +
                                 "  \"employment\": {\n" +
                                 "    \"employmentStatus\": \"EMPLOYED\",\n" +
                                 "    \"employerINN\": \"string\",\n" +

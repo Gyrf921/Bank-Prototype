@@ -19,7 +19,7 @@
             <column name="email" type="VARCHAR(255)"/>
             <column name="gender" type="VARCHAR(255)"/>
             <column name="marital_status" type="VARCHAR(255)"/>
-            <column name="dependent_amount" type="DECIMAL"/>
+            <column name="dependent_amount" type="INTEGER"/>
             <column name="passport_id" type="JSONB"/>
             <column name="employment_id" type="JSONB"/>
             <column name="account" type="VARCHAR(255)"/>

@@ -54,7 +54,7 @@ class CreditServiceImplTest extends BaseServiceTest {
                 .build();
 
         FinishRegistrationRequestDTO requestDTO = FinishRegistrationRequestDTO.builder()
-                .dependentAmount(BigDecimal.valueOf(1000000))
+                .dependentAmount(1)
                 .gender(Gender.MALE)
                 .employment(employmentDTO)
                 .build();
@@ -68,7 +68,7 @@ class CreditServiceImplTest extends BaseServiceTest {
 
         LoanOfferDTO loanOfferDTO = LoanOfferDTO.builder()
                 .applicationId(1L)
-                .requestedAmount(requestDTO.getDependentAmount())
+                .requestedAmount(BigDecimal.valueOf(1000000))
                 .term(6)
                 .isInsuranceEnabled(true)
                 .isSalaryClient(true)

@@ -26,7 +26,7 @@ public interface CreditMapper {
     @Mapping(target = "passportSeries", source = "client.passport.series")
     @Mapping(target = "passportNumber", source = "client.passport.number")
     @Mapping(target = "passportIssueDate", source = "requestDTO.passportIssueDate")
-    @Mapping(target = "passportIssueBranch", source = "requestDTO.passportIssueBrach")
+    @Mapping(target = "passportIssueBranch", source = "requestDTO.passportIssueBranch")
     @Mapping(target = "maritalStatus", source = "requestDTO.maritalStatus")
     @Mapping(target = "dependentAmount", source = "requestDTO.dependentAmount")
     @Mapping(target = "employment", source = "requestDTO.employment")

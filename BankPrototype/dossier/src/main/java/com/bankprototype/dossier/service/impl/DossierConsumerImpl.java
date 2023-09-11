@@ -54,6 +54,16 @@ public class DossierConsumerImpl implements DossierConsumer {
     }
 
     @Override
+    @KafkaListener(topics = "${topic-name.send-ses}")
+    public void consumeSendSes(String message) {
+        log.info("[consumeSendSes] >> message: {}", message);
+
+        sendEmailWithSesCode(message, emailConfig.getSendSesTheme(), emailConfig.getSendSesText());
+
+        log.info("[consumeSendSes] << result void");
+    }
+
+    @Override
     @KafkaListener(topics = "${topic-name.credit-issued}")
     public void consumeCreditIssued(String message) {
         log.info("[consumeCreditIssued] >> message: {}", message);
@@ -61,15 +71,6 @@ public class DossierConsumerImpl implements DossierConsumer {
         sendEmailFromTheKafkaMessage(message, emailConfig.getCreditIssuedTheme(), emailConfig.getCreditIssuedText());
 
         log.info("[consumeCreditIssued] << result void");
-    }
-
-    @Override
-    @KafkaListener(topics = "${topic-name.send-ses}")
-    public void consumeSendSes(String message) {
-        log.info("[consumeSendSes] >> message: {}", message);
-
-        sendEmailFromTheKafkaMessage(message, emailConfig.getSendSesTheme(), emailConfig.getSendSesText());
-        log.info("[consumeSendSes] << result void");
     }
 
     @Override
@@ -98,4 +99,19 @@ public class DossierConsumerImpl implements DossierConsumer {
         log.info("[sendEmailFromTheKafkaMessage] << result void, email: {}", email);
     }
 
+    private void sendEmailWithSesCode(String message, String theme, String text) {
+        log.info("[sendEmailWithSesCode] >> message: {}", message);
+
+        EmailMassageDTO email;
+        try {
+            email = objectMapper.readValue(message, EmailMassageDTO.class);
+        } catch (JsonProcessingException e) {
+            log.error("Error converting kafka message to EmailMessageDTO");
+            throw new BadKafkaMessageException("Error converting kafka message to EmailMessageDTO, exception's message: " + e.getMessage());
+        }
+
+        mailService.sendEmail(email, theme, text.concat(email.getSesCode().toString()));
+
+        log.info("[sendEmailWithSesCode] << result void, email: {}", email);
+    }
 }

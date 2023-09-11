@@ -29,8 +29,13 @@ public class DealProducerImpl implements DealProducer {
         log.info("[createMessage] >> applicationId: {}, theme: {}", applicationId, theme);
 
         Application application = applicationService.getApplicationById(applicationId);
+        EmailMessageDTO massageDTO;
 
-        EmailMessageDTO massageDTO = new EmailMessageDTO(application.getClientId().getEmail(), theme, applicationId);
+        if (application.getSesCode() != null) {
+            massageDTO = new EmailMessageDTO(application.getClientId().getEmail(), theme, applicationId, application.getSesCode());
+        } else {
+            massageDTO = new EmailMessageDTO(application.getClientId().getEmail(), theme, applicationId, null);
+        }
 
         log.info("[createMessage] << result: {}", massageDTO);
 

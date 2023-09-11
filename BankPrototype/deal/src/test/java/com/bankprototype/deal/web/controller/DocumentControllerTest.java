@@ -1,6 +1,7 @@
 package com.bankprototype.deal.web.controller;
 
 import com.bankprototype.deal.kafka.EmailMessageDTO;
+import com.bankprototype.deal.repository.dao.Application;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ class DocumentControllerTest extends BaseControllerTest {
 
         doNothing().when(dealProducer).sendMessage(any(), any());
 
-        ResultActions response = mockMvc.perform(post("/document/1/send"))
+        ResultActions response = mockMvc.perform(post("/deal/document/1/send"))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
 
@@ -38,13 +39,17 @@ class DocumentControllerTest extends BaseControllerTest {
     void signDocuments() throws Exception {
         EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build();
         EmailMessageDTO emailMessageDTO = enhancedRandom.nextObject(EmailMessageDTO.class);
+        Application application = enhancedRandom.nextObject(Application.class);
+
+        when(applicationService.updateSesCodeForApplication(any()))
+                .thenReturn(application);
 
         when(dealProducer.createMessage(any(), any()))
                 .thenReturn(emailMessageDTO);
 
         doNothing().when(dealProducer).sendMessage(any(), any());
 
-        ResultActions response = mockMvc.perform(post("/document/1/sign"))
+        ResultActions response = mockMvc.perform(post("/deal/document/1/sign"))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
 
@@ -56,14 +61,37 @@ class DocumentControllerTest extends BaseControllerTest {
         EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build();
         EmailMessageDTO emailMessageDTO = enhancedRandom.nextObject(EmailMessageDTO.class);
 
+        when(applicationService.checkingCorrectnessSesCode(any(), any()))
+                .thenReturn(true);
+
         when(dealProducer.createMessage(any(), any()))
                 .thenReturn(emailMessageDTO);
 
         doNothing().when(dealProducer).sendMessage(any(), any());
 
-        ResultActions response = mockMvc.perform(post("/document/1/code"))
+        ResultActions response = mockMvc.perform(post("/deal/document/1/code?sesCode=666666"))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+
+        System.out.println(response);
+    }
+
+    @Test
+    void codeDocuments_SesCodeIsNotCorrectException() throws Exception {
+        EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build();
+        EmailMessageDTO emailMessageDTO = enhancedRandom.nextObject(EmailMessageDTO.class);
+
+        when(applicationService.checkingCorrectnessSesCode(any(), any()))
+                .thenReturn(false);
+
+        when(dealProducer.createMessage(any(), any()))
+                .thenReturn(emailMessageDTO);
+
+        doNothing().when(dealProducer).sendMessage(any(), any());
+
+        ResultActions response = mockMvc.perform(post("/deal/document/1/code?sesCode=666666"))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
 
         System.out.println(response);
     }

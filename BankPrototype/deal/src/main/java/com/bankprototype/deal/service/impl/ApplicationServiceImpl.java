@@ -41,6 +41,17 @@ public class ApplicationServiceImpl implements ApplicationService {
         return application;
     }
 
+    @Override
+    public List<Application> getAllApplication() {
+        log.info("[getAllApplication] >> without resources");
+
+        List<Application> applications = applicationRepository.findAll();
+
+        log.info("[getAllApplication] << result: {}", applications);
+
+        return applications;
+    }
+
 
     @Override
     public Application createApplication(Client client) {
@@ -97,6 +108,40 @@ public class ApplicationServiceImpl implements ApplicationService {
         log.info("[updateStatusHistoryForApplication] << result: {}", updatedApplication);
 
         return updatedApplication;
+    }
+
+    @Override
+    public Application updateSesCodeForApplication(Long applicationId) {
+        log.info("[updateSesCodeForApplication] >> applicationId: {}", applicationId);
+
+        Application application = getApplicationById(applicationId);
+
+        long minimum = 100000L;
+        long maximum = 999999L;
+
+        log.info("[Generated ses code] << minimum: {}, minimum: {}", minimum, maximum);
+        Long sesCode = (long) (Math.random() * (maximum - minimum) + minimum);
+
+        application.setSesCode(sesCode);
+
+        Application updatedApplication = applicationRepository.save(application);
+
+        log.info("[updateSesCodeForApplication] << result: {}", updatedApplication);
+
+        return updatedApplication;
+    }
+
+    @Override
+    public boolean checkingCorrectnessSesCode(Long applicationId, Long sesCode) {
+        log.info("[checkingCorrectnessSesCode] >> applicationId: {}, sesCode: {}", applicationId, sesCode);
+
+        Application application = getApplicationById(applicationId);
+
+        boolean isSesCodeCorrect = application.getSesCode().equals(sesCode);
+
+        log.info("[checkingCorrectnessSesCode] << result: {}", isSesCodeCorrect);
+
+        return isSesCodeCorrect;
     }
 
 }

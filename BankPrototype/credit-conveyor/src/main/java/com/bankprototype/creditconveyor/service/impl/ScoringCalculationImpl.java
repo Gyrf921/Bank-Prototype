@@ -23,6 +23,7 @@ import java.util.List;
 public class ScoringCalculationImpl implements ScoringCalculation {
 
     private final CreditCalculation calculation;
+
     private final RateRuleEngine ruleEngine;
 
     @Value("${loanRate}")
@@ -37,8 +38,7 @@ public class ScoringCalculationImpl implements ScoringCalculation {
 
         BigDecimal creditRate = ruleEngine.getRate(scoringDataDTO, BigDecimal.valueOf(loanRate));
 
-        if (creditRate.equals(BigDecimal.ZERO) || creditRate.compareTo(BigDecimal.ZERO) < 0) {
-
+        if (creditRate.compareTo(BigDecimal.ZERO) <= 0) {
             creditRate = BigDecimal.ONE;
         }
 

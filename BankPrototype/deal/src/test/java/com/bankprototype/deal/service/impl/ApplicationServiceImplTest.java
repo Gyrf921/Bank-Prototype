@@ -10,6 +10,8 @@ import com.bankprototype.deal.repository.dao.enumfordao.ChangeType;
 import com.bankprototype.deal.repository.dao.jsonb.StatusHistory;
 import com.bankprototype.deal.web.dto.ApplicationStatusHistoryDTO;
 import com.bankprototype.deal.web.dto.LoanOfferDTO;
+import io.github.benas.randombeans.EnhancedRandomBuilder;
+import io.github.benas.randombeans.api.EnhancedRandom;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -186,5 +188,54 @@ class ApplicationServiceImplTest extends BaseServiceTest {
 
         verify(applicationRepository, times(1)).save(any());
 
+    }
+
+    @Test
+    void updateSesCodeForApplication() {
+        EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build();
+
+        Application application = enhancedRandom.nextObject(Application.class);
+        application.setSesCode(null);
+
+        when(applicationRepository.findById(any()))
+                .thenReturn(Optional.of(application));
+
+        when(applicationRepository.save(any()))
+                .thenReturn(application);
+
+
+        Application applicationSaved = applicationService
+                .updateSesCodeForApplication(application.getApplicationId());
+
+
+        System.out.println(applicationSaved);
+        assertThat(applicationSaved).isNotNull();
+
+        System.out.println(applicationSaved.getSesCode());
+        assertThat(applicationSaved.getSesCode()).isNotNull();
+        assertThat(applicationSaved.getSesCode()).isLessThanOrEqualTo(999999L);
+        assertThat(applicationSaved.getSesCode()).isGreaterThanOrEqualTo(100000L);
+
+        verify(applicationRepository, times(1)).save(any());
+
+    }
+
+    @Test
+    void checkingCorrectnessSesCode() {
+        EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build();
+        Application application = enhancedRandom.nextObject(Application.class);
+
+        long sesCodeFromUser = application.getSesCode();
+
+        when(applicationRepository.findById(any()))
+                .thenReturn(Optional.of(application));
+
+        Boolean isSesCodeCorrect = applicationService
+                .checkingCorrectnessSesCode(application.getApplicationId(), sesCodeFromUser);
+
+        System.out.println(application);
+        System.out.println("Ses code is correct: " + isSesCodeCorrect);
+        assertThat(isSesCodeCorrect).isTrue();
+        assertThat(application.getSesCode()).isEqualTo(sesCodeFromUser);
     }
 }

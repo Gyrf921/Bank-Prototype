@@ -4,6 +4,7 @@ import com.bankprototype.deal.repository.ApplicationRepository;
 import com.bankprototype.deal.repository.ClientRepository;
 import com.bankprototype.deal.repository.CreditRepository;
 import com.bankprototype.deal.service.DealProducer;
+import com.bankprototype.deal.service.impl.ApplicationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
@@ -34,5 +35,8 @@ public abstract class BaseControllerTest {
 
     @MockBean
     public CreditRepository creditRepository;
+
+    @MockBean
+    public ApplicationServiceImpl applicationService;
 
 }

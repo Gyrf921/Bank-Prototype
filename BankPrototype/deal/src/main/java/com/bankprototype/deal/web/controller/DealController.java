@@ -96,7 +96,7 @@ public class DealController {
 
     @Operation(summary = "Completion registration", description = "Completion of registration and calculation of full loan terms")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Status history for application has been updated"),
+            @ApiResponse(responseCode = "200", description = "Credit has been created. Registration has been finished"),
             @ApiResponse(responseCode = "400", description = "Validation failed for some argument. Invalid input supplied"),
             @ApiResponse(responseCode = "404", description = "Not found some resource in database"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")})
@@ -119,7 +119,7 @@ public class DealController {
 
         dealProducer.sendMessage(massageDTO, createDocumentsTopicName);
 
-        log.info("[completionRegistrationAndCalculateFullCredit] << result: {}", credit);
+        log.info("[completionRegistrationAndCalculateFullCredit] << result is void, credit: {}", credit);
     }
 
 

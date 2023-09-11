@@ -54,7 +54,7 @@ public class Client {
     private MaritalStatus maritalStatus;
 
     @Column(name = "dependent_amount")
-    private BigDecimal dependentAmount;
+    private Integer dependentAmount;
 
     @Type(type = "json")
     @Column(name = "passport_id", columnDefinition = "json")
