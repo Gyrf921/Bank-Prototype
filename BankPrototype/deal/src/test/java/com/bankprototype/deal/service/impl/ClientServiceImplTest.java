@@ -26,12 +26,10 @@ import static org.mockito.Mockito.*;
 
 class ClientServiceImplTest extends BaseServiceTest {
 
-
     @Mock
     private ClientRepository clientRepository;
 
     private final ClientMapperImpl clientMapper = new ClientMapperImpl(new EmploymentMapperImpl());
-
     private ClientServiceImpl clientService;
 
     @BeforeEach

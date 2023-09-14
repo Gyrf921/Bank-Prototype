@@ -33,7 +33,7 @@ public class ApplicationController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error")})
     @PostMapping
     public ResponseEntity<List<LoanOfferDTO>> calculatePossibleLoanOffers(@Valid @RequestBody LoanApplicationRequestDTO requestDTO) {
-        log.info("[calculatePossibleLoanOffers] >> applicationId:");
+        log.info("[calculatePossibleLoanOffers] >> requestDTO: {}", requestDTO);
 
         List<LoanOfferDTO> listLoanOffers = applicationFeignClient.calculatePossibleLoanOffers(requestDTO).getBody();
 
@@ -49,7 +49,7 @@ public class ApplicationController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error")})
     @PostMapping("/apply")
     public void chooseOneOfTheOffers(@Valid @RequestBody LoanOfferDTO loanOfferDTO) {
-        log.info("[chooseOneOfTheOffers] >> applicationId:");
+        log.info("[chooseOneOfTheOffers] >> loanOfferDTO: {}", loanOfferDTO);
 
         applicationFeignClient.chooseOneOfTheOffers(loanOfferDTO);
 

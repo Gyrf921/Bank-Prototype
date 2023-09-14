@@ -3,8 +3,11 @@ package com.bankprototype.deal.web.controller;
 import com.bankprototype.deal.repository.ApplicationRepository;
 import com.bankprototype.deal.repository.ClientRepository;
 import com.bankprototype.deal.repository.CreditRepository;
+import com.bankprototype.deal.service.ClientService;
 import com.bankprototype.deal.service.DealProducer;
 import com.bankprototype.deal.service.impl.ApplicationServiceImpl;
+import com.bankprototype.deal.service.impl.CreditServiceImpl;
+import com.bankprototype.deal.web.feign.CreditConveyorFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
@@ -28,15 +31,25 @@ public abstract class BaseControllerTest {
     protected DealProducer dealProducer;
 
     @MockBean
-    public ApplicationRepository applicationRepository;
+    protected ApplicationRepository applicationRepository;
 
     @MockBean
-    public ClientRepository clientRepository;
+    protected ClientRepository clientRepository;
 
     @MockBean
-    public CreditRepository creditRepository;
+    protected CreditRepository creditRepository;
 
     @MockBean
-    public ApplicationServiceImpl applicationService;
+    protected ApplicationServiceImpl applicationService;
+
+    @MockBean
+    protected CreditConveyorFeignClient feignClient;
+
+    @MockBean
+    protected ClientService clientService;
+
+    @MockBean
+    protected CreditServiceImpl creditService;
+
 
 }

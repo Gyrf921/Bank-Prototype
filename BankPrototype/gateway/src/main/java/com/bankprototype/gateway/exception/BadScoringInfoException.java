@@ -1,7 +1,6 @@
-package com.bankprototype.deal.exception;
+package com.bankprototype.gateway.exception;
 
 
-import com.bankprototype.deal.exception.global.ErrorDetails;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

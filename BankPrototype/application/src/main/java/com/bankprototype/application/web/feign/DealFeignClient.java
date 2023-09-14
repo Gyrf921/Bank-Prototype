@@ -3,6 +3,7 @@ package com.bankprototype.application.web.feign;
 import com.bankprototype.application.web.dto.FinishRegistrationRequestDTO;
 import com.bankprototype.application.web.dto.LoanApplicationRequestDTO;
 import com.bankprototype.application.web.dto.LoanOfferDTO;
+import com.bankprototype.application.web.feign.fallback.DealFeignClientFallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.validation.Valid;
 import java.util.List;
 
-@FeignClient(value = "deal", url = "http://localhost:8081/deal")
+@FeignClient(value = "deal", url = "http://localhost:8081/deal", fallbackFactory = DealFeignClientFallbackFactory.class)
 public interface DealFeignClient {
 
     @PostMapping("/application")

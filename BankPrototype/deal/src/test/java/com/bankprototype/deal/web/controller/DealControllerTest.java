@@ -1,30 +1,17 @@
 package com.bankprototype.deal.web.controller;
 
 import com.bankprototype.deal.exception.ResourceNotFoundException;
-import com.bankprototype.deal.repository.dao.Application;
-import com.bankprototype.deal.repository.dao.Client;
-import com.bankprototype.deal.repository.dao.Credit;
-import com.bankprototype.deal.repository.dao.enumfordao.*;
-import com.bankprototype.deal.repository.dao.jsonb.StatusHistory;
-import com.bankprototype.deal.service.ClientService;
-import com.bankprototype.deal.service.impl.CreditServiceImpl;
-import com.bankprototype.deal.web.dto.CreditDTO;
-import com.bankprototype.deal.web.dto.EmploymentDTO;
+import com.bankprototype.deal.service.impl.DealService;
 import com.bankprototype.deal.web.dto.LoanOfferDTO;
-import com.bankprototype.deal.web.dto.ScoringDataDTO;
-import com.bankprototype.deal.web.feign.CreditConveyorFeignClient;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasItem;
@@ -39,39 +26,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class DealControllerTest extends BaseControllerTest {
 
-
     @MockBean
-    private CreditConveyorFeignClient feignClient;
-
-    @MockBean
-    private ClientService clientService;
-
-
-    @MockBean
-    private CreditServiceImpl creditService;
+    private DealService dealService;
 
     @Test
     void calculatePossibleLoanOffers() throws Exception {
-
         EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build();
-        Client clientTest = enhancedRandom.nextObject(Client.class);
-        Application applicationTest = enhancedRandom.nextObject(Application.class);
-
         LoanOfferDTO ln1 = enhancedRandom.nextObject(LoanOfferDTO.class);
+        List<LoanOfferDTO> list = List.of(ln1, ln1, ln1, ln1);
         ln1.setRequestedAmount(BigDecimal.valueOf(1000000));
         ln1.setIsSalaryClient(true);
         ln1.setIsInsuranceEnabled(true);
-
-        List<LoanOfferDTO> list = List.of(ln1, ln1, ln1, ln1);
-        ResponseEntity<List<LoanOfferDTO>> listResponseEntity = ResponseEntity.ok().body(list);
-        when(clientService.createClient(any()))
-                .thenReturn(clientTest);
-
-        when(applicationService.createApplication(any()))
-                .thenReturn(applicationTest);
-
-        when(feignClient.calculatePossibleLoanOffers(any()))
-                .thenReturn(listResponseEntity);
+        when(dealService.createLoanApplication(any()))
+                .thenReturn(list);
 
         ResultActions response = mockMvc.perform(post("/deal/application")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -98,14 +65,8 @@ class DealControllerTest extends BaseControllerTest {
 
     @Test
     void chooseOneOfTheOffers() throws Exception {
-        EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build();
 
-        Application applicationTest = enhancedRandom.nextObject(Application.class);
-
-        when(applicationService.updateStatusHistoryForApplication(any(), any()))
-                .thenReturn(applicationTest);
-
-        doNothing().when(dealProducer).sendMessage(any(), any());
+        when(dealService.chooseOneOfTheOffers(any())).thenReturn(true);
 
         ResultActions response = mockMvc.perform(put("/deal/offer")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -129,7 +90,7 @@ class DealControllerTest extends BaseControllerTest {
     @Test
     void chooseOneOfTheOffers_ExceptionResourceNotFound() throws Exception {
 
-        when(applicationService.updateStatusHistoryForApplication(any(), any()))
+        when(dealService.chooseOneOfTheOffers(any()))
                 .thenThrow(ResourceNotFoundException.class);
 
         doNothing().when(dealProducer).sendMessage(any(), any());
@@ -155,67 +116,6 @@ class DealControllerTest extends BaseControllerTest {
 
     @Test
     void completionRegistrationAndCalculateFullCredit() throws Exception {
-
-        EmploymentDTO employmentDTO = EmploymentDTO.builder()
-                .employmentStatus(EmploymentStatus.BUSINESS_OWNER)
-                .salary(BigDecimal.valueOf(400000))
-                .build();
-
-        ScoringDataDTO scoringDataDTO = ScoringDataDTO.builder()
-                .amount(BigDecimal.valueOf(1000000))
-                .term(6)
-                .firstName("testName")
-                .lastName("testName")
-                .middleName("testName")
-                .gender(Gender.MALE)
-                .birthDate(LocalDate.of(1990, 07, 07))
-                .passportSeries("1111")
-                .passportNumber("222222")
-                .passportIssueDate(LocalDate.of(2020, 07, 07))
-                .passportIssueBranch("issue Branch")
-                .maritalStatus(MaritalStatus.SINGLE)
-                .dependentAmount(1)
-                .employment(employmentDTO)
-                .account("testAccount")
-                .isInsuranceEnabled(true)
-                .isSalaryClient(true)
-                .build();
-
-        StatusHistory applicationStatusHistory = StatusHistory.builder()
-                .status(ApplicationStatus.PREAPPROVAL)
-                .time(LocalDateTime.now())
-                .changeType(ChangeType.AUTOMATIC)
-                .build();
-
-        EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build();
-
-        Client clientTest = enhancedRandom.nextObject(Client.class);
-        clientTest.setClientId(1L);
-
-        Application applicationTest = Application.builder()
-                .applicationId(1L)
-                .clientId(clientTest).build();
-
-        Credit credit = enhancedRandom.nextObject(Credit.class);
-        CreditDTO creditDTO = enhancedRandom.nextObject(CreditDTO.class);
-        ResponseEntity<CreditDTO> creditDTOResponseEntity = ResponseEntity.ok().body(creditDTO);
-
-        when(applicationService.getApplicationById(any()))
-                .thenReturn(applicationTest);
-
-        when(clientService.updateClient(any(), any()))
-                .thenReturn(clientTest);
-
-        when(creditService.createScoringDataDTO(any(), any(), any()))
-                .thenReturn(scoringDataDTO);
-
-        when(feignClient.calculateFullLoanParameters(any()))
-                .thenReturn(creditDTOResponseEntity);
-
-        when(creditService.createCredit(any(), any()))
-                .thenReturn(credit);
-
-        doNothing().when(dealProducer).sendMessage(any(), any());
 
         ResultActions response = mockMvc.perform(put("/deal/calculate/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -245,7 +145,7 @@ class DealControllerTest extends BaseControllerTest {
     @Test
     void completionRegistrationAndCalculateFullCredit_ExceptionResourceNotFound() throws Exception {
 
-        when(applicationService.getApplicationById(any()))
+        when(dealService.finishRegistration(any(), any()))
                 .thenThrow(ResourceNotFoundException.class);
 
         doNothing().when(dealProducer).sendMessage(any(), any());

@@ -8,9 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Builder
@@ -26,15 +24,14 @@ public class FinishRegistrationRequestDTO {
     private MaritalStatus maritalStatus;
 
     @NotNull
-    @DecimalMin(value = "10000")
-    private BigDecimal dependentAmount;
+    private Integer dependentAmount;
 
     @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate passportIssueDate;
 
     @NotNull
-    private String passportIssueBrach;
+    private String passportIssueBranch;
 
     @NotNull
     private EmploymentDTO employment;

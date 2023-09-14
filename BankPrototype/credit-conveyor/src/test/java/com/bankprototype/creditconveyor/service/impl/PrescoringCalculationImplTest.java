@@ -29,7 +29,7 @@ class PrescoringCalculationImplTest {
         List<LoanOfferDTO> loanOfferDTO = prescoringCalculation.createListLoanOffer(LNR_DTO);
 
         loanOfferDTO.forEach(System.out::println);
-        assertThat(loanOfferDTO.size()).isEqualTo(4);
+        assertThat(loanOfferDTO.toArray()).hasSize(4);
 
         assertThat(loanOfferDTO.get(3).getTotalAmount()).isLessThan(loanOfferDTO.get(2).getTotalAmount());
         assertThat(loanOfferDTO.get(3).getIsSalaryClient()).isTrue();

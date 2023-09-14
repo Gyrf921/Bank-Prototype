@@ -13,13 +13,29 @@ import java.time.LocalDate;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    private static final int BUSINESS_ERROR_CODE_SERVER = 0;
+    @ExceptionHandler(BadScoringInfoException.class)
+    public ResponseEntity<?> badScoringInfoException(BadScoringInfoException ex, WebRequest request) {
+        log.error(ex.getMessage(), ex);
+
+        ErrorDetails errorDetails = new ErrorDetails(HttpStatus.BAD_REQUEST.value(), ConstantErrorCode.BUSINESS_ERROR_CODE_SCORING_INFO, LocalDate.now(), ex.getMessage(), request.getDescription(false));
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ExternalException.class)
+    public ResponseEntity<?> externalExceptionValidation(ExternalException ex, WebRequest request) {
+        log.error(ex.getMessage(), ex);
+
+        ErrorDetails errorDetails = new ErrorDetails(HttpStatus.BAD_REQUEST.value(), ConstantErrorCode.BUSINESS_ERROR_CODE_VALIDATE, LocalDate.now(), ex.getMessage(), request.getDescription(false));
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> globalExceptionHandler(Exception ex, WebRequest request) {
         log.error(ex.getMessage(), ex);
 
-        ErrorDetails errorDetails = new ErrorDetails(HttpStatus.INTERNAL_SERVER_ERROR.value(), BUSINESS_ERROR_CODE_SERVER, LocalDate.now(), ex.getMessage(), request.getDescription(false));
+        ErrorDetails errorDetails = new ErrorDetails(HttpStatus.INTERNAL_SERVER_ERROR.value(), ConstantErrorCode.BUSINESS_ERROR_CODE_SERVER, LocalDate.now(), ex.getMessage(), request.getDescription(false));
 
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }

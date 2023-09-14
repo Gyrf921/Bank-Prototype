@@ -1,5 +1,6 @@
 package com.bankprototype.gateway.web.controller;
 
+import com.bankprototype.gateway.web.feign.ApplicationFeignClient;
 import com.bankprototype.gateway.web.feign.DealFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,4 +17,7 @@ public abstract class BaseControllerTest {
 
     @MockBean
     protected DealFeignClient dealFeignClient;
+
+    @MockBean
+    protected ApplicationFeignClient applicationFeignClient;
 }

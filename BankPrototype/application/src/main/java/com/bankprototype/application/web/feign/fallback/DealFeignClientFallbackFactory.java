@@ -1,13 +1,15 @@
-package com.bankprototype.gateway.web.feign.fallback;
+package com.bankprototype.application.web.feign.fallback;
 
-import com.bankprototype.gateway.exception.ErrorDetails;
-import com.bankprototype.gateway.exception.ExternalException;
-import com.bankprototype.gateway.web.dto.LoanApplicationRequestDTO;
-import com.bankprototype.gateway.web.dto.LoanOfferDTO;
-import com.bankprototype.gateway.web.feign.ApplicationFeignClient;
+import com.bankprototype.application.exception.ErrorDetails;
+import com.bankprototype.application.exception.ExternalException;
+import com.bankprototype.application.web.dto.FinishRegistrationRequestDTO;
+import com.bankprototype.application.web.dto.LoanApplicationRequestDTO;
+import com.bankprototype.application.web.dto.LoanOfferDTO;
+import com.bankprototype.application.web.feign.DealFeignClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import feign.FeignException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.http.ResponseEntity;
@@ -19,18 +21,18 @@ import java.util.List;
 
 @Component
 @Slf4j
-public class ApplicationFeignClientFallbackFactory implements FallbackFactory<ApplicationFeignClient> {
-
+@RequiredArgsConstructor
+public class DealFeignClientFallbackFactory implements FallbackFactory<DealFeignClient> {
     @Override
-    public ApplicationFeignClient create(Throwable cause) {
+    public DealFeignClient create(Throwable cause) {
 
-        log.error("An exception occurred when calling the ApplicationFeignClient ", cause);
+        log.error("An exception occurred when calling the DealFeignClient", cause);
 
-        return new ApplicationFeignClient() {
-
+        return new DealFeignClient() {
             @Override
-            public ResponseEntity<List<LoanOfferDTO>> calculatePossibleLoanOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
-                log.info("[Fallback.calculatePossibleLoanOffers] >> loanApplicationRequestDTO: {}", loanApplicationRequestDTO);
+            public ResponseEntity<List<LoanOfferDTO>> calculatePossibleLoanOffers(LoanApplicationRequestDTO requestDTO) {
+
+                log.info("[Fallback.calculatePossibleLoanOffers] >> loanApplicationRequestDTO: {}", requestDTO);
 
                 getExternalException(cause);
 
@@ -41,11 +43,20 @@ public class ApplicationFeignClientFallbackFactory implements FallbackFactory<Ap
 
             @Override
             public void chooseOneOfTheOffers(LoanOfferDTO loanOfferDTO) {
-                log.info("[Fallback.chooseOneOfTheOffers] >> LoanOfferDTO: {}", loanOfferDTO);
+                log.info("[Fallback.chooseOneOfTheOffers] >> loanOfferDTO: {}", loanOfferDTO);
 
                 getExternalException(cause);
 
                 log.error("An exception occurred when calling the chooseOneOfTheOffers method", cause);
+            }
+
+            @Override
+            public void completionRegistrationAndCalculateFullCredit(Long applicationId, FinishRegistrationRequestDTO requestDTO) {
+                log.info("[Fallback.completionRegistrationAndCalculateFullCredit] >> applicationId: {}, requestDTO: {}", applicationId, requestDTO);
+
+                getExternalException(cause);
+
+                log.error("An exception occurred when calling the completionRegistrationAndCalculateFullCredit method", cause);
             }
         };
     }

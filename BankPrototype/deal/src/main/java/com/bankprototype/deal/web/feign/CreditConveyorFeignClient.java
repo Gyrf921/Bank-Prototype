@@ -4,6 +4,7 @@ import com.bankprototype.deal.web.dto.CreditDTO;
 import com.bankprototype.deal.web.dto.LoanApplicationRequestDTO;
 import com.bankprototype.deal.web.dto.LoanOfferDTO;
 import com.bankprototype.deal.web.dto.ScoringDataDTO;
+import com.bankprototype.deal.web.feign.fallback.CreditConveyorFeignClientFallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

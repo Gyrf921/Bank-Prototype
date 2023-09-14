@@ -1,11 +1,9 @@
 package com.bankprototype.gateway.web.controller;
 
 import com.bankprototype.gateway.web.dto.LoanOfferDTO;
-import com.bankprototype.gateway.web.feign.ApplicationFeignClient;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.ResultActions;
@@ -22,10 +20,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 
 class ApplicationControllerTest extends BaseControllerTest {
-
-
-    @MockBean
-    private ApplicationFeignClient applicationFeignClient;
 
 
     @Test
@@ -123,7 +117,7 @@ class ApplicationControllerTest extends BaseControllerTest {
                                 "  \"maritalStatus\": \"SINGLE\",\n" +
                                 "  \"dependentAmount\": 1000000,\n" +
                                 "  \"passportIssueDate\": \"2020-07-30\",\n" +
-                                "  \"passportIssueBrach\": \"passportIssue\",\n" +
+                                "  \"passportIssueBranch\": \"passportIssue\",\n" +
                                 "  \"employment\": {\n" +
                                 "    \"employmentStatus\": \"EMPLOYED\",\n" +
                                 "    \"employerINN\": \"string\",\n" +
