@@ -4,8 +4,6 @@ import com.bankprototype.deal.exception.BadScoringInfoException;
 import com.bankprototype.deal.exception.ExternalException;
 import com.bankprototype.deal.exception.global.ConstantErrorCode;
 import com.bankprototype.deal.exception.global.ErrorDetails;
-import com.bankprototype.deal.kafka.EmailMessageDTO;
-import com.bankprototype.deal.kafka.enumfordto.Theme;
 import com.bankprototype.deal.service.DealProducer;
 import com.bankprototype.deal.web.dto.CreditDTO;
 import com.bankprototype.deal.web.dto.LoanApplicationRequestDTO;
@@ -30,11 +28,6 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class CreditConveyorFeignClientFallbackFactory implements FallbackFactory<CreditConveyorFeignClient> {
-
-    @Value("${topic-name.application-denied}")
-    private String applicationDeniedTopicName;
-
-    private final DealProducer dealProducer;
 
     @Override
     public CreditConveyorFeignClient create(Throwable cause) {

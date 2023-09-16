@@ -101,8 +101,8 @@ public class DealService {
         catch (BadScoringInfoException exception){
             EmailMessageDTO massageDTO = dealProducer.createMessage(application.getApplicationId(), Theme.APPLICATION_DENIED);
             dealProducer.sendMessage(massageDTO, applicationDeniedTopicName);
-            //exception.getErrorDetails().getStatusCode(), exception.getErrorDetails(),
-            throw new BadScoringInfoException(exception.getErrorDetails().getMessage());
+
+            throw new BadScoringInfoException(exception.getMessage());
         }
 
         creditService.createCredit(creditDTO, application);

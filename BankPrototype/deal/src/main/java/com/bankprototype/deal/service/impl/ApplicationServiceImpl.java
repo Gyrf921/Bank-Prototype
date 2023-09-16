@@ -130,6 +130,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         return updatedApplication;
     }
+    //TODO Смена статусов и sign_date
 
     @Override
     public boolean checkingCorrectnessSesCode(Long applicationId, Long sesCode) {

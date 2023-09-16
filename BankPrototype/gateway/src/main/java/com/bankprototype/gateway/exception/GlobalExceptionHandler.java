@@ -11,16 +11,7 @@ import java.time.LocalDate;
 
 @RestControllerAdvice
 @Slf4j
-public class GlobalExceptionHandler {
-
-    @ExceptionHandler(BadScoringInfoException.class)
-    public ResponseEntity<?> badScoringInfoException(BadScoringInfoException ex, WebRequest request) {
-        log.error(ex.getMessage(), ex);
-
-        ErrorDetails errorDetails = new ErrorDetails(HttpStatus.BAD_REQUEST.value(), ConstantErrorCode.BUSINESS_ERROR_CODE_SCORING_INFO, LocalDate.now(), ex.getMessage(), request.getDescription(false));
-
-        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
-    }
+public class GlobalExceptionHandler{
 
     @ExceptionHandler(ExternalException.class)
     public ResponseEntity<?> externalExceptionValidation(ExternalException ex, WebRequest request) {
