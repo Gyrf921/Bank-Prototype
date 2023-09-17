@@ -1,8 +1,6 @@
 package com.bankprototype.deal.service.impl;
 
 import com.bankprototype.deal.exception.BadScoringInfoException;
-import com.bankprototype.deal.exception.ExternalException;
-import com.bankprototype.deal.exception.global.ErrorDetails;
 import com.bankprototype.deal.kafka.EmailMessageDTO;
 import com.bankprototype.deal.kafka.enumfordto.Theme;
 import com.bankprototype.deal.repository.dao.Application;
@@ -14,17 +12,12 @@ import com.bankprototype.deal.service.CreditService;
 import com.bankprototype.deal.service.DealProducer;
 import com.bankprototype.deal.web.dto.*;
 import com.bankprototype.deal.web.feign.CreditConveyorFeignClient;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.List;
 
 @RestController
@@ -85,7 +78,7 @@ public class DealService {
     }
 
     public boolean finishRegistration(Long applicationId, FinishRegistrationRequestDTO requestDTO) {
-        log.info("[chooseOneOfTheOffers] >> requestDTO: {}", requestDTO);
+        log.info("[finishRegistration] >> requestDTO: {}", requestDTO);
 
         Application application = applicationService.getApplicationById(applicationId);
 
@@ -93,15 +86,15 @@ public class DealService {
 
         ScoringDataDTO scoringDataDTO = creditService.createScoringDataDTO(requestDTO, client, application.getAppliedOffer());
         CreditDTO creditDTO = null;
-        try{
+        try {
             log.info("[feignClient.calculateFullLoanParameters] >> scoringDataDTO: {}", scoringDataDTO);
             creditDTO = feignClient.calculateFullLoanParameters(scoringDataDTO).getBody();
             log.info("[feignClient.calculateFullLoanParameters] << result is creditDTO: {}", creditDTO);
-        }
-        catch (BadScoringInfoException exception){
+        } catch (BadScoringInfoException exception) {
             EmailMessageDTO massageDTO = dealProducer.createMessage(application.getApplicationId(), Theme.APPLICATION_DENIED);
             dealProducer.sendMessage(massageDTO, applicationDeniedTopicName);
 
+            log.error("[finishRegistration] Data validation error: BadScoringInfoException");
             throw new BadScoringInfoException(exception.getMessage());
         }
 
@@ -110,10 +103,9 @@ public class DealService {
         EmailMessageDTO massageDTO = dealProducer.createMessage(application.getApplicationId(), Theme.CREATE_DOCUMENTS);
         dealProducer.sendMessage(massageDTO, createDocumentsTopicName);
 
-        log.info("[chooseOneOfTheOffers] << result: true");
+        log.info("[finishRegistration] << result: true");
         return true;
     }
-
 
 
 }

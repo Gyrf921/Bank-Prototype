@@ -62,6 +62,7 @@ public class DealFeignClientFallbackFactory implements FallbackFactory<DealFeign
     }
 
     private void getExternalException(Throwable cause) {
+        log.info("[getExternalException] >> throwable(cause)");
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
 
@@ -70,12 +71,17 @@ public class DealFeignClientFallbackFactory implements FallbackFactory<DealFeign
             FeignException feignException = (FeignException) cause;
             ByteBuffer buffer = feignException.responseBody().get();
             try {
+                log.info("[getExternalException] >> try -> to getting ErrorDetails from the received exception");
                 errorDetails = mapper.readValue(buffer.array(), ErrorDetails.class);
             } catch (IOException e) {
+                log.error("[getExternalException] catch -> Error getting ErrorDetails from the received exception: {}", e.getMessage());
+                log.info("[getExternalException] << ExternalException: Some error with server");
                 throw new ExternalException(500, null, "Some error with server");
             }
 
-            throw new ExternalException(errorDetails.getStatusCode(), errorDetails, errorDetails.getMessage());
+            ExternalException externalException = new ExternalException(errorDetails.getStatusCode(), errorDetails, errorDetails.getMessage());
+            log.info("[ExceptionHandlerUtil.getExternalException] << externalException: {}", externalException.getMessage());
+            throw externalException;
         }
     }
 }
