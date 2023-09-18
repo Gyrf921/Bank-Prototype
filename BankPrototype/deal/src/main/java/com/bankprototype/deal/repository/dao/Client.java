@@ -14,7 +14,6 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Builder
@@ -54,7 +53,7 @@ public class Client {
     private MaritalStatus maritalStatus;
 
     @Column(name = "dependent_amount")
-    private BigDecimal dependentAmount;
+    private Integer dependentAmount;
 
     @Type(type = "json")
     @Column(name = "passport_id", columnDefinition = "json")

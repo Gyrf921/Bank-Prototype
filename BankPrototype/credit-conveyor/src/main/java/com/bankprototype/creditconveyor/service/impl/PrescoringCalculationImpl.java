@@ -30,7 +30,9 @@ public class PrescoringCalculationImpl implements PrescoringCalculation {
     @Value("${ratioOfSalaryClient}")
     private Double ratioOfSalaryClient;
 
-    private static final BigDecimal COST_INSURANCE = BigDecimal.valueOf(100000);
+    @Value("${priceOfInsurance}")
+    private Double priceOfInsurance; //100 divide priceOfInsurance = n%
+
     private static final int COUNT_MONTH_OF_YEAR = 12;
 
 
@@ -41,17 +43,19 @@ public class PrescoringCalculationImpl implements PrescoringCalculation {
         BigDecimal creditRatio = BigDecimal.valueOf(loanRate);
         List<LoanOfferDTO> loanOfferDTOs = new LinkedList<>();
 
-        loanOfferDTOs.add(calculateLoanOffer(1L, requestDTO.getAmount(), requestDTO.getTerm(),
-                creditRatio.subtract(BigDecimal.valueOf(ratioOfInsuranceEnabled + ratioOfSalaryClient)), false, false));
+        BigDecimal loanAmountWithInsurance = requestDTO.getAmount().add(requestDTO.getAmount().divide(BigDecimal.valueOf(priceOfInsurance), requestDTO.getAmount().scale(), RoundingMode.DOWN));
 
-        loanOfferDTOs.add(calculateLoanOffer(2L, requestDTO.getAmount().add(COST_INSURANCE), requestDTO.getTerm(),
+        loanOfferDTOs.add(calculateLoanOffer(1L, requestDTO.getAmount(), requestDTO.getTerm(),
+                creditRatio, false, false));
+
+        loanOfferDTOs.add(calculateLoanOffer(2L, loanAmountWithInsurance, requestDTO.getTerm(),
                 creditRatio.subtract(BigDecimal.valueOf(ratioOfInsuranceEnabled)), true, false));
 
         loanOfferDTOs.add(calculateLoanOffer(3L, requestDTO.getAmount(), requestDTO.getTerm(),
                 creditRatio.subtract(BigDecimal.valueOf(ratioOfSalaryClient)), false, true));
 
-        loanOfferDTOs.add(calculateLoanOffer(4L, requestDTO.getAmount().add(COST_INSURANCE), requestDTO.getTerm(),
-                creditRatio, true, true));
+        loanOfferDTOs.add(calculateLoanOffer(4L, loanAmountWithInsurance, requestDTO.getTerm(),
+                creditRatio.subtract(BigDecimal.valueOf(ratioOfInsuranceEnabled + ratioOfSalaryClient)), true, true));
 
 
         log.info("[createLoanOffer] << result: {}", loanOfferDTOs);

@@ -24,7 +24,7 @@ public interface ClientMapper {
 
 
     @Mapping(target = "passport.issueDate", source = "requestFDTO.passportIssueDate")
-    @Mapping(target = "passport.issueBranch", source = "requestFDTO.passportIssueBrach")
+    @Mapping(target = "passport.issueBranch", source = "requestFDTO.passportIssueBranch")
     Client updateClientToFinishRegistrationRequestDTO(FinishRegistrationRequestDTO requestFDTO, @MappingTarget Client client);
 
 

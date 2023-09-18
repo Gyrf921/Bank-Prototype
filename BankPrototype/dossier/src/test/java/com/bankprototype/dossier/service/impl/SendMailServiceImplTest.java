@@ -3,7 +3,6 @@ package com.bankprototype.dossier.service.impl;
 import com.bankprototype.dossier.kafka.dto.EmailMassageDTO;
 import com.bankprototype.dossier.kafka.dto.enamfordto.Theme;
 import org.junit.jupiter.api.Test;
-
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -19,7 +17,6 @@ import java.io.IOException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
-
 
 
 @SpringBootTest
@@ -39,7 +36,7 @@ class SendMailServiceImplTest {
     void shouldUseGreenMail() throws MessagingException, IOException {
         String testTheme = "theme";
         String testEmailAddress = "gyrf921@gmail.com";
-        EmailMassageDTO emailMassageDTO = new EmailMassageDTO(testEmailAddress, Theme.SEND_SES, 1L);
+        EmailMassageDTO emailMassageDTO = new EmailMassageDTO(testEmailAddress, Theme.SEND_SES, 1L, null);
 
         doNothing().when(javaMailSender).send(any(MimeMessage.class));
 

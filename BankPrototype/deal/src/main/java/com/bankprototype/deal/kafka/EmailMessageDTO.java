@@ -14,4 +14,5 @@ public class EmailMessageDTO {
     String address;
     Theme theme;
     Long applicationId;
+    Long sesCode;
 }

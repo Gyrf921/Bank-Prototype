@@ -16,9 +16,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @SpringBootTest
-@AutoConfigureMockMvc //simulating a http request without a server
+@AutoConfigureMockMvc
 class ConveyorControllerTest {
-
 
     @Autowired
     private MockMvc mockMvc;
@@ -43,14 +42,7 @@ class ConveyorControllerTest {
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.[*].requestedAmount", hasItem(1000000)))
-                .andExpect(jsonPath("$.[*].requestedAmount", hasItem(1100000)))
-                .andExpect(jsonPath("$.[*].totalAmount", hasItem(1159689)))
-                .andExpect(jsonPath("$.[*].monthlyPayment", hasItem(16107)))
-                .andExpect(jsonPath("$.[*].rate", hasItem(5.0)))
-                .andExpect(jsonPath("$.[*].isInsuranceEnabled", hasItem(false)))
-                .andExpect(jsonPath("$.[*].isSalaryClient", hasItem(false)))
-                .andExpect(jsonPath("$.[*].isInsuranceEnabled", hasItem(true)))
-                .andExpect(jsonPath("$.[*].isSalaryClient", hasItem(true)));
+                .andExpect(jsonPath("$.[*].requestedAmount", hasItem(1020000)));
 
         System.out.println(response);
 

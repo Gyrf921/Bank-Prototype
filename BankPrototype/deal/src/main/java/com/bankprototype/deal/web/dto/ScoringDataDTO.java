@@ -27,7 +27,7 @@ public class ScoringDataDTO {
     private LocalDate passportIssueDate;
     private String passportIssueBranch;
     private MaritalStatus maritalStatus;
-    private BigDecimal dependentAmount;
+    private Integer dependentAmount;
     private EmploymentDTO employment;
     private String account;
     private Boolean isInsuranceEnabled;

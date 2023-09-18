@@ -46,6 +46,7 @@
             <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
 
+
         <!--ГЕНЕРАТОРЫ КОДА-->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -63,7 +64,6 @@
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
         </dependency>
-
 
         <!--ТЕСТЫ-->
         <dependency>

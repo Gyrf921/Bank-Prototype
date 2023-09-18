@@ -20,7 +20,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> badBirthdateException(BirthdateException ex, WebRequest request) {
         log.error(ex.getMessage(), ex);
 
-        //100 - ошибка валидации данных
+        ErrorDetails errorDetails = new ErrorDetails(HttpStatus.BAD_REQUEST.value(), BUSINESS_ERROR_CODE_VALIDATE, LocalDate.now(), ex.getMessage(), request.getDescription(false));
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ExternalException.class)
+    public ResponseEntity<?> externalExceptionValidation(ExternalException ex, WebRequest request) {
+        log.error(ex.getMessage(), ex);
+
         ErrorDetails errorDetails = new ErrorDetails(HttpStatus.BAD_REQUEST.value(), BUSINESS_ERROR_CODE_VALIDATE, LocalDate.now(), ex.getMessage(), request.getDescription(false));
 
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);

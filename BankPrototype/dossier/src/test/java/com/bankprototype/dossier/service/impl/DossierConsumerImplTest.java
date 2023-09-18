@@ -5,8 +5,6 @@ import com.bankprototype.dossier.kafka.dto.enamfordto.Theme;
 import com.bankprototype.dossier.service.SendMailService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -54,42 +52,42 @@ class DossierConsumerImplTest {
 
     @Test
     void testKafkaConsumer_finishRegistration() {
-        EmailMassageDTO message = new EmailMassageDTO("gyrf921@gmail.com", Theme.FINISH_REGISTRATION, 1L);
+        EmailMassageDTO message = new EmailMassageDTO("gyrf921@gmail.com", Theme.FINISH_REGISTRATION, 1L, null);
 
         testKafkaConsumer(finishRegistration, message);
     }
 
     @Test
     void testKafkaConsumer_createDocuments() {
-        EmailMassageDTO message = new EmailMassageDTO("gyrf921@gmail.com", Theme.CREATE_DOCUMENTS, 1L);
+        EmailMassageDTO message = new EmailMassageDTO("gyrf921@gmail.com", Theme.FINISH_REGISTRATION, 1L, null);
 
         testKafkaConsumer(createDocuments, message);
     }
 
     @Test
     void testKafkaConsumer_sendDocuments() {
-        EmailMassageDTO message = new EmailMassageDTO("gyrf921@gmail.com", Theme.SEND_DOCUMENTS, 1L);
+        EmailMassageDTO message = new EmailMassageDTO("gyrf921@gmail.com", Theme.FINISH_REGISTRATION, 1L, null);
 
         testKafkaConsumer(sendDocuments, message);
     }
 
     @Test
     void testKafkaConsumer_creditIssued() {
-        EmailMassageDTO message = new EmailMassageDTO("gyrf921@gmail.com", Theme.CREDIT_ISSUED, 1L);
+        EmailMassageDTO message = new EmailMassageDTO("gyrf921@gmail.com", Theme.FINISH_REGISTRATION, 1L, null);
 
         testKafkaConsumer(creditIssued, message);
     }
 
     @Test
     void testKafkaConsumer_sendSes() {
-        EmailMassageDTO message = new EmailMassageDTO("gyrf921@gmail.com", Theme.SEND_SES, 1L);
+        EmailMassageDTO message = new EmailMassageDTO("gyrf921@gmail.com", Theme.FINISH_REGISTRATION, 1L, 666666L);
 
         testKafkaConsumer(sendSes, message);
     }
 
     @Test
     void testKafkaConsumer_applicationDenied() {
-        EmailMassageDTO message = new EmailMassageDTO("gyrf921@gmail.com", Theme.APPLICATION_DENIED, 1L);
+        EmailMassageDTO message = new EmailMassageDTO("gyrf921@gmail.com", Theme.APPLICATION_DENIED, 1L, null);
 
         testKafkaConsumer(applicationDenied, message);
     }
