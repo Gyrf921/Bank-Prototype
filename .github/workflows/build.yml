@@ -1,6 +1,12 @@
 name: Build
   
-on: workflow_dispatch
+on:
+  pull_request:
+    branches:
+      - '*'
+  push:
+    branches:
+      - 'master'
 
 jobs:
   build:
@@ -15,3 +21,9 @@ jobs:
         run: mvn -f ./BankPrototype/gateway/pom.xml -B clean package -DskipTests
       - name: Maven Package application
         run: mvn -f ./BankPrototype/application/pom.xml -B clean package -DskipTests
+      - name: Maven Package deal
+        run: mvn -f ./BankPrototype/deal/pom.xml -B clean package -DskipTests
+      - name: Maven Package dossier
+        run: mvn -f ./BankPrototype/dossier/pom.xml -B clean package -DskipTests
+      - name: Maven Package credit-conveyor
+        run: mvn -f ./BankPrototype/credit-conveyor/pom.xml -B clean package -DskipTests
