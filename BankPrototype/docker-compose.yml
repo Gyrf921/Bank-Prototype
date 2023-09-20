@@ -10,6 +10,9 @@ services:
     restart: always
     ports:
       - "8084:8084"
+    environment:
+      - 'DEAL_FEIGN_CLIENT_HOST=deal:8081'
+      - 'APPLICATION_FEIGN_CLIENT_HOST=application:8082'
     depends_on:
       - deal
       - application
@@ -22,6 +25,8 @@ services:
       dockerfile: Dockerfile
     container_name: application
     restart: always
+    environment:
+      - 'DEAL_FEIGN_CLIENT_HOST=deal:8081'
     ports:
       - "8082:8082"
     depends_on:
@@ -51,6 +56,7 @@ services:
     ports:
       - "8081:8081"
     environment:
+      - 'CONVEYOR_FEIGN_CLIENT_HOST=conveyor:8080'
       - 'KAFKA_SERVER=kafka:9092'
       - 'POSTGRES_LINK=postgres:5432'
     depends_on:

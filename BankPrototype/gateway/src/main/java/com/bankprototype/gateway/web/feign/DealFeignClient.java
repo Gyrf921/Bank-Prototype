@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@FeignClient(value = "deal", url = "http://localhost:8081/deal", fallbackFactory = DealFeignClientFallbackFactory.class)
+@FeignClient(value = "deal", url = "http://deal:8081", fallbackFactory = DealFeignClientFallbackFactory.class)
 public interface DealFeignClient {
     @PutMapping("/calculate/{applicationId}")
     void completionRegistrationAndCalculateFullCredit(@PathVariable(value = "applicationId") Long applicationId,
