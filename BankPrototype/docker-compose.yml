@@ -1,0 +1,98 @@
+version: '3'
+
+services:
+
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: gateway
+    restart: always
+    ports:
+      - "8084:8084"
+    depends_on:
+      - deal
+      - application
+      - dossier
+      - conveyor
+
+  application:
+    build:
+      context: ./application
+      dockerfile: Dockerfile
+    container_name: application
+    restart: always
+    ports:
+      - "8082:8082"
+    depends_on:
+      - deal
+
+  dossier:
+    build:
+      context: ./dossier
+      dockerfile: Dockerfile
+    container_name: dossier
+    restart: always
+    ports:
+      - "8083:8083"
+    environment:
+      - 'MAIL_USERNAME=bank-prototipe@yandex.ru'
+      - 'MAIL_PASSWORD=ogbyrkipdzxzgarg'
+      - 'KAFKA_SERVER=kafka:9092'
+    depends_on:
+      - kafka
+
+  deal:
+    build:
+      context: ./deal
+      dockerfile: Dockerfile
+    container_name: deal
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      - 'KAFKA_SERVER=kafka:9092'
+      - 'POSTGRES_LINK=postgres:5432'
+    depends_on:
+      - postgres
+      - zookeeper
+      - kafka
+      - conveyor
+
+
+  conveyor:
+    build:
+      context: ./credit-conveyor
+      dockerfile: Dockerfile
+    container_name: credit-conveyor
+    restart: always
+    ports:
+      - "8080:8080"
+
+
+  postgres:
+    image: 'postgres'
+    container_name: 'postgres_BP'
+    ports:
+      - "5432:5432"
+    environment:
+      - 'POSTGRES_USER=postgres'
+      - 'POSTGRES_PASSWORD=1234'
+      - 'POSTGRES_HOST_AUTH_METHOD=trust'
+      - 'POSTGRES_DB=java'
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper_BP
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka_BP
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "finish_registration:1:1,create_documents:1:1,send_documents:1:1,credit_issued:1:1,send_ses:1:1,application_denied:1:1"
