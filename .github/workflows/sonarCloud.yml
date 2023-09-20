@@ -33,52 +33,52 @@ jobs:
           with:
             java-version: '11'
         - name: Analyze with SonarCloud
-          run: ./mvnw -f ./BankPrototype/application/ -B verify sonar:sonar -Dsonar.projectKey=Gyrf921_Bank-Prototype -Dsonar.organization=gyrf921 -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=$SONAR_TOKEN
+          run: mvn -f ./BankPrototype/application/ -B verify sonar:sonar -Dsonar.projectKey=Gyrf921_Bank-Prototype -Dsonar.organization=gyrf921 -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=$SONAR_TOKEN
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           
   sonarCloud3:
-    name: SonarCloud3
+    name: SonarCloudGateway
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          projectBaseDir: BankPrototype/gateway/
+        - uses: actions/checkout@v1
+        - name: SonarCloud Scan
+          uses: actions/setup-java@v1
+          with:
+            java-version: '11'
+        - name: Analyze with SonarCloud
+          run: mvn -f ./BankPrototype/gateway/ -B verify sonar:sonar -Dsonar.projectKey=Gyrf921_Bank-Prototype -Dsonar.organization=gyrf921 -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=$SONAR_TOKEN
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           
   sonarCloud4:
-    name: SonarCloud4
+    name: SonarCloudDossier
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          projectBaseDir: BankPrototype/dossier/
+        - uses: actions/checkout@v1
+        - name: SonarCloud Scan
+          uses: actions/setup-java@v1
+          with:
+            java-version: '11'
+        - name: Analyze with SonarCloud
+          run: mvn -f ./BankPrototype/dossier/ -B verify sonar:sonar -Dsonar.projectKey=Gyrf921_Bank-Prototype -Dsonar.organization=gyrf921 -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=$SONAR_TOKEN
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   sonarCloud5:
-    name: SonarCloud5
+    name: SonarCloudConveyor
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          projectBaseDir: BankPrototype/application/
+        - uses: actions/checkout@v1
+        - name: SonarCloud Scan
+          uses: actions/setup-java@v1
+          with:
+            java-version: '11'
+        - name: Analyze with SonarCloud
+          run: mvn -f ./BankPrototype/credit-conveyor/ -B verify sonar:sonar -Dsonar.projectKey=Gyrf921_Bank-Prototype -Dsonar.organization=gyrf921 -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=$SONAR_TOKEN
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
