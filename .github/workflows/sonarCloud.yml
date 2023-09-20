@@ -23,12 +23,12 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 #       run sonar maven plugin:
       - name: Maven Package gateway
-        run: mvn -f ./BankPrototype/gateway/pom.xml -B verify sonar:sonar -Dsonar.projectKey=gyrf921 -Dsonar.organization=Владислав -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.coverage.jacoco.xmlReportPaths=./target/site/jacoco/jacoco.xml
+        run: mvn -f ./BankPrototype/gateway/pom.xml -B verify sonar:sonar -Dsonar.projectKey=Bank-Prototype -Dsonar.organization=Владислав -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.coverage.jacoco.xmlReportPaths=./target/site/jacoco/jacoco.xml
       - name: Maven Package application
-        run: mvn -f ./BankPrototype/application/pom.xml -B verify sonar:sonar -Dsonar.projectKey=gyrf921 -Dsonar.organization=Владислав -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.coverage.jacoco.xmlReportPaths=./target/site/jacoco/jacoco.xml
+        run: mvn -f ./BankPrototype/application/pom.xml -B verify sonar:sonar -Dsonar.projectKey=Bank-Prototype -Dsonar.organization=Владислав -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.coverage.jacoco.xmlReportPaths=./target/site/jacoco/jacoco.xml
       - name: Maven Package deal
-        run: mvn -f ./BankPrototype/deal/pom.xml -B verify sonar:sonar -Dsonar.projectKey=gyrf921 -Dsonar.organization=Владислав -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.coverage.jacoco.xmlReportPaths=./target/site/jacoco/jacoco.xml
+        run: mvn -f ./BankPrototype/deal/pom.xml -B verify sonar:sonar -Dsonar.projectKey=Bank-Prototype -Dsonar.organization=Владислав -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.coverage.jacoco.xmlReportPaths=./target/site/jacoco/jacoco.xml
       - name: Maven Package dossier
-        run: mvn -f ./BankPrototype/dossier/pom.xml -B verify sonar:sonar -Dsonar.projectKey=gyrf921 -Dsonar.organization=Владислав -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.coverage.jacoco.xmlReportPaths=./target/site/jacoco/jacoco.xml
+        run: mvn -f ./BankPrototype/dossier/pom.xml -B verify sonar:sonar -Dsonar.projectKey=Bank-Prototype -Dsonar.organization=Владислав -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.coverage.jacoco.xmlReportPaths=./target/site/jacoco/jacoco.xml
       - name: Maven Package credit-conveyor
-        run: mvn -f ./BankPrototype/credit-conveyor/pom.xml -B verify sonar:sonar -Dsonar.projectKey=gyrf921 -Dsonar.organization=Владислав -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.coverage.jacoco.xmlReportPaths=./target/site/jacoco/jacoco.xml
+        run: mvn -f ./BankPrototype/credit-conveyor/pom.xml -B verify sonar:sonar -Dsonar.projectKey=Bank-Prototype -Dsonar.organization=Владислав -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.coverage.jacoco.xmlReportPaths=./target/site/jacoco/jacoco.xml
