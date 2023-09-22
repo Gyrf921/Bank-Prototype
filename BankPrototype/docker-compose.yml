@@ -1,4 +1,4 @@
-version: '3'
+version: '3.9'
 
 services:
 
@@ -11,8 +11,8 @@ services:
     ports:
       - "8084:8084"
     environment:
-      - 'DEAL_FEIGN_CLIENT_HOST=deal:8081'
-      - 'APPLICATION_FEIGN_CLIENT_HOST=application:8082'
+      - DEAL_FEIGN_CLIENT_HOST=deal:8081
+      - APPLICATION_FEIGN_CLIENT_HOST=application:8082
     depends_on:
       - deal
       - application
@@ -23,10 +23,11 @@ services:
     build:
       context: ./application
       dockerfile: Dockerfile
+    hostname: application
     container_name: application
     restart: always
     environment:
-      - 'DEAL_FEIGN_CLIENT_HOST=deal:8081'
+      - DEAL_FEIGN_CLIENT_HOST=deal:8081
     ports:
       - "8082:8082"
     depends_on:
@@ -41,9 +42,9 @@ services:
     ports:
       - "8083:8083"
     environment:
-      - 'MAIL_USERNAME=bank-prototipe@yandex.ru'
-      - 'MAIL_PASSWORD=ogbyrkipdzxzgarg'
-      - 'KAFKA_SERVER=kafka:9092'
+      - KAFKA_SERVER=kafka:9092
+      - MAIL_USERNAME=bank-prototipe@yandex.ru
+      - MAIL_PASSWORD=ogbyrkipdzxzgarg
     depends_on:
       - kafka
 
@@ -51,14 +52,15 @@ services:
     build:
       context: ./deal
       dockerfile: Dockerfile
+    hostname: deal
     container_name: deal
     restart: always
     ports:
       - "8081:8081"
     environment:
-      - 'CONVEYOR_FEIGN_CLIENT_HOST=conveyor:8080'
-      - 'KAFKA_SERVER=kafka:9092'
-      - 'POSTGRES_LINK=postgres:5432'
+      - KAFKA_SERVER=kafka:9092
+      - CONVEYOR_FEIGN_CLIENT_HOST=conveyor:8080
+      - POSTGRES_LINK=postgres:5432
     depends_on:
       - postgres
       - zookeeper
@@ -70,7 +72,8 @@ services:
     build:
       context: ./credit-conveyor
       dockerfile: Dockerfile
-    container_name: credit-conveyor
+    hostname: conveyor
+    container_name: conveyor
     restart: always
     ports:
       - "8080:8080"
@@ -96,9 +99,13 @@ services:
   kafka:
     image: wurstmeister/kafka
     container_name: kafka_BP
+    restart: "no"
     ports:
       - "9092:9092"
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9092,OUTSIDE://kafka:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_CREATE_TOPICS: "finish_registration:1:1,create_documents:1:1,send_documents:1:1,credit_issued:1:1,send_ses:1:1,application_denied:1:1"
