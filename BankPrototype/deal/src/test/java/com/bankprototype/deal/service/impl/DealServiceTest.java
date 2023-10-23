@@ -1,10 +1,10 @@
 package com.bankprototype.deal.service.impl;
 
 import com.bankprototype.deal.kafka.EmailMessageDTO;
-import com.bankprototype.deal.repository.dao.Application;
-import com.bankprototype.deal.repository.dao.Client;
-import com.bankprototype.deal.repository.dao.Credit;
-import com.bankprototype.deal.repository.dao.enumfordao.ApplicationStatus;
+import com.bankprototype.deal.dao.Application;
+import com.bankprototype.deal.dao.Client;
+import com.bankprototype.deal.dao.Credit;
+import com.bankprototype.deal.dao.enumfordao.ApplicationStatus;
 import com.bankprototype.deal.service.ClientService;
 import com.bankprototype.deal.service.DealProducer;
 import com.bankprototype.deal.web.dto.*;
@@ -88,7 +88,7 @@ class DealServiceTest extends BaseServiceTest {
         Application applicationTest = enhancedRandom.nextObject(Application.class);
         applicationTest.setStatus(ApplicationStatus.PREAPPROVAL);
 
-        when(applicationService.updateStatusHistoryForApplication(any(), any()))
+        when(applicationService.updateApplicationSetLoanOffer(any()))
                 .thenReturn(applicationTest);
 
         doNothing().when(dealProducer).sendMessage(any(), any());
@@ -96,7 +96,7 @@ class DealServiceTest extends BaseServiceTest {
         boolean isItWork = dealService.chooseOneOfTheOffers(requestDTO);
 
         assertThat(isItWork).isTrue();
-        verify(applicationService, times(1)).updateStatusHistoryForApplication(any(), any());
+        verify(applicationService, times(1)).updateApplicationSetLoanOffer(any());
     }
 
     @Test

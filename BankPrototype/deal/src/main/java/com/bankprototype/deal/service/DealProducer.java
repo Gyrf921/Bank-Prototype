@@ -2,7 +2,7 @@ package com.bankprototype.deal.service;
 
 
 import com.bankprototype.deal.kafka.EmailMessageDTO;
-import com.bankprototype.deal.kafka.enumfordto.Theme;
+import com.bankprototype.deal.kafka.enumforkafka.Theme;
 
 public interface DealProducer {
 

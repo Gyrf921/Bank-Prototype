@@ -3,11 +3,11 @@ package com.bankprototype.deal.service.impl;
 import com.bankprototype.deal.exception.ResourceNotFoundException;
 import com.bankprototype.deal.mapper.StatusHistoryMapperImpl;
 import com.bankprototype.deal.repository.ApplicationRepository;
-import com.bankprototype.deal.repository.dao.Application;
-import com.bankprototype.deal.repository.dao.Client;
-import com.bankprototype.deal.repository.dao.enumfordao.ApplicationStatus;
-import com.bankprototype.deal.repository.dao.enumfordao.ChangeType;
-import com.bankprototype.deal.repository.dao.jsonb.StatusHistory;
+import com.bankprototype.deal.dao.Application;
+import com.bankprototype.deal.dao.Client;
+import com.bankprototype.deal.dao.enumfordao.ApplicationStatus;
+import com.bankprototype.deal.dao.enumfordao.ChangeType;
+import com.bankprototype.deal.dao.jsonb.StatusHistory;
 import com.bankprototype.deal.web.dto.ApplicationStatusHistoryDTO;
 import com.bankprototype.deal.web.dto.LoanOfferDTO;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
@@ -21,7 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.bankprototype.deal.repository.dao.enumfordao.ApplicationStatus.PREAPPROVAL;
+import static com.bankprototype.deal.dao.enumfordao.ApplicationStatus.PREAPPROVAL;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -174,7 +174,7 @@ class ApplicationServiceImplTest extends BaseServiceTest {
 
 
         Application applicationSaved = applicationService
-                .updateStatusHistoryForApplication(loanOfferDTO, status);
+                .updateApplicationSetLoanOffer(loanOfferDTO);
 
 
         System.out.println(applicationSaved);

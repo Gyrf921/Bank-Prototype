@@ -1,4 +1,4 @@
-package com.bankprototype.deal.repository.dao.enumfordao;
+package com.bankprototype.deal.dao.enumfordao;
 
 public enum MaritalStatus {
 

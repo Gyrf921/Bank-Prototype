@@ -1,6 +1,6 @@
 package com.bankprototype.deal.web.controller;
 
-import com.bankprototype.deal.repository.dao.Application;
+import com.bankprototype.deal.dao.Application;
 import com.bankprototype.deal.service.ApplicationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

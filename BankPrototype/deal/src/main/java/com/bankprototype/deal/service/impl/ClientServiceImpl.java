@@ -3,7 +3,7 @@ package com.bankprototype.deal.service.impl;
 import com.bankprototype.deal.exception.ResourceNotFoundException;
 import com.bankprototype.deal.mapper.ClientMapper;
 import com.bankprototype.deal.repository.ClientRepository;
-import com.bankprototype.deal.repository.dao.Client;
+import com.bankprototype.deal.dao.Client;
 import com.bankprototype.deal.service.ClientService;
 import com.bankprototype.deal.web.dto.FinishRegistrationRequestDTO;
 import com.bankprototype.deal.web.dto.LoanApplicationRequestDTO;

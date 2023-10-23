@@ -7,7 +7,6 @@ services:
       context: ./gateway
       dockerfile: Dockerfile
     container_name: gateway
-    restart: always
     ports:
       - "8084:8084"
     environment:
@@ -25,7 +24,6 @@ services:
       dockerfile: Dockerfile
     hostname: application
     container_name: application
-    restart: always
     environment:
       - DEAL_FEIGN_CLIENT_HOST=deal:8081
     ports:
@@ -38,7 +36,6 @@ services:
       context: ./dossier
       dockerfile: Dockerfile
     container_name: dossier
-    restart: always
     ports:
       - "8083:8083"
     environment:
@@ -54,7 +51,6 @@ services:
       dockerfile: Dockerfile
     hostname: deal
     container_name: deal
-    restart: always
     ports:
       - "8081:8081"
     environment:
@@ -74,10 +70,8 @@ services:
       dockerfile: Dockerfile
     hostname: conveyor
     container_name: conveyor
-    restart: always
     ports:
       - "8080:8080"
-
 
   postgres:
     image: 'postgres'
