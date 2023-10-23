@@ -1,4 +1,4 @@
-package com.bankprototype.deal.kafka.enumfordto;
+package com.bankprototype.deal.kafka.enumforkafka;
 
 public enum Theme {
     FINISH_REGISTRATION,

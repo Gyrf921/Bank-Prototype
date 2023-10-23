@@ -1,7 +1,7 @@
 package com.bankprototype.deal.web.dto;
 
-import com.bankprototype.deal.repository.dao.enumfordao.ApplicationStatus;
-import com.bankprototype.deal.repository.dao.enumfordao.ChangeType;
+import com.bankprototype.deal.dao.enumfordao.ApplicationStatus;
+import com.bankprototype.deal.dao.enumfordao.ChangeType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

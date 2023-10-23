@@ -1,7 +1,7 @@
-package com.bankprototype.deal.repository.dao;
+package com.bankprototype.deal.dao;
 
-import com.bankprototype.deal.repository.dao.enumfordao.ApplicationStatus;
-import com.bankprototype.deal.repository.dao.jsonb.StatusHistory;
+import com.bankprototype.deal.dao.enumfordao.ApplicationStatus;
+import com.bankprototype.deal.dao.jsonb.StatusHistory;
 import com.bankprototype.deal.web.dto.LoanOfferDTO;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;

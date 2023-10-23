@@ -21,5 +21,4 @@ public class ErrorDetails {
 
     private String details;
 
-
 }

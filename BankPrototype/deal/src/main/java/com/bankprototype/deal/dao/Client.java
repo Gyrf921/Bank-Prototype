@@ -1,10 +1,10 @@
-package com.bankprototype.deal.repository.dao;
+package com.bankprototype.deal.dao;
 
 
-import com.bankprototype.deal.repository.dao.enumfordao.Gender;
-import com.bankprototype.deal.repository.dao.enumfordao.MaritalStatus;
-import com.bankprototype.deal.repository.dao.jsonb.Employment;
-import com.bankprototype.deal.repository.dao.jsonb.Passport;
+import com.bankprototype.deal.dao.enumfordao.Gender;
+import com.bankprototype.deal.dao.enumfordao.MaritalStatus;
+import com.bankprototype.deal.dao.jsonb.Employment;
+import com.bankprototype.deal.dao.jsonb.Passport;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

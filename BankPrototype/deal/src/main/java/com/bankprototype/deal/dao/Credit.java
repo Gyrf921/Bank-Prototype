@@ -1,6 +1,6 @@
-package com.bankprototype.deal.repository.dao;
+package com.bankprototype.deal.dao;
 
-import com.bankprototype.deal.repository.dao.enumfordao.CreditStatus;
+import com.bankprototype.deal.dao.enumfordao.CreditStatus;
 import com.bankprototype.deal.web.dto.PaymentScheduleElement;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;

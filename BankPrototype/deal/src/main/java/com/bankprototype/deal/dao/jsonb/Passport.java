@@ -1,4 +1,4 @@
-package com.bankprototype.deal.repository.dao.jsonb;
+package com.bankprototype.deal.dao.jsonb;
 
 
 import lombok.AllArgsConstructor;

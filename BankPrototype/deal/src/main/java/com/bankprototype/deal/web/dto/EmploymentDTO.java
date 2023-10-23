@@ -1,8 +1,8 @@
 package com.bankprototype.deal.web.dto;
 
 
-import com.bankprototype.deal.repository.dao.enumfordao.EmploymentPosition;
-import com.bankprototype.deal.repository.dao.enumfordao.EmploymentStatus;
+import com.bankprototype.deal.dao.enumfordao.EmploymentPosition;
+import com.bankprototype.deal.dao.enumfordao.EmploymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

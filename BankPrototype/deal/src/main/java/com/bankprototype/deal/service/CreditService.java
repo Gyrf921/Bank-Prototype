@@ -1,8 +1,8 @@
 package com.bankprototype.deal.service;
 
-import com.bankprototype.deal.repository.dao.Application;
-import com.bankprototype.deal.repository.dao.Client;
-import com.bankprototype.deal.repository.dao.Credit;
+import com.bankprototype.deal.dao.Application;
+import com.bankprototype.deal.dao.Client;
+import com.bankprototype.deal.dao.Credit;
 import com.bankprototype.deal.web.dto.CreditDTO;
 import com.bankprototype.deal.web.dto.FinishRegistrationRequestDTO;
 import com.bankprototype.deal.web.dto.LoanOfferDTO;

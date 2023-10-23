@@ -1,6 +1,6 @@
 package com.bankprototype.deal.mapper;
 
-import com.bankprototype.deal.repository.dao.jsonb.Employment;
+import com.bankprototype.deal.dao.jsonb.Employment;
 import com.bankprototype.deal.web.dto.EmploymentDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

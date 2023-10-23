@@ -1,7 +1,7 @@
 package com.bankprototype.deal.web.controller;
 
 import com.bankprototype.deal.kafka.EmailMessageDTO;
-import com.bankprototype.deal.repository.dao.Application;
+import com.bankprototype.deal.dao.Application;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
 import org.junit.jupiter.api.Test;
@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -49,7 +50,7 @@ class DocumentControllerTest extends BaseControllerTest {
 
         doNothing().when(dealProducer).sendMessage(any(), any());
 
-        ResultActions response = mockMvc.perform(post("/deal/document/1/sign"))
+        ResultActions response = mockMvc.perform(patch("/deal/document/1/sign"))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
 
@@ -69,7 +70,7 @@ class DocumentControllerTest extends BaseControllerTest {
 
         doNothing().when(dealProducer).sendMessage(any(), any());
 
-        ResultActions response = mockMvc.perform(post("/deal/document/1/code?sesCode=666666"))
+        ResultActions response = mockMvc.perform(patch("/deal/document/1/code?sesCode=666666"))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
 
@@ -89,7 +90,7 @@ class DocumentControllerTest extends BaseControllerTest {
 
         doNothing().when(dealProducer).sendMessage(any(), any());
 
-        ResultActions response = mockMvc.perform(post("/deal/document/1/code?sesCode=666666"))
+        ResultActions response = mockMvc.perform(patch("/deal/document/1/code?sesCode=666666"))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
 
