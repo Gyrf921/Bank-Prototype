@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.validation.Valid;
 import java.util.List;
 
-@FeignClient(value = "application", url = "http://localhost:8082/application", fallbackFactory = ApplicationFeignClientFallbackFactory.class)
+@FeignClient(value = "application", url = "application:8082/application", fallbackFactory = ApplicationFeignClientFallbackFactory.class)
 public interface ApplicationFeignClient {
 
     @PostMapping

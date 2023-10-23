@@ -1,6 +1,6 @@
 package com.bankprototype.deal.web.controller;
 
-import com.bankprototype.deal.repository.dao.Application;
+import com.bankprototype.deal.dao.Application;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
 import org.junit.jupiter.api.Test;

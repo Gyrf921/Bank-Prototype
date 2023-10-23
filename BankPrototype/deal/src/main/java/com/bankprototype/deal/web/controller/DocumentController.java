@@ -2,7 +2,7 @@ package com.bankprototype.deal.web.controller;
 
 import com.bankprototype.deal.exception.SesCodeIsNotCorrectException;
 import com.bankprototype.deal.kafka.EmailMessageDTO;
-import com.bankprototype.deal.kafka.enumfordto.Theme;
+import com.bankprototype.deal.kafka.enumforkafka.Theme;
 import com.bankprototype.deal.service.ApplicationService;
 import com.bankprototype.deal.service.DealProducer;
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,7 +51,7 @@ public class DocumentController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Request to sign documents has been completed"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")})
-    @PostMapping("/{applicationId}/sign")
+    @PatchMapping("/{applicationId}/sign")
     public void signDocuments(@PathVariable(value = "applicationId") Long applicationId) {
         log.info("[signDocuments] >> applicationId:{}", applicationId);
 
@@ -64,12 +64,12 @@ public class DocumentController {
         log.info("[signDocuments] << result is void, message: {}, topic/theme: {}", massageDTO, Theme.SEND_SES.name());
     }
 
-    @Operation(summary = "Signing of documents")
+    @Operation(summary = "Signing of documents and set sign date")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Signing of documents has been completed"),
             @ApiResponse(responseCode = "400", description = "Mistake with ses code"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")})
-    @PostMapping("/{applicationId}/code")
+    @PatchMapping("/{applicationId}/code")
     public void codeDocuments(@RequestParam(value = "sesCode") Long sesCode,
                               @PathVariable(value = "applicationId") Long applicationId) {
         log.info("[codeDocuments] >> sesCode:{}, applicationId: {}", sesCode, applicationId);

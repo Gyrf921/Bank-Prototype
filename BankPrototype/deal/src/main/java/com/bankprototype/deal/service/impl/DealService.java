@@ -2,10 +2,10 @@ package com.bankprototype.deal.service.impl;
 
 import com.bankprototype.deal.exception.BadScoringInfoException;
 import com.bankprototype.deal.kafka.EmailMessageDTO;
-import com.bankprototype.deal.kafka.enumfordto.Theme;
-import com.bankprototype.deal.repository.dao.Application;
-import com.bankprototype.deal.repository.dao.Client;
-import com.bankprototype.deal.repository.dao.enumfordao.ApplicationStatus;
+import com.bankprototype.deal.kafka.enumforkafka.Theme;
+import com.bankprototype.deal.dao.Application;
+import com.bankprototype.deal.dao.Client;
+import com.bankprototype.deal.dao.enumfordao.ApplicationStatus;
 import com.bankprototype.deal.service.ApplicationService;
 import com.bankprototype.deal.service.ClientService;
 import com.bankprototype.deal.service.CreditService;
@@ -67,7 +67,7 @@ public class DealService {
         log.info("[chooseOneOfTheOffers] >> requestDTO: {}", requestDTO);
 
         Application application = applicationService
-                .updateStatusHistoryForApplication(requestDTO, ApplicationStatus.PREAPPROVAL);
+                .updateApplicationSetLoanOffer(requestDTO);
 
         EmailMessageDTO massageDTO = dealProducer.createMessage(application.getApplicationId(), Theme.FINISH_REGISTRATION);
 

@@ -92,12 +92,11 @@ class DossierConsumerImplTest {
         testKafkaConsumer(applicationDenied, message);
     }
 
-
     void testKafkaConsumer(String topicName, EmailMassageDTO message) {
 
         kafkaProducer.send(topicName, message);
 
-        doNothing().when(mailService).sendEmail(any(), any(), any());
+        doNothing().when(mailService).sendEmail(any(EmailMassageDTO.class), any(String.class), any(String.class));
 
         verify(mailService, timeout(5000)).sendEmail(any(), any(), any());
 

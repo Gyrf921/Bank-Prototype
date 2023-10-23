@@ -3,11 +3,11 @@ package com.bankprototype.deal.service.impl;
 import com.bankprototype.deal.exception.ResourceNotFoundException;
 import com.bankprototype.deal.mapper.StatusHistoryMapper;
 import com.bankprototype.deal.repository.ApplicationRepository;
-import com.bankprototype.deal.repository.dao.Application;
-import com.bankprototype.deal.repository.dao.Client;
-import com.bankprototype.deal.repository.dao.enumfordao.ApplicationStatus;
-import com.bankprototype.deal.repository.dao.enumfordao.ChangeType;
-import com.bankprototype.deal.repository.dao.jsonb.StatusHistory;
+import com.bankprototype.deal.dao.Application;
+import com.bankprototype.deal.dao.Client;
+import com.bankprototype.deal.dao.enumfordao.ApplicationStatus;
+import com.bankprototype.deal.dao.enumfordao.ChangeType;
+import com.bankprototype.deal.dao.jsonb.StatusHistory;
 import com.bankprototype.deal.service.ApplicationService;
 import com.bankprototype.deal.web.dto.ApplicationStatusHistoryDTO;
 import com.bankprototype.deal.web.dto.LoanOfferDTO;
@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -84,28 +85,53 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public Application updateStatusHistoryForApplication(LoanOfferDTO loanOfferDTO, ApplicationStatus status) {
-        log.info("[updateStatusHistoryForApplication] >> loanOfferDTO: {}, status: {}", loanOfferDTO, status);
-
-        Application application = getApplicationById(loanOfferDTO.getApplicationId());
+    public Application updateStatusForApplication(Long applicationId, ApplicationStatus status){
+        log.info("[updateStatusForApplication] >> loanOfferDTO: {}, status: {}", applicationId, status);
+        Application application = getApplicationById(applicationId);
 
         ApplicationStatusHistoryDTO applicationStatusForHistory = ApplicationStatusHistoryDTO.builder()
                 .status(status)
                 .time(LocalDateTime.now())
                 .changeType(ChangeType.AUTOMATIC)
                 .build();
-
         List<StatusHistory> listStatusHistory = application.getStatusHistory();
 
         listStatusHistory.add(statusHistoryMapper.applicationStatusHistoryDtoToStatusHistory(applicationStatusForHistory));
 
         application.setStatus(status);
         application.setStatusHistory(listStatusHistory);
+
+        Application updatedApplication = applicationRepository.save(application);
+
+        log.info("[updateStatusForApplication] >> return: {}", updatedApplication);
+
+        return updatedApplication;
+    }
+
+    @Override
+    public Application updateApplicationSetLoanOffer(LoanOfferDTO loanOfferDTO) {
+        log.info("[setLoanOfferForApplication] >> loanOfferDTO: {}", loanOfferDTO);
+
+        Application application = getApplicationById(loanOfferDTO.getApplicationId());
+
         application.setAppliedOffer(loanOfferDTO);
 
         Application updatedApplication = applicationRepository.save(application);
 
-        log.info("[updateStatusHistoryForApplication] << result: {}", updatedApplication);
+        log.info("[setLoanOfferForApplication] << result: {}", updatedApplication);
+
+        return updatedApplication;
+    }
+
+    @Override
+    public Application updateApplicationSetSignDate(Application application) {
+        log.info("[updateApplicationSetSignDate] >> applicationId: {}", application.getApplicationId());
+
+        application.setSignDate(Timestamp.valueOf(LocalDateTime.now()));
+
+        Application updatedApplication = applicationRepository.save(application);
+
+        log.info("[updateApplicationSetSignDate] << result: {}", updatedApplication);
 
         return updatedApplication;
     }

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.validation.Valid;
 import java.util.List;
 
-@FeignClient(value = "creditConveyor", url = "http://localhost:8080/conveyor", fallbackFactory = CreditConveyorFeignClientFallbackFactory.class)
+@FeignClient(value = "conveyor", url = "conveyor:8080/conveyor", fallbackFactory = CreditConveyorFeignClientFallbackFactory.class)
 public interface CreditConveyorFeignClient {
 
     @PostMapping("/offers")

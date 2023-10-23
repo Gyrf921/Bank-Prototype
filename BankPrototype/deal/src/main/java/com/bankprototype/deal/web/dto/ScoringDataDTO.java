@@ -1,7 +1,7 @@
 package com.bankprototype.deal.web.dto;
 
-import com.bankprototype.deal.repository.dao.enumfordao.Gender;
-import com.bankprototype.deal.repository.dao.enumfordao.MaritalStatus;
+import com.bankprototype.deal.dao.enumfordao.Gender;
+import com.bankprototype.deal.dao.enumfordao.MaritalStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
