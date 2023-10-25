@@ -17,7 +17,7 @@
                 <tr>
                     <td align="center"
                         style="  border-collapse: collapse; text-align: center; border-bottom: #333333 1px solid; font-size: 18px;">
-                        <p>Ваш номер заявки: ${emailMassageDTO.applicationId}</p>
+                        <p>Ваш номер заявки: ${applicationId}</p>
                     </td>
                 </tr>
             </table>
@@ -39,7 +39,7 @@
                 <tr>
                     <td width="560" align="left"
                         style=" min-height: 150px; border-collapse: collapse; margin: 20px 10px 20px 10px; font-size: 16px;">
-                        <p style="line-height: 1.5;">${textForUser}</p>
+                        <p style="line-height: 1.5;">${text}</p>
                     </td>
                 </tr>
             </table>

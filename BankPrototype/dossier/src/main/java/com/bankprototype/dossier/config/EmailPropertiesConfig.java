@@ -4,34 +4,35 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+
 @Configuration
 @ConfigurationProperties(prefix = "mail")
 @Data
 public class EmailPropertiesConfig {
 
-    private String finishRegistrationTheme;
+    String finishRegistrationTheme;
 
-    private String finishRegistrationText;
+    String finishRegistrationText;
 
-    private String createDocumentsTheme;
+    String createDocumentsTheme;
 
-    private String createDocumentsText;
+    String createDocumentsText;
 
-    private String sendDocumentsTheme;
+    String sendDocumentsTheme;
 
-    private String sendDocumentsText;
+    String sendDocumentsText;
 
-    private String creditIssuedTheme;
+    String creditIssuedTheme;
 
-    private String creditIssuedText;
+    String creditIssuedText;
 
-    private String sendSesTheme;
+    String sendSesTheme;
 
-    private String sendSesText;
+    String sendSesText;
 
-    private String applicationDeniedTheme;
+    String applicationDeniedTheme;
 
-    private String applicationDeniedText;
+    String applicationDeniedText;
 
 
 }
