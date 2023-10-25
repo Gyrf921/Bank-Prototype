@@ -10,9 +10,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmailMassageDTO {
-    String address;
-    Theme theme;
-    Long applicationId;
-    Long sesCode;
+public class EmailMessageDTO {
+    private String address;
+
+    private Theme theme;
+
+    private Long applicationId;
+
+    private Long sesCode;
 }

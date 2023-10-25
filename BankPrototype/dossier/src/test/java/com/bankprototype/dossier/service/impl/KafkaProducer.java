@@ -1,6 +1,6 @@
 package com.bankprototype.dossier.service.impl;
 
-import com.bankprototype.dossier.kafka.dto.EmailMassageDTO;
+import com.bankprototype.dossier.kafka.dto.EmailMessageDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -13,9 +13,9 @@ import org.springframework.test.context.ActiveProfiles;
 @RequiredArgsConstructor
 public class KafkaProducer {
 
-    private final KafkaTemplate<String, EmailMassageDTO> kafkaTemplate;
+    private final KafkaTemplate<String, EmailMessageDTO> kafkaTemplate;
 
-    public void send(String topic, EmailMassageDTO payload) {
+    public void send(String topic, EmailMessageDTO payload) {
         kafkaTemplate.send(topic, payload);
     }
 }
