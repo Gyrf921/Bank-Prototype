@@ -4,8 +4,6 @@ import com.bankprototype.dossier.kafka.dto.EmailMessageDTO;
 import com.bankprototype.dossier.kafka.dto.enamfordto.Theme;
 import com.bankprototype.dossier.model.EmailInfo;
 import com.bankprototype.dossier.service.MailService;
-import io.github.benas.randombeans.EnhancedRandomBuilder;
-import io.github.benas.randombeans.api.EnhancedRandom;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -98,8 +96,6 @@ class DossierConsumerImplTest {
     }
 
     void testKafkaConsumer(String topicName, EmailMessageDTO message) {
-        EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build();
-
         kafkaProducer.send(topicName, message);
 
         when(mailService.createEmailMimeMessage(any()))
