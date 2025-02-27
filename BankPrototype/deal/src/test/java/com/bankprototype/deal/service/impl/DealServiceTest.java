@@ -1,6 +1,6 @@
 package com.bankprototype.deal.service.impl;
 
-import com.bankprototype.deal.kafka.EmailMessageDTO;
+import com.bankprototype.deal.web.kafka.EmailMessageDTO;
 import com.bankprototype.deal.dao.Application;
 import com.bankprototype.deal.dao.Client;
 import com.bankprototype.deal.dao.Credit;

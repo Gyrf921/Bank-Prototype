@@ -1,13 +1,15 @@
 package com.bankprototype.deal.service.impl;
 
+import com.bankprototype.deal.dao.mapper.StatusHistoryMapper;
+import com.bankprototype.deal.dao.mapper.StatusHistoryMapperImpl;
 import com.bankprototype.deal.exception.ResourceNotFoundException;
-import com.bankprototype.deal.mapper.StatusHistoryMapperImpl;
 import com.bankprototype.deal.repository.ApplicationRepository;
 import com.bankprototype.deal.dao.Application;
 import com.bankprototype.deal.dao.Client;
 import com.bankprototype.deal.dao.enumfordao.ApplicationStatus;
 import com.bankprototype.deal.dao.enumfordao.ChangeType;
 import com.bankprototype.deal.dao.jsonb.StatusHistory;
+import com.bankprototype.deal.service.metric.MeasureMonitoringService;
 import com.bankprototype.deal.web.dto.ApplicationStatusHistoryDTO;
 import com.bankprototype.deal.web.dto.LoanOfferDTO;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
@@ -34,13 +36,16 @@ class ApplicationServiceImplTest extends BaseServiceTest {
     @Mock
     private ApplicationRepository applicationRepository;
 
+    @Mock
+    private MeasureMonitoringService measureMonitoringService;
+
     private final StatusHistoryMapperImpl statusHistoryMapper = new StatusHistoryMapperImpl();
 
     private ApplicationServiceImpl applicationService;
 
     @BeforeEach
     void setUp() {
-        applicationService = new ApplicationServiceImpl(applicationRepository, statusHistoryMapper);
+        applicationService = new ApplicationServiceImpl(applicationRepository, statusHistoryMapper, measureMonitoringService);
     }
 
     @Test
@@ -99,7 +104,7 @@ class ApplicationServiceImplTest extends BaseServiceTest {
                 .changeType(ChangeType.AUTOMATIC)
                 .build();
 
-        List<StatusHistory> listStatus = List.of(statusHistoryMapper.applicationStatusHistoryDtoToStatusHistory(applicationStatusHistoryDTO));
+        List<StatusHistory> listStatus = List.of(statusHistoryMapper.map(applicationStatusHistoryDTO));
 
         Application applicationTest = Application.builder()
                 .applicationId(1L)
@@ -140,7 +145,7 @@ class ApplicationServiceImplTest extends BaseServiceTest {
                 .changeType(ChangeType.AUTOMATIC)
                 .build();
         List<StatusHistory> listStatus = new LinkedList<>();
-        listStatus.add(statusHistoryMapper.applicationStatusHistoryDtoToStatusHistory(applicationStatusHistoryDTO));
+        listStatus.add(statusHistoryMapper.map(applicationStatusHistoryDTO));
         Application applicationTestBefore = Application.builder()
                 .applicationId(1L)
                 .clientId(client)

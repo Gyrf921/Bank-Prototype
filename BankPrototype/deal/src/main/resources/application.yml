@@ -1,0 +1,59 @@
+feign:
+  circuitbreaker:
+    enabled: true
+  client:
+    config:
+      default:
+        logger-level: full
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+
+resilience4j:
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 7s
+
+server:
+  port: 8081
+spring:
+  datasource:
+    password: ${DATABASE_PASSWORD:1234}
+    url: jdbc:postgresql://${POSTGRES_LINK:localhost:5432}/postgres
+    username: postgres
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVER:localhost:9092}
+    consumer:
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: '*'
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  liquibase:
+    change-log: classpath:db/changelog/changelog.xml
+    enabled: true
+topic-name:
+  application-denied: application_denied
+  create-documents: create_documents
+  credit-issued: credit_issued
+  finish-registration: finish_registration
+  send-documents: send_documents
+  send-ses: send_ses

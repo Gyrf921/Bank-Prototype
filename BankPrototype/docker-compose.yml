@@ -103,3 +103,20 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_CREATE_TOPICS: "finish_registration:1:1,create_documents:1:1,send_documents:1:1,credit_issued:1:1,send_ses:1:1,application_denied:1:1"
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - '9090:9090'
+    container_name: prometheus_CC
+    volumes:
+      - ./deal/src/main/resources/prometheus.yaml:/etc/prometheus/prometheus.yml
+      - ./prometheus:/prometheus
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana_CC
+    ports:
+      - '3000:3000'
+    depends_on:
+      - prometheus
