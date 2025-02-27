@@ -24,13 +24,10 @@ public class MeasureMonitoringService {
     @PostConstruct
     private void initStatusCounters() {
         Arrays.stream(ApplicationStatus.values())
-                .forEach(status -> {
-                            Counter.builder(COUNTER_STATUS_NAME)
+                .forEach(status -> Counter.builder(COUNTER_STATUS_NAME)
                                     .description("Number of applications in each status")
                                     .tag("status", status.name())
-                                    .register(meterRegistry);
-                        }
-                );
+                                    .register(meterRegistry));
     }
 
     public void incrementStatusCounter(ApplicationStatus status) {
