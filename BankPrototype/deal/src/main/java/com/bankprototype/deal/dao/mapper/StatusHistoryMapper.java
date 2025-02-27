@@ -1,4 +1,4 @@
-package com.bankprototype.deal.mapper;
+package com.bankprototype.deal.dao.mapper;
 
 import com.bankprototype.deal.dao.jsonb.StatusHistory;
 import com.bankprototype.deal.web.dto.ApplicationStatusHistoryDTO;
@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 public interface StatusHistoryMapper {
 
     @Mapping(target = "time", source = "applicationStatusHistoryDTO.time")
-    StatusHistory applicationStatusHistoryDtoToStatusHistory(ApplicationStatusHistoryDTO applicationStatusHistoryDTO);
+    StatusHistory map(ApplicationStatusHistoryDTO applicationStatusHistoryDTO);
 
 }
 

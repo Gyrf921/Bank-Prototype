@@ -21,4 +21,12 @@ public class ApplicationStatusHistoryDTO {
 
     private ChangeType changeType;
 
+    public static ApplicationStatusHistoryDTO createAuto(ApplicationStatus status){
+        return ApplicationStatusHistoryDTO.builder()
+                .status(status)
+                .time(LocalDateTime.now())
+                .changeType(ChangeType.AUTOMATIC)
+                .build();
+    }
+
 }

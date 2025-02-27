@@ -1,11 +1,12 @@
 package com.bankprototype.deal.service.impl;
 
+import com.bankprototype.deal.dao.enumfordao.ApplicationStatus;
 import com.bankprototype.deal.exception.BadScoringInfoException;
-import com.bankprototype.deal.kafka.EmailMessageDTO;
-import com.bankprototype.deal.kafka.enumforkafka.Theme;
+import com.bankprototype.deal.service.metric.MeasureMonitoringService;
+import com.bankprototype.deal.web.kafka.EmailMessageDTO;
+import com.bankprototype.deal.web.kafka.enumforkafka.Theme;
 import com.bankprototype.deal.dao.Application;
 import com.bankprototype.deal.dao.Client;
-import com.bankprototype.deal.dao.enumfordao.ApplicationStatus;
 import com.bankprototype.deal.service.ApplicationService;
 import com.bankprototype.deal.service.ClientService;
 import com.bankprototype.deal.service.CreditService;
@@ -81,22 +82,10 @@ public class DealService {
         log.info("[finishRegistration] >> requestDTO: {}", requestDTO);
 
         Application application = applicationService.getApplicationById(applicationId);
-
         Client client = clientService.updateClient(application.getClientId().getClientId(), requestDTO);
-
         ScoringDataDTO scoringDataDTO = creditService.createScoringDataDTO(requestDTO, client, application.getAppliedOffer());
-        CreditDTO creditDTO = null;
-        try {
-            log.info("[feignClient.calculateFullLoanParameters] >> scoringDataDTO: {}", scoringDataDTO);
-            creditDTO = feignClient.calculateFullLoanParameters(scoringDataDTO).getBody();
-            log.info("[feignClient.calculateFullLoanParameters] << result is creditDTO: {}", creditDTO);
-        } catch (BadScoringInfoException exception) {
-            EmailMessageDTO massageDTO = dealProducer.createMessage(application.getApplicationId(), Theme.APPLICATION_DENIED);
-            dealProducer.sendMessage(massageDTO, applicationDeniedTopicName);
 
-            log.error("[finishRegistration] Data validation error: BadScoringInfoException");
-            throw new BadScoringInfoException(exception.getMessage());
-        }
+        CreditDTO creditDTO = calculateCreditDTO(application, scoringDataDTO);
 
         creditService.createCredit(creditDTO, application);
 
@@ -107,5 +96,22 @@ public class DealService {
         return true;
     }
 
+    private CreditDTO calculateCreditDTO(Application application, ScoringDataDTO scoringDataDTO) {
+        CreditDTO creditDTO;
+        try {
+            log.info("[feignClient.calculateFullLoanParameters] >> scoringDataDTO: {}", scoringDataDTO);
+            creditDTO = feignClient.calculateFullLoanParameters(scoringDataDTO).getBody();
+            applicationService.updateStatusForApplication(application.getApplicationId(), ApplicationStatus.CC_APPROVED);
+            log.info("[feignClient.calculateFullLoanParameters] << result is creditDTO: {}", creditDTO);
+        } catch (BadScoringInfoException exception) {
+            EmailMessageDTO massageDTO = dealProducer.createMessage(application.getApplicationId(), Theme.APPLICATION_DENIED);
+            dealProducer.sendMessage(massageDTO, applicationDeniedTopicName);
+            applicationService.updateStatusForApplication(application.getApplicationId(), ApplicationStatus.CC_DENIED);
+
+            log.error("[finishRegistration] Data validation error: BadScoringInfoException");
+            throw new BadScoringInfoException(exception.getMessage());
+        }
+        return creditDTO;
+    }
 
 }

@@ -1,6 +1,6 @@
 package com.bankprototype.deal.service.impl;
 
-import com.bankprototype.deal.mapper.CreditMapper;
+import com.bankprototype.deal.dao.mapper.CreditMapper;
 import com.bankprototype.deal.repository.ApplicationRepository;
 import com.bankprototype.deal.dao.Application;
 import com.bankprototype.deal.dao.Client;

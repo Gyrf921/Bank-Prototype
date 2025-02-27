@@ -1,8 +1,9 @@
 package com.bankprototype.deal.service.impl;
 
+import com.bankprototype.deal.dao.mapper.ClientMapper;
+import com.bankprototype.deal.dao.mapper.ClientMapperImpl;
+import com.bankprototype.deal.dao.mapper.EmploymentMapperImpl;
 import com.bankprototype.deal.exception.ResourceNotFoundException;
-import com.bankprototype.deal.mapper.ClientMapperImpl;
-import com.bankprototype.deal.mapper.EmploymentMapperImpl;
 import com.bankprototype.deal.repository.ClientRepository;
 import com.bankprototype.deal.dao.Client;
 import com.bankprototype.deal.dao.jsonb.Passport;
@@ -24,18 +25,19 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+
+
 class ClientServiceImplTest extends BaseServiceTest {
 
     @Mock
     private ClientRepository clientRepository;
 
-    private final ClientMapperImpl clientMapper = new ClientMapperImpl(new EmploymentMapperImpl());
+    private final ClientMapperImpl clientMapperImpl = new ClientMapperImpl(new EmploymentMapperImpl());
     private ClientServiceImpl clientService;
 
     @BeforeEach
     void setUp() {
-
-        clientService = new ClientServiceImpl(clientRepository, clientMapper);
+        clientService = new ClientServiceImpl(clientRepository, clientMapperImpl);
     }
 
     @Test
@@ -90,7 +92,7 @@ class ClientServiceImplTest extends BaseServiceTest {
                 .passportSeries("2222")
                 .build();
 
-        Client clientTest = clientMapper.loanApplicationRequestDTOToClient(requestDTO);
+        Client clientTest = clientMapperImpl.loanApplicationRequestDTOToClient(requestDTO);
 
         when(clientRepository.save(any()))
                 .thenReturn(clientTest);
@@ -127,7 +129,7 @@ class ClientServiceImplTest extends BaseServiceTest {
         EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build();
         FinishRegistrationRequestDTO requestDTO = enhancedRandom.nextObject(FinishRegistrationRequestDTO.class);
 
-        Client client = clientMapper.updateClientToFinishRegistrationRequestDTO(requestDTO, clientTest);
+        Client client = clientMapperImpl.updateClientToFinishRegistrationRequestDTO(requestDTO, clientTest);
 
         when(clientRepository.findById(any()))
                 .thenReturn(Optional.of(clientTest));

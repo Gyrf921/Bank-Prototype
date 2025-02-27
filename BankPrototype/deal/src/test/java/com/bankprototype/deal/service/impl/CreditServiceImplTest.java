@@ -1,7 +1,7 @@
 package com.bankprototype.deal.service.impl;
 
-import com.bankprototype.deal.mapper.CreditMapper;
-import com.bankprototype.deal.mapper.CreditMapperImpl;
+import com.bankprototype.deal.dao.mapper.CreditMapper;
+import com.bankprototype.deal.dao.mapper.CreditMapperImpl;
 import com.bankprototype.deal.repository.ApplicationRepository;
 import com.bankprototype.deal.dao.Application;
 import com.bankprototype.deal.dao.Client;
@@ -13,6 +13,7 @@ import com.bankprototype.deal.dao.jsonb.Passport;
 import com.bankprototype.deal.web.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
 
 import java.math.BigDecimal;
@@ -31,7 +32,7 @@ class CreditServiceImplTest extends BaseServiceTest {
     @Mock
     private ApplicationRepository applicationRepository;
 
-    private final CreditMapper creditMapper = new CreditMapperImpl();
+    private final CreditMapperImpl creditMapper = new CreditMapperImpl();
 
     private CreditServiceImpl creditService;
 

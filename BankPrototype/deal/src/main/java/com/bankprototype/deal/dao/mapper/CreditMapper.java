@@ -1,4 +1,4 @@
-package com.bankprototype.deal.mapper;
+package com.bankprototype.deal.dao.mapper;
 
 import com.bankprototype.deal.dao.Client;
 import com.bankprototype.deal.dao.Credit;

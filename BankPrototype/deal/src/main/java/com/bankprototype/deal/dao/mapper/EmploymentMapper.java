@@ -1,4 +1,4 @@
-package com.bankprototype.deal.mapper;
+package com.bankprototype.deal.dao.mapper;
 
 import com.bankprototype.deal.dao.jsonb.Employment;
 import com.bankprototype.deal.web.dto.EmploymentDTO;

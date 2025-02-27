@@ -1,8 +1,9 @@
 package com.bankprototype.deal.web.controller;
 
+import com.bankprototype.deal.dao.enumfordao.ApplicationStatus;
 import com.bankprototype.deal.exception.SesCodeIsNotCorrectException;
-import com.bankprototype.deal.kafka.EmailMessageDTO;
-import com.bankprototype.deal.kafka.enumforkafka.Theme;
+import com.bankprototype.deal.web.kafka.EmailMessageDTO;
+import com.bankprototype.deal.web.kafka.enumforkafka.Theme;
 import com.bankprototype.deal.service.ApplicationService;
 import com.bankprototype.deal.service.DealProducer;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,7 +42,7 @@ public class DocumentController {
         log.info("[sendDocuments] >> applicationId:{}", applicationId);
 
         EmailMessageDTO massageDTO = dealProducer.createMessage(applicationId, Theme.SEND_DOCUMENTS);
-
+        applicationService.updateStatusForApplication(applicationId, ApplicationStatus.PREPARE_DOCUMENTS);
         dealProducer.sendMessage(massageDTO, sendDocumentsTopicName);
 
         log.info("[sendDocuments] << result is void, message: {}, topic/theme: {}", massageDTO, Theme.SEND_DOCUMENTS.name());
@@ -51,13 +52,14 @@ public class DocumentController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Request to sign documents has been completed"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")})
-    @PatchMapping("/{applicationId}/sign")
+    @PostMapping("/{applicationId}/sign")
     public void signDocuments(@PathVariable(value = "applicationId") Long applicationId) {
         log.info("[signDocuments] >> applicationId:{}", applicationId);
 
         applicationService.updateSesCodeForApplication(applicationId);
 
         EmailMessageDTO massageDTO = dealProducer.createMessage(applicationId, Theme.SEND_SES);
+        applicationService.updateStatusForApplication(applicationId, ApplicationStatus.DOCUMENT_CREATED);
 
         dealProducer.sendMessage(massageDTO, sendSesTopicName);
 
@@ -69,16 +71,17 @@ public class DocumentController {
             @ApiResponse(responseCode = "200", description = "Signing of documents has been completed"),
             @ApiResponse(responseCode = "400", description = "Mistake with ses code"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")})
-    @PatchMapping("/{applicationId}/code")
+    @PostMapping("/{applicationId}/code")
     public void codeDocuments(@RequestParam(value = "sesCode") Long sesCode,
                               @PathVariable(value = "applicationId") Long applicationId) {
         log.info("[codeDocuments] >> sesCode:{}, applicationId: {}", sesCode, applicationId);
 
-        EmailMessageDTO massageDTO = null;
+        EmailMessageDTO massageDTO;
 
         if (applicationService.checkingCorrectnessSesCode(applicationId, sesCode)) {
 
             massageDTO = dealProducer.createMessage(applicationId, Theme.CREDIT_ISSUED);
+            applicationService.updateStatusForApplication(applicationId, ApplicationStatus.CREDIT_ISSUED);
 
             dealProducer.sendMessage(massageDTO, creditIssuedTopicName);
         } else {

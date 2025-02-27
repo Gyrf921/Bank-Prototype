@@ -1,6 +1,6 @@
 package com.bankprototype.deal.web.controller;
 
-import com.bankprototype.deal.kafka.EmailMessageDTO;
+import com.bankprototype.deal.web.kafka.EmailMessageDTO;
 import com.bankprototype.deal.dao.Application;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
@@ -50,7 +50,7 @@ class DocumentControllerTest extends BaseControllerTest {
 
         doNothing().when(dealProducer).sendMessage(any(), any());
 
-        ResultActions response = mockMvc.perform(patch("/deal/document/1/sign"))
+        ResultActions response = mockMvc.perform(post("/deal/document/1/sign"))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
 
@@ -70,7 +70,7 @@ class DocumentControllerTest extends BaseControllerTest {
 
         doNothing().when(dealProducer).sendMessage(any(), any());
 
-        ResultActions response = mockMvc.perform(patch("/deal/document/1/code?sesCode=666666"))
+        ResultActions response = mockMvc.perform(post("/deal/document/1/code?sesCode=666666"))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
 
@@ -90,7 +90,7 @@ class DocumentControllerTest extends BaseControllerTest {
 
         doNothing().when(dealProducer).sendMessage(any(), any());
 
-        ResultActions response = mockMvc.perform(patch("/deal/document/1/code?sesCode=666666"))
+        ResultActions response = mockMvc.perform(post("/deal/document/1/code?sesCode=666666"))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
 
