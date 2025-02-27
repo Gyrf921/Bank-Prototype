@@ -4,7 +4,8 @@
 
 ## Архитектура
 
-![Архитектура](/images/architechture.drawio.png)
+![image](https://github.com/user-attachments/assets/85d2e7a0-af60-48ef-8373-dbcf04914df0)
+
 
 ## Задание
 Разработать приложение "Кредитный конвейер" с применением технологий и инструментов:
