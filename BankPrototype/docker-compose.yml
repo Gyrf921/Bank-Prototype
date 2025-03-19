@@ -84,6 +84,16 @@ services:
       - 'POSTGRES_HOST_AUTH_METHOD=trust'
       - 'POSTGRES_DB=java'
 
+  redis:
+    image: redis
+    container_name: redis_BP
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}  # Пароль из окружения
+    command: redis-server --requirepass $${REDIS_PASSWORD}  # Используем пароль при запуске Redis
+    restart: always
+
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper_BP
@@ -102,7 +112,7 @@ services:
       KAFKA_LISTENERS: INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "finish_registration:1:1,create_documents:1:1,send_documents:1:1,credit_issued:1:1,send_ses:1:1,application_denied:1:1"
+      KAFKA_CREATE_TOPICS: "finish_registration:1:1,create_documents:1:1,send_documents:1:1,credit_issued:1:1,send_ses:1:1,application_denied:1:1,audit_action:1:1"
 
   prometheus:
     image: prom/prometheus
