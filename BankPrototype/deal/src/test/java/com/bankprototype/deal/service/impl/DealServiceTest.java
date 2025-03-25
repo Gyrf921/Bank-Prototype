@@ -1,12 +1,12 @@
 package com.bankprototype.deal.service.impl;
 
-import com.bankprototype.deal.web.kafka.EmailMessageDTO;
+import com.bankprototype.deal.kafka.dto.EmailMessageDTO;
 import com.bankprototype.deal.dao.Application;
 import com.bankprototype.deal.dao.Client;
 import com.bankprototype.deal.dao.Credit;
 import com.bankprototype.deal.dao.enumfordao.ApplicationStatus;
 import com.bankprototype.deal.service.ClientService;
-import com.bankprototype.deal.service.DealProducer;
+import com.bankprototype.deal.kafka.producer.DealProducer;
 import com.bankprototype.deal.web.dto.*;
 import com.bankprototype.deal.web.feign.CreditConveyorFeignClient;
 import io.github.benas.randombeans.EnhancedRandomBuilder;

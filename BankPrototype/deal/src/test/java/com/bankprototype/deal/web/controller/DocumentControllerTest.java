@@ -1,6 +1,6 @@
 package com.bankprototype.deal.web.controller;
 
-import com.bankprototype.deal.web.kafka.EmailMessageDTO;
+import com.bankprototype.deal.kafka.dto.EmailMessageDTO;
 import com.bankprototype.deal.dao.Application;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;

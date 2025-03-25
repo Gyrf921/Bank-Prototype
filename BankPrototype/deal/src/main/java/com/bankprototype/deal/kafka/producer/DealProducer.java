@@ -1,8 +1,8 @@
-package com.bankprototype.deal.service;
+package com.bankprototype.deal.kafka.producer;
 
 
-import com.bankprototype.deal.web.kafka.EmailMessageDTO;
-import com.bankprototype.deal.web.kafka.enumforkafka.Theme;
+import com.bankprototype.deal.kafka.dto.EmailMessageDTO;
+import com.bankprototype.deal.kafka.dto.enumforkafka.Theme;
 
 public interface DealProducer {
 

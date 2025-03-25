@@ -30,6 +30,7 @@
         <java.version>17</java.version>
         <hibernate.validation.version>8.0.2.Final</hibernate.validation.version>
         <jakarta.validation.version>3.1.1</jakarta.validation.version>
+        <spring.redisearch.version>3.1.2</spring.redisearch.version>
     </properties>
     <dependencies>
         <!-- WEB -->
@@ -45,6 +46,10 @@
         </dependency>
 
         <!-- DATA -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
@@ -84,6 +89,10 @@
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
         </dependency>
     </dependencies>
 
