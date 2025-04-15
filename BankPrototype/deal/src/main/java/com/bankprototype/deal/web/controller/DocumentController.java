@@ -1,11 +1,16 @@
 package com.bankprototype.deal.web.controller;
 
+import com.bankprototype.deal.dao.Application;
 import com.bankprototype.deal.dao.enumfordao.ApplicationStatus;
 import com.bankprototype.deal.exception.SesCodeIsNotCorrectException;
-import com.bankprototype.deal.web.kafka.EmailMessageDTO;
-import com.bankprototype.deal.web.kafka.enumforkafka.Theme;
+import com.bankprototype.deal.kafka.dto.AuditAction;
+import com.bankprototype.deal.kafka.dto.EmailMessageDTO;
+import com.bankprototype.deal.kafka.dto.enumforkafka.Service;
+import com.bankprototype.deal.kafka.dto.enumforkafka.Theme;
+import com.bankprototype.deal.kafka.dto.enumforkafka.Type;
+import com.bankprototype.deal.kafka.producer.AuditProducer;
 import com.bankprototype.deal.service.ApplicationService;
-import com.bankprototype.deal.service.DealProducer;
+import com.bankprototype.deal.kafka.producer.DealProducer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -14,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @RestController
 @Slf4j
 @RequestMapping("/deal/document")
@@ -21,6 +28,8 @@ import org.springframework.web.bind.annotation.*;
 public class DocumentController {
 
     private final DealProducer dealProducer;
+
+    private final AuditProducer audit;
 
     private final ApplicationService applicationService;
 
@@ -42,7 +51,9 @@ public class DocumentController {
         log.info("[sendDocuments] >> applicationId:{}", applicationId);
 
         EmailMessageDTO massageDTO = dealProducer.createMessage(applicationId, Theme.SEND_DOCUMENTS);
-        applicationService.updateStatusForApplication(applicationId, ApplicationStatus.PREPARE_DOCUMENTS);
+        audit.send(AuditAction.create(Type.START, Service.DOSSIER, LocalDateTime.now() + " | appId: " + applicationId));
+        Application application = applicationService.updateStatusForApplication(applicationId, ApplicationStatus.PREPARE_DOCUMENTS);
+        audit.send(AuditAction.create(Type.SUCCESS, Service.DOSSIER, LocalDateTime.now() + " | application: " + application));
         dealProducer.sendMessage(massageDTO, sendDocumentsTopicName);
 
         log.info("[sendDocuments] << result is void, message: {}, topic/theme: {}", massageDTO, Theme.SEND_DOCUMENTS.name());
@@ -56,10 +67,14 @@ public class DocumentController {
     public void signDocuments(@PathVariable(value = "applicationId") Long applicationId) {
         log.info("[signDocuments] >> applicationId:{}", applicationId);
 
-        applicationService.updateSesCodeForApplication(applicationId);
+        audit.send(AuditAction.create(Type.START, Service.DOSSIER, LocalDateTime.now() + " | appId: " + applicationId));
+        Application application = applicationService.updateSesCodeForApplication(applicationId);
+        audit.send(AuditAction.create(Type.SUCCESS, Service.DOSSIER, LocalDateTime.now() + " | application: " + application));
 
         EmailMessageDTO massageDTO = dealProducer.createMessage(applicationId, Theme.SEND_SES);
-        applicationService.updateStatusForApplication(applicationId, ApplicationStatus.DOCUMENT_CREATED);
+        audit.send(AuditAction.create(Type.START, Service.DOSSIER, LocalDateTime.now() + " | appId: " + applicationId));
+        application = applicationService.updateStatusForApplication(applicationId, ApplicationStatus.DOCUMENT_CREATED);
+        audit.send(AuditAction.create(Type.SUCCESS, Service.DOSSIER, LocalDateTime.now() + " | application: " + application));
 
         dealProducer.sendMessage(massageDTO, sendSesTopicName);
 
@@ -81,9 +96,10 @@ public class DocumentController {
         if (applicationService.checkingCorrectnessSesCode(applicationId, sesCode)) {
 
             massageDTO = dealProducer.createMessage(applicationId, Theme.CREDIT_ISSUED);
-            applicationService.updateStatusForApplication(applicationId, ApplicationStatus.CREDIT_ISSUED);
-
+            audit.send(AuditAction.create(Type.START, Service.DOSSIER, LocalDateTime.now() + " | massage to dossier: " + massageDTO));
+            Application application = applicationService.updateStatusForApplication(applicationId, ApplicationStatus.CREDIT_ISSUED);
             dealProducer.sendMessage(massageDTO, creditIssuedTopicName);
+            audit.send(AuditAction.create(Type.SUCCESS, Service.DOSSIER, LocalDateTime.now() + " | application: " + application));
         } else {
             log.error("Ses code: \"{}\" is not correct", sesCode);
             throw new SesCodeIsNotCorrectException("Ses code: \"" + sesCode + "\" is not correct");

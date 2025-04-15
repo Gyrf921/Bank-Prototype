@@ -4,7 +4,7 @@ import com.bankprototype.deal.repository.ApplicationRepository;
 import com.bankprototype.deal.repository.ClientRepository;
 import com.bankprototype.deal.repository.CreditRepository;
 import com.bankprototype.deal.service.ClientService;
-import com.bankprototype.deal.service.DealProducer;
+import com.bankprototype.deal.kafka.producer.DealProducer;
 import com.bankprototype.deal.service.impl.ApplicationServiceImpl;
 import com.bankprototype.deal.service.impl.CreditServiceImpl;
 import com.bankprototype.deal.web.feign.CreditConveyorFeignClient;

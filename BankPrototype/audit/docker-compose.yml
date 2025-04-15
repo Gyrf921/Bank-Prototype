@@ -1,0 +1,9 @@
+version: '3.9'  # Версия формата docker-compose
+
+services:
+  redis-dev:  # Имя сервиса
+    image: redis  # Используемый образ Redis
+    container_name: redis-dev  # Имя контейнера
+    ports:
+      - "6379:6379"  # Проброс порта (хост:контейнер)
+    restart: always  # Автоматический перезапуск контейнера при сбоях

@@ -4,10 +4,7 @@ import com.bankprototype.deal.dao.enumfordao.ApplicationStatus;
 import com.bankprototype.deal.dao.jsonb.StatusHistory;
 import com.bankprototype.deal.web.dto.LoanOfferDTO;
 import com.vladmihalcea.hibernate.type.json.JsonType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -53,6 +50,7 @@ public class Application {
     private Timestamp signDate;
 
     @Column(name = "ses_code")
+    @ToString.Exclude
     private Long sesCode;
 
     @Type(type = "json")

@@ -1,0 +1,18 @@
+server:
+  port: 8086
+spring:
+  application:
+    name: audit
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  kafka:
+      bootstrap-servers: ${KAFKA_SERVER:localhost:9092}
+      consumer:
+          group-id: audit
+          key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+          value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+topic-name:
+    audit-action: audit_action

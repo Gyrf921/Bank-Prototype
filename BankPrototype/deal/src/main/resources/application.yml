@@ -52,6 +52,7 @@ spring:
     enabled: true
 topic-name:
   application-denied: application_denied
+  audit-action: audit_action
   create-documents: create_documents
   credit-issued: credit_issued
   finish-registration: finish_registration

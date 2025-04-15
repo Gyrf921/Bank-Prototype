@@ -12,6 +12,7 @@ services:
     environment:
       - DEAL_FEIGN_CLIENT_HOST=deal:8081
       - APPLICATION_FEIGN_CLIENT_HOST=application:8082
+      - AUDIT_FEIGN_CLIENT_HOST=application:8086
     depends_on:
       - deal
       - application
@@ -63,7 +64,6 @@ services:
       - kafka
       - conveyor
 
-
   conveyor:
     build:
       context: ./credit-conveyor
@@ -72,6 +72,25 @@ services:
     container_name: conveyor
     ports:
       - "8080:8080"
+
+  audit:
+    build:
+      context: ./audit
+      dockerfile: Dockerfile
+    hostname: audit
+    container_name: audit
+    ports:
+      - "8086:8086"
+    environment:
+      - KAFKA_SERVER=kafka:9092
+      - REDIS_HOST=redis_CC
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=123
+    depends_on:
+      - redis
+      - zookeeper
+      - kafka
+
 
   postgres:
     image: 'postgres'
@@ -83,6 +102,13 @@ services:
       - 'POSTGRES_PASSWORD=1234'
       - 'POSTGRES_HOST_AUTH_METHOD=trust'
       - 'POSTGRES_DB=java'
+
+  redis:
+    image: redis
+    container_name: redis_CC
+    ports:
+      - "6379:6379"
+    restart: always
 
   zookeeper:
     image: wurstmeister/zookeeper
@@ -102,7 +128,7 @@ services:
       KAFKA_LISTENERS: INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "finish_registration:1:1,create_documents:1:1,send_documents:1:1,credit_issued:1:1,send_ses:1:1,application_denied:1:1"
+      KAFKA_CREATE_TOPICS: "finish_registration:1:1,create_documents:1:1,send_documents:1:1,credit_issued:1:1,send_ses:1:1,application_denied:1:1,audit_action:1:1"
 
   prometheus:
     image: prom/prometheus

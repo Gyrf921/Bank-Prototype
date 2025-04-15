@@ -2,6 +2,9 @@ package com.bankprototype.deal.service.impl;
 
 import com.bankprototype.deal.exception.ResourceNotFoundException;
 import com.bankprototype.deal.dao.mapper.StatusHistoryMapper;
+import com.bankprototype.deal.kafka.dto.AuditAction;
+import com.bankprototype.deal.kafka.dto.enumforkafka.Type;
+import com.bankprototype.deal.kafka.producer.AuditProducer;
 import com.bankprototype.deal.repository.ApplicationRepository;
 import com.bankprototype.deal.dao.Application;
 import com.bankprototype.deal.dao.Client;
@@ -20,10 +23,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bankprototype.deal.kafka.dto.enumforkafka.Service.APPLICATION;
+
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class ApplicationServiceImpl implements ApplicationService {
+    private final AuditProducer audit;
 
     private final ApplicationRepository applicationRepository;
 
@@ -37,6 +44,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         Application application = applicationRepository.findById(id)
                 .orElseThrow(() -> {
+                    audit.send(AuditAction.create(Type.FAILURE, APPLICATION, LocalDateTime.now() + " | Application not found by this id :" + id));
                     log.error("Application not found by this id :{} ", id);
                     return new ResourceNotFoundException("Application not found by this id :: " + id);
                 });
@@ -108,7 +116,6 @@ public class ApplicationServiceImpl implements ApplicationService {
         log.info("[setLoanOfferForApplication] >> loanOfferDTO: {}", loanOfferDTO);
 
         Application application = getApplicationById(loanOfferDTO.getApplicationId());
-
         application.setAppliedOffer(loanOfferDTO);
         setApplicationStatus(application, ApplicationStatus.APPROVED);
 

@@ -1,8 +1,9 @@
 package com.bankprototype.deal.service.impl;
 
 import com.bankprototype.deal.dao.mapper.StatusHistoryMapper;
-import com.bankprototype.deal.dao.mapper.StatusHistoryMapperImpl;
+import com.bankprototype.deal.dao.mapper.*;
 import com.bankprototype.deal.exception.ResourceNotFoundException;
+import com.bankprototype.deal.kafka.producer.AuditProducer;
 import com.bankprototype.deal.repository.ApplicationRepository;
 import com.bankprototype.deal.dao.Application;
 import com.bankprototype.deal.dao.Client;
@@ -35,17 +36,19 @@ class ApplicationServiceImplTest extends BaseServiceTest {
 
     @Mock
     private ApplicationRepository applicationRepository;
+    @Mock
+    private AuditProducer auditProducer;
 
     @Mock
     private MeasureMonitoringService measureMonitoringService;
 
-    private final StatusHistoryMapperImpl statusHistoryMapper = new StatusHistoryMapperImpl();
+    private final StatusHistoryMapper statusHistoryMapper = new StatusHistoryMapperImpl();
 
     private ApplicationServiceImpl applicationService;
 
     @BeforeEach
     void setUp() {
-        applicationService = new ApplicationServiceImpl(applicationRepository, statusHistoryMapper, measureMonitoringService);
+        applicationService = new ApplicationServiceImpl(auditProducer, applicationRepository, statusHistoryMapper, measureMonitoringService);
     }
 
     @Test

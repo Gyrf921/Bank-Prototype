@@ -1,6 +1,6 @@
-package com.bankprototype.deal.web.kafka;
+package com.bankprototype.deal.kafka.dto;
 
-import com.bankprototype.deal.web.kafka.enumforkafka.Theme;
+import com.bankprototype.deal.kafka.dto.enumforkafka.Theme;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
