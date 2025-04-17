@@ -1,8 +1,7 @@
-package org.bankprototype.audit.consumer;
+package org.bankprototype.audit.kafka.consumer;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bankprototype.audit.domein.mapper.AuditActionMapper;
 import org.bankprototype.audit.service.AuditService;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,7 @@ public class AuditConsumerImpl {
     @KafkaListener(topics = "${topic-name.audit-action}")
     public void consumeAuditMessage(String auditAction) {
         log.info("[consumeAuditMessage] >> take auditAction message");
-        if (!auditAction.isEmpty()){
+        if (auditAction != null){
             auditService.saveAction(auditAction);
         }
         log.info("[consumeAuditMessage] << done");
