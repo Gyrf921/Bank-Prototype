@@ -16,7 +16,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuditAction {
-    private UUID id;
     private Type type;
     private Service service;
     private String message;
@@ -33,6 +32,7 @@ public class AuditAction {
                 .service(service)
                 .message(sb.toString()).build();
     }
+
     public static AuditAction create(Type type, Service service, String message) {
         return AuditAction.builder()
                 .type(type)

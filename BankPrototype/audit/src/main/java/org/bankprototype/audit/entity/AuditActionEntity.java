@@ -1,11 +1,9 @@
-package org.bankprototype.audit.domein.entity;
+package org.bankprototype.audit.entity;
 
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import lombok.*;
-import org.bankprototype.audit.domein.enums.Service;
-import org.bankprototype.audit.domein.enums.Type;
+import org.bankprototype.audit.entity.enums.Service;
+import org.bankprototype.audit.entity.enums.Type;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
@@ -19,7 +17,9 @@ import java.util.UUID;
 public class AuditActionEntity {
     @Id
     private UUID id;
+    @Indexed
     private Type type;
+    @Indexed
     private Service service;
     private String message;
 }

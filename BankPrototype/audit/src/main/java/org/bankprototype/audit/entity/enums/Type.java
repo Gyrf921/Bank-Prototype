@@ -1,4 +1,4 @@
-package org.bankprototype.audit.domein.enums;
+package org.bankprototype.audit.entity.enums;
 
 public enum Type {
 
